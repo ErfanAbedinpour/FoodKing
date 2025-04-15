@@ -7,6 +7,7 @@ import { Role } from "../value-object/role.vo"
 
 export class UserEntity {
 
+    private otp: string;
     constructor(
         public id: UserId,
         public name: string,
@@ -19,5 +20,13 @@ export class UserEntity {
 
     static create(name: string, email: string, phone_number: string, password: string, role: UserRole = UserRole.Customer): UserEntity {
         return new UserEntity(randomUUID(), name, new Email(email), new Phone(phone_number), password, new Role(role))
+    }
+
+    validateOTP(otp: string) {
+        return this.otp === otp
+    }
+
+    setOtp(otp: string) {
+        this.otp = otp;
     }
 }

@@ -4,6 +4,8 @@ import { Hashing } from "./infrastructure/HashStrategies/hash";
 import { ArgonHash } from "./infrastructure/HashStrategies/argon-hash";
 import { AuthController } from "./infrastructure/http/auth.controller";
 import { CreateUserUseCase } from "./application/use-cases/create-user";
+import { OtpRepository } from "./domain/repository/opt-repository";
+import { MemoryOtpRepository } from "./infrastructure/repository/memory.otp.repository";
 
 @Module({
     imports: [UserModule],
@@ -13,6 +15,10 @@ import { CreateUserUseCase } from "./application/use-cases/create-user";
         {
             provide: Hashing,
             useClass: ArgonHash
+        },
+        {
+            provide: OtpRepository,
+            useClass: MemoryOtpRepository
         }
     ]
 })

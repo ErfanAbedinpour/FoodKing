@@ -20,7 +20,6 @@ export class CreateUserUseCase implements ICommandHandler<CreateUserCommand, voi
                 throw new BadRequestException(ErrorMessage.PHONE_EXIST);
 
             await this.userRepository.create(user);
-            // generate Token
             return
         } catch (err) {
             throw err;
