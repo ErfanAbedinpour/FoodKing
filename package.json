@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "@mikro-orm/core": "^6.4.13",
+    "@mikro-orm/entity-generator": "^6.4.13",
     "@mikro-orm/migrations": "^6.4.13",
     "@mikro-orm/nestjs": "^6.1.1",
     "@mikro-orm/postgresql": "^6.4.13",
@@ -33,12 +34,14 @@
     "@nestjs/core": "^11.0.1",
     "@nestjs/platform-express": "^11.0.1",
     "decimal.js": "^10.5.0",
+    "dotenv": "^16.5.0",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
     "@eslint/js": "^9.18.0",
+    "@mikro-orm/cli": "^6.4.13",
     "@nestjs/cli": "^11.0.0",
     "@nestjs/schematics": "^11.0.0",
     "@nestjs/testing": "^11.0.1",

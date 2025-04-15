@@ -23,7 +23,7 @@ services:
   migration:
     build:
       context: .
-      dockerfile: dockerFile
+      dockerfile: Dockerfile
     restart: "no"
     command: sh -c "pnpm run migrate:create && pnpm run migrate:up"
     profiles:
