@@ -3,6 +3,9 @@ import { CreateUserDTO } from "./DTO/auth.DTO";
 import { CommandBus } from "@nestjs/cqrs";
 import { CreateUserCommand } from "../../application/command/createUser.command";
 import { SendOtpCommand } from "../../application/command/send-otp.command";
+import { VerifyOtpCommand } from "../../application/command/verify-otp.command";
+import { SendOtpDTO } from "./DTO/send-otp.DTO";
+import { VerifyOtpDTO } from "./DTO/verify-otp.DTO";
 
 @Controller("auth")
 export class AuthController {
@@ -19,19 +22,18 @@ export class AuthController {
 
     @Post("send-otp")
     @HttpCode(HttpStatus.OK)
-    async sendOTP(@Body() sendOtp: SendOtpCommand) {
+    async sendOTP(@Body() sendOtp: SendOtpDTO) {
         await this.commandBus.execute(new SendOtpCommand(sendOtp.phone));
-
         return { msg: "Otp Sended successfully" }
     }
 
 
     @Post("verify-otp")
     @HttpCode(HttpStatus.OK)
-    async verifyOtp(@Body() sendOtp: SendOtpCommand) {
-        await this.commandBus.execute(new SendOtpCommand(sendOtp.phone));
+    async verifyOtp(@Body() verifyOtp: VerifyOtpDTO) {
+        const res = await this.commandBus.execute(new VerifyOtpCommand(verifyOtp.code, verifyOtp.phone));
+        return res
 
-        return { msg: "Otp Sended successfully" }
     }
 
 

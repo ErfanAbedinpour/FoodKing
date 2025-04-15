@@ -51,7 +51,7 @@ export class MikroUserRepository implements UserRepository {
 
     async findById(id: number): Promise<UserEntity> {
         try {
-            const user = ((await this.em.findOne(User, id, { fields: ["role.name"] })) as User);
+            const user = ((await this.em.findOne(User, id, { populate: ["role.name"] })) as User);
             if (!user)
                 return user
             return UserMapper.toDomain(user)
@@ -62,9 +62,10 @@ export class MikroUserRepository implements UserRepository {
 
     async findByPhone(phone: string): Promise<UserEntity> {
         try {
-            const user = ((await this.em.findOne(User, { phone_number: phone }, { fields: ["role.name"] })) as User);
+            const user = (await this.em.findOne(User, { phone_number: phone }, { populate: ["role"] })) as User;
             if (!user)
                 return user
+
             return UserMapper.toDomain(user)
         } catch (err) {
             if (err instanceof NotFoundError)
@@ -76,7 +77,7 @@ export class MikroUserRepository implements UserRepository {
 
     async update(id: number, user: Partial<UserEntity>): Promise<UserEntity> {
         try {
-            const u = UserMapper.toDomain((await this.em.findOneOrFail(User, id, { fields: ["role.name"] })) as User);
+            const u = UserMapper.toDomain((await this.em.findOneOrFail(User, id, { populate: ["role"] })) as User);
             const newUser = wrap(u).assign(user)
             return UserMapper.toDomain(newUser as unknown as User);
         } catch (err) {
