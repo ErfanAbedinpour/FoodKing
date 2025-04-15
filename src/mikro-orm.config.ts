@@ -4,7 +4,7 @@ import { PostgreSqlDriver } from "@mikro-orm/postgresql";
 import { SeedManager } from "@mikro-orm/seeder";
 import { Logger } from "@nestjs/common";
 import 'dotenv/config';
-import { DatabaseSeeder } from "./modules/seeder/seed";
+import { DatabaseSeeder } from "./seeder/seed";
 
 
 const logger = new Logger("MikroOrm")
