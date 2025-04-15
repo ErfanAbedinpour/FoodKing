@@ -11,13 +11,13 @@ export class UserEntity {
         public id: UserId,
         public name: string,
         public email: Email,
-        public role: Role,
         public phone_number: Phone,
         public password: string,
+        public role: Role,
     ) { }
 
 
-    static create(name: string, email: string, role: UserRole, phone_number: string, password: string) {
-        return new UserEntity(randomUUID(), name, new Email(email), new Role(role), new Phone(phone_number), password)
+    static create(name: string, email: string, phone_number: string, password: string, role: UserRole = UserRole.Customer): UserEntity {
+        return new UserEntity(randomUUID(), name, new Email(email), new Phone(phone_number), password, new Role(role))
     }
 }

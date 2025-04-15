@@ -51,19 +51,21 @@ export class MikroUserRepository implements UserRepository {
 
     async findById(id: number): Promise<UserEntity> {
         try {
-            const user = UserMapper.toDomain((await this.em.findOneOrFail(User, id, { fields: ["role.name"] })) as User);
-            return user
+            const user = ((await this.em.findOne(User, id, { fields: ["role.name"] })) as User);
+            if (!user)
+                return user
+            return UserMapper.toDomain(user)
         } catch (err) {
-            if (err instanceof NotFoundError)
-                throw new UserNotFound(ErrorMessage.USER_NOT_FOUND)
             throw err
         }
     }
 
     async findByPhone(phone: string): Promise<UserEntity> {
         try {
-            const user = UserMapper.toDomain((await this.em.findOneOrFail(User, { phone_number: phone }, { fields: ["role.name"] })) as User);
-            return user
+            const user = ((await this.em.findOne(User, { phone_number: phone }, { fields: ["role.name"] })) as User);
+            if (!user)
+                return user
+            return UserMapper.toDomain(user)
         } catch (err) {
             if (err instanceof NotFoundError)
                 throw new UserNotFound(ErrorMessage.USER_NOT_FOUND)

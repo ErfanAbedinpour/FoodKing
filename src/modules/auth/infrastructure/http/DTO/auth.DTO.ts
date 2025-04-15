@@ -1,6 +1,4 @@
-import { IsEmail, IsEnum, IsNotEmpty, IsPhoneNumber, IsString, MaxLength, MinLength } from "class-validator";
-import { UserRole } from "../../../../../models";
-
+import { IsEmail, IsNotEmpty, IsPhoneNumber, IsString, MaxLength, MinLength } from "class-validator";
 export class CreateUserDTO {
     @IsNotEmpty()
     @IsString()
@@ -18,8 +16,4 @@ export class CreateUserDTO {
     @IsNotEmpty()
     @MaxLength(8, { message: "password cannot less than 8 character" })
     password: string
-
-    @IsNotEmpty()
-    @IsEnum(UserRole)
-    role: UserRole
 }

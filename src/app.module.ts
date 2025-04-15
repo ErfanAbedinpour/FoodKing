@@ -7,6 +7,7 @@ import { cwd } from 'process';
 import { ForkEntityManagerMiddleware } from './middleware/fork.middleware';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { UserModule } from './modules/users/user.module';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -17,7 +18,8 @@ import { UserModule } from './modules/users/user.module';
       isGlobal: true
     }),
     MikroOrmModule.forRoot(),
-    UserModule
+    UserModule,
+    AuthModule
   ],
   controllers: [AppController]
 
