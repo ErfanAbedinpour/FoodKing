@@ -4,6 +4,7 @@ import { PostgreSqlDriver } from "@mikro-orm/postgresql";
 import { SeedManager } from "@mikro-orm/seeder";
 import { Logger } from "@nestjs/common";
 import 'dotenv/config';
+import { DatabaseSeeder } from "./modules/seeder/seed";
 
 
 const logger = new Logger("MikroOrm")
@@ -22,13 +23,13 @@ export default defineConfig({
     driver: PostgreSqlDriver,
     logger: (msg) => logger.debug(msg),
     metadataCache: { enabled: true },
-    // seeder: {
-    //     path: "./src/seeders",
-    //     pathTs: "./src/seeders",
-    //     defaultSeeder: DatabaseSeeder.name,
-    //     glob: '!(*.d).{js,ts}',
-    //     emit: 'ts',
-    // },
+    seeder: {
+        path: "./src/seeders",
+        pathTs: "./src/seeders",
+        defaultSeeder: DatabaseSeeder.name,
+        glob: '!(*.d).{js,ts}',
+        emit: 'ts',
+    },
     migrations: {
         tableName: 'migrations',
         path: './dist/migrations',
