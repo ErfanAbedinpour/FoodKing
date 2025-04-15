@@ -5,6 +5,7 @@ import { UserMapper } from "../mapper/user.mapper";
 import { Role, User } from '@models/index'
 import { Injectable } from "@nestjs/common";
 import { ErrorMessage } from "../../../../ErrorMessages/Error.enum";
+import { RoleNotFound, UserNotFound } from "../../domain/errors";
 
 @Injectable()
 export class MikroUserRepository implements UserRepository {
@@ -13,7 +14,9 @@ export class MikroUserRepository implements UserRepository {
     async create({ email, name, password, phone_number, role }: UserEntity): Promise<void> {
         try {
 
-            const userRole = await this.em.findOneOrFail(Role, { name: role.value });
+            const userRole = await this.em.findOne(Role, { name: role.value });
+            if (!userRole)
+                throw new RoleNotFound(ErrorMessage.ROLE_NOT_FOUND)
 
             const user = this.em.create(User, {
                 email: email.value,
@@ -30,15 +33,15 @@ export class MikroUserRepository implements UserRepository {
             return
 
         } catch (err) {
-            if (err instanceof NotFoundError)
-                throw new Error(ErrorMessage.ROLE_NOT_FOUNd)
             throw err
         }
     }
 
 
     async delete(id: number): Promise<void> {
-        const user = this.em.getReference(User, id);
+        const user = await this.em.findOne(User, id);
+        if (!user)
+            throw new UserNotFound(ErrorMessage.ROLE_NOT_FOUND)
         try {
             await this.em.removeAndFlush(user);
         } catch (err) {
@@ -51,6 +54,8 @@ export class MikroUserRepository implements UserRepository {
             const user = UserMapper.toDomain((await this.em.findOneOrFail(User, id, { fields: ["role.name"] })) as User);
             return user
         } catch (err) {
+            if (err instanceof NotFoundError)
+                throw new UserNotFound(ErrorMessage.USER_NOT_FOUND)
             throw err
         }
     }
@@ -60,6 +65,8 @@ export class MikroUserRepository implements UserRepository {
             const user = UserMapper.toDomain((await this.em.findOneOrFail(User, { phone_number: phone }, { fields: ["role.name"] })) as User);
             return user
         } catch (err) {
+            if (err instanceof NotFoundError)
+                throw new UserNotFound(ErrorMessage.USER_NOT_FOUND)
             throw err
         }
     }
@@ -71,6 +78,8 @@ export class MikroUserRepository implements UserRepository {
             const newUser = wrap(u).assign(user)
             return UserMapper.toDomain(newUser as unknown as User);
         } catch (err) {
+            if (err instanceof NotFoundError)
+                throw new UserNotFound(ErrorMessage.USER_NOT_FOUND)
             throw err
         }
     }
