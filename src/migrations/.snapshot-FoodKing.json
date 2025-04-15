@@ -177,7 +177,12 @@
           "primary": false,
           "nullable": false,
           "default": "'Customer'",
-          "enumItems": [],
+          "enumItems": [
+            "Customer",
+            "Manager",
+            "Delivery",
+            "Owner"
+          ],
           "mappedType": "enum"
         }
       },

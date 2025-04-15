@@ -10,7 +10,7 @@ export enum UserRole {
 
 @Entity({ tableName: "Role" })
 export class Role extends BaseModel {
-    @Enum({ items: () => Role, unique: true, default: UserRole.Customer })
+    @Enum({ items: () => UserRole, unique: true, default: UserRole.Customer })
     name: UserRole
 
 }
