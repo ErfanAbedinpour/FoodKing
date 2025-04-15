@@ -1,11 +1,11 @@
-import { publicDecrypt } from "crypto";
 import { UserRole } from "../../../../models";
 
-export class CreateUserCommand{
+export class CreateUserCommand {
     constructor(
-        public name:string,
-        public phone:string,
-        public role:UserRole,
-        public email:string,
-    ){}
+        public name: string,
+        public phone: string,
+        public role: UserRole,
+        public email: string,
+        public password: string,
+    ) { }
 }
