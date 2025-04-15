@@ -7,11 +7,12 @@ import { Comment } from "./comment.model";
 import { Cart } from "./cart.model";
 import { Order } from "./order.model";
 import { Product } from "./product.model";
+import { ArgonHash } from "../modules/auth/infrastructure/hash/argon-hash";
 
 
 @Entity({ tableName: "User" })
 export class User extends BaseModel {
-    // private hashService = new ArgonService()
+    private hashService = new ArgonHash()
 
     @Property({ nullable: false })
     name: string
@@ -50,10 +51,10 @@ export class User extends BaseModel {
     @OneToOne(() => Cart, cart => cart.user)
     cart: Rel<Cart>
 
-    // @BeforeCreate()
-    // async beforeCreate(args: EventArgs<this>) {
-    //     args.entity.password = await this.hashService.hash(args.entity.password)
-    //     args.entity.email = args.entity.email.toLowerCase();
-    //     return args;
-    // }
+    @BeforeCreate()
+    async beforeCreate(args: EventArgs<this>) {
+        args.entity.password = await this.hashService.hash(args.entity.password)
+        args.entity.email = args.entity.email.toLowerCase();
+        return args;
+    }
 }
