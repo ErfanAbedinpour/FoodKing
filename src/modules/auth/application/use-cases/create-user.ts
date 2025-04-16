@@ -2,11 +2,12 @@ import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { CreateUserCommand } from "../../../auth/application/command/createUser.command";
 import { UserRepository } from "../../../users/domain/repository/user.repository";
 import { UserEntity } from "../../../users/domain/entities/user.entity";
-import { BadRequestException } from "@nestjs/common";
+import { BadRequestException, InternalServerErrorException, Logger } from "@nestjs/common";
 import { ErrorMessage } from "../../../../ErrorMessages/Error.enum";
 
 @CommandHandler(CreateUserCommand)
 export class CreateUserUseCase implements ICommandHandler<CreateUserCommand, void> {
+    private readonly logger = new Logger(CreateUserUseCase.name)
     constructor(
         private readonly userRepository: UserRepository,
     ) { }
@@ -22,7 +23,8 @@ export class CreateUserUseCase implements ICommandHandler<CreateUserCommand, voi
             await this.userRepository.create(user);
             return
         } catch (err) {
-            throw err;
+            this.logger.error(err)
+            throw new InternalServerErrorException()
         }
     }
 }
