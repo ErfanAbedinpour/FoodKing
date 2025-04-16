@@ -13,8 +13,13 @@ export class SendOtpUseCase implements ICommandHandler<SendOtpCommand, void> {
         private readonly otpRepository: OtpRepository
     ) { }
 
+
+    private generateOTP() {
+        return Math.floor(Math.random() * (99999 - 10000 + 1) + 10000);
+    }
+
+
     async execute(command: SendOtpCommand): Promise<void> {
-        // const user = 
         try {
 
             const user = await this.userRepository.findByPhone(command.phone);
@@ -23,11 +28,9 @@ export class SendOtpUseCase implements ICommandHandler<SendOtpCommand, void> {
                 throw new BadRequestException(ErrorMessage.USER_NOT_FOUND);
 
 
-
-
-            const otpCode = new Otp("random", 2 * 60 * 1000 + Date.now());
+            const otpCode = new Otp(this.generateOTP().toString(), 2 * 60 * 1000 + Date.now());
             this.otpRepository.save(user.phone_number.value, otpCode);
-            console.log('code is ', otpCode);
+            console.log('code is ', otpCode.code);
             return
         } catch (err) {
             throw err;
