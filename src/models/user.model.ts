@@ -1,20 +1,21 @@
-import { BeforeCreate, Collection, Entity, EventArgs,  OneToMany, OneToOne, Property, Rel } from "@mikro-orm/core";
+import { BeforeCreate, Collection, Entity, EventArgs, OneToMany, OneToOne, Property, Rel } from "@mikro-orm/core";
 import { BaseModel } from "./base.model";
-import {  Role} from "./role.model";
+import { Role } from "./role.model";
 import { Address } from "./address.model";
 import { Session } from "./user-session";
 import { Comment } from "./comment.model";
 import { Cart } from "./cart.model";
 import { Order } from "./order.model";
 import { Product } from "./product.model";
+import { ArgonHash } from "../modules/auth/infrastructure/HashStrategies/argon-hash";
 
 
 @Entity({ tableName: "User" })
-export class User extends BaseModel{
-    // private hashService = new ArgonService()
+export class User extends BaseModel {
+    private hashService = new ArgonHash()
 
-    @Property({nullable:false})
-    name:string
+    @Property({ nullable: false })
+    name: string
 
     @Property({ unique: true, nullable: false })
     email: string
@@ -23,13 +24,13 @@ export class User extends BaseModel{
     password: string
 
     @OneToOne({ entity: () => Role, nullable: false, fieldName: "role_id", owner: true, deleteRule: "set default" })
-    role: Rel<Role >
+    role: Rel<Role>
 
-    @Property({nullable:false,unique:true})
-    phone_number:string
+    @Property({ nullable: false, unique: true })
+    phone_number: string
 
     @Property({})
-    is_active:boolean
+    is_active: boolean
 
     @OneToMany(() => Product, (product) => product.user)
     products = new Collection<Product>(this)
@@ -38,7 +39,7 @@ export class User extends BaseModel{
     addresses = new Collection<Address>(this)
 
 
-    @OneToMany(()=>Session,s=>s.user)
+    @OneToMany(() => Session, s => s.user)
     sessions = new Collection<Session>(this)
 
     @OneToMany(() => Order, order => order.user)
@@ -49,11 +50,11 @@ export class User extends BaseModel{
 
     @OneToOne(() => Cart, cart => cart.user)
     cart: Rel<Cart>
-    
-    // @BeforeCreate()
-    // async beforeCreate(args: EventArgs<this>) {
-    //     args.entity.password = await this.hashService.hash(args.entity.password)
-    //     args.entity.email = args.entity.email.toLowerCase();
-    //     return args;
-    // }
+
+    @BeforeCreate()
+    async beforeCreate(args: EventArgs<this>) {
+        args.entity.password = await this.hashService.hash(args.entity.password)
+        args.entity.email = args.entity.email.toLowerCase();
+        return args;
+    }
 }

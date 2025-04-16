@@ -177,7 +177,12 @@
           "primary": false,
           "nullable": false,
           "default": "'Customer'",
-          "enumItems": [],
+          "enumItems": [
+            "Customer",
+            "Manager",
+            "Delivery",
+            "Owner"
+          ],
           "mappedType": "enum"
         }
       },
@@ -372,13 +377,21 @@
         },
         "token": {
           "name": "token",
-          "type": "varchar(255)",
+          "type": "text",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": 255,
-          "mappedType": "string"
+          "mappedType": "text"
+        },
+        "token_id": {
+          "name": "token_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "uuid"
         },
         "user_id": {
           "name": "user_id",
@@ -391,6 +404,15 @@
         },
         "created_at": {
           "name": "created_at",
+          "type": "bigint",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "bigint"
+        },
+        "exp": {
+          "name": "exp",
           "type": "bigint",
           "unsigned": false,
           "autoincrement": false,
