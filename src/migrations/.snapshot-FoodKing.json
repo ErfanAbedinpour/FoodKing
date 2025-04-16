@@ -385,6 +385,16 @@
           "length": 255,
           "mappedType": "string"
         },
+        "token_id": {
+          "name": "token_id",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 255,
+          "mappedType": "string"
+        },
         "user_id": {
           "name": "user_id",
           "type": "int",
@@ -396,6 +406,15 @@
         },
         "created_at": {
           "name": "created_at",
+          "type": "bigint",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "bigint"
+        },
+        "exp": {
+          "name": "exp",
           "type": "bigint",
           "unsigned": false,
           "autoincrement": false,
