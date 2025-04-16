@@ -16,6 +16,7 @@ export class MikroOrmUserSessionRepository implements UserSessionRepository {
             await this.em.persistAndFlush(session)
             return
         } catch (err) {
+            console.error('error in here', err)
             throw err;
         }
     }

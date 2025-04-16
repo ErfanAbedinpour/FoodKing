@@ -6,10 +6,10 @@ export class Session {
     @PrimaryKey()
     id!: number
 
-    @Property()
+    @Property({ type: "text" })
     token: string
 
-    @Property()
+    @Property({ type: 'uuid' })
     tokenId: string
 
     @ManyToOne(() => User, { deleteRule: "cascade", updateRule: "cascade" })

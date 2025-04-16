@@ -1,16 +1,17 @@
-import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
+import { CommandBus, CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { UserRepository } from "../../../users/domain/repository/user.repository";
 import { BadRequestException } from "@nestjs/common";
 import { ErrorMessage } from "../../../../ErrorMessages/Error.enum";
 import { VerifyOtpCommand } from "../command/verify-otp.command";
 import { OtpRepository } from "../../domain/repository/opt-repository";
-import { randomUUID } from "crypto";
+import { GenerateUserTokenCommand } from "../command/generate-user-token.command";
 
 @CommandHandler(VerifyOtpCommand)
 export class VerifyOtpUseCase implements ICommandHandler<VerifyOtpCommand> {
     constructor(
         private readonly userRepository: UserRepository,
-        private readonly otpRepository: OtpRepository
+        private readonly otpRepository: OtpRepository,
+        private readonly commandBus: CommandBus
     ) { }
 
     async execute(command: VerifyOtpCommand) {
@@ -22,24 +23,13 @@ export class VerifyOtpUseCase implements ICommandHandler<VerifyOtpCommand> {
 
             const user = await this.userRepository.findByPhone(command.phone);
             // here should generated Token
-            // TODO: Write AccessToken And RefreshToken
-            const AccessTokenPayload = {
-                id: user?.id,
-                name: user?.name,
-            }
 
-            const tokenId = randomUUID()
+            if (!user)
+                throw new Error()
 
-            const refreshTokenPayload = {
-                tokenId,
-            }
-
-            return {
-                accessToken: AccessTokenPayload,
-                refreshToken: refreshTokenPayload
-            }
-
+            return this.commandBus.execute(new GenerateUserTokenCommand(+user.id.toString(), user.name, user.role.value))
         } catch (err) {
+
             throw err;
         }
     }

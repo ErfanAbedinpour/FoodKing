@@ -8,11 +8,16 @@ import { OtpRepository } from "./domain/repository/opt-repository";
 import { MemoryOtpRepository } from "./infrastructure/repository/memory.otp.repository";
 import { VerifyOtpUseCase } from "./application/use-cases/verify-otp";
 import { SendOtpUseCase } from "./application/use-cases/send-otp";
+import { JwtModule } from "@nestjs/jwt";
+import { UserSessionRepository } from "./domain/repository/user-session.repository";
+import { MikroOrmUserSessionRepository } from "./infrastructure/repository/mikro-orm-user-session.repository";
+import { GenerateTokenUseCase } from "./application/use-cases/generateUserToken";
 
 @Module({
-    imports: [UserModule],
+    imports: [UserModule, JwtModule.register({})],
     controllers: [AuthController],
     providers: [
+        GenerateTokenUseCase,
         CreateUserUseCase,
         SendOtpUseCase,
         VerifyOtpUseCase,
@@ -23,6 +28,10 @@ import { SendOtpUseCase } from "./application/use-cases/send-otp";
         {
             provide: OtpRepository,
             useClass: MemoryOtpRepository
+        },
+        {
+            provide: UserSessionRepository,
+            useClass: MikroOrmUserSessionRepository
         }
     ]
 })
