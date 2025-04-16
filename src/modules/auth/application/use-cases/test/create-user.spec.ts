@@ -4,15 +4,10 @@ import { UserRepository } from '../../../../users/domain/repository/user.reposit
 import { UserEntity } from '../../../../users/domain/entities/user.entity'
 import { BadRequestException } from '@nestjs/common'
 import { ErrorMessage } from '../../../../../ErrorMessages/Error.enum'
+import { userRepository } from './mocks/user-repository.mock'
 describe("CreateUserUseCase", () => {
 
-    let userRepository: UserRepository = {
-        create: jest.fn(),
-        update: jest.fn(),
-        delete: jest.fn(),
-        findById: jest.fn(),
-        findByPhone: jest.fn()
-    }
+
 
     let createUserUseCase: CreateUserUseCase;
 
