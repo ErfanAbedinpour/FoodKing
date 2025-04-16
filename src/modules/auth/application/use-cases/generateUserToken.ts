@@ -1,6 +1,6 @@
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { UserSessionRepository } from "../../domain/repository/user-session.repository";
-import { Injectable, Logger } from "@nestjs/common";
+import { HttpException, Injectable, InternalServerErrorException, Logger } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { IAccessTokenPayload } from "../interfaces/accessTokenPayload";
 import { randomUUID } from "crypto";
@@ -42,9 +42,10 @@ export class GenerateTokenUseCase implements ICommandHandler<GenerateUserTokenCo
             }
 
         } catch (err) {
+            if (err instanceof HttpException)
+                throw err
             this.logger.error(err)
-            // console.error(err)
-            throw err;
+            throw new InternalServerErrorException()
         }
 
     }
