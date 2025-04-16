@@ -14,7 +14,7 @@ export class SendOtpUseCase implements ICommandHandler<SendOtpCommand, void> {
     ) { }
 
 
-    private generateOTP() {
+    generateOTP() {
         return Math.floor(Math.random() * (99999 - 10000 + 1) + 10000);
     }
 
@@ -29,7 +29,7 @@ export class SendOtpUseCase implements ICommandHandler<SendOtpCommand, void> {
 
 
             const otpCode = new Otp(this.generateOTP().toString(), 2 * 60 * 1000 + Date.now());
-            this.otpRepository.save(user.phone_number.value, otpCode);
+            this.otpRepository.save(command.phone, otpCode);
             console.log('code is ', otpCode.code);
             return
         } catch (err) {
