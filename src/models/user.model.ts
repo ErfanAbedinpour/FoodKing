@@ -23,7 +23,7 @@ export class User extends BaseModel {
     @Property({ hidden: true, lazy: true, nullable: false })
     password: string
 
-    @OneToOne({ entity: () => Role, nullable: false, fieldName: "role_id", owner: true, deleteRule: "set default" })
+    @OneToOne({ entity: () => Role, nullable: false, fieldName: "role_id", owner: true, deleteRule: "set default", unique: false })
     role: Rel<Role>
 
     @Property({ nullable: false, unique: true })

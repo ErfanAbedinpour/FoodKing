@@ -317,16 +317,6 @@
         },
         {
           "columnNames": [
-            "role_id"
-          ],
-          "composite": false,
-          "keyName": "User_role_id_unique",
-          "constraint": true,
-          "primary": false,
-          "unique": true
-        },
-        {
-          "columnNames": [
             "phone_number"
           ],
           "composite": false,
