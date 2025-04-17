@@ -1,0 +1,85 @@
+
+version: '4.2.0'
+
+services:
+  app:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - ${PORT}:3000
+    depends_on:
+      - psql
+    volumes:
+      - .:/app
+      - public-data:/app/public
+    networks:
+      - app
+    command: ["pnpm", "run","start:dev"]
+
+  migration:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: "no"
+    command: sh -c "pnpm run migrate:create && pnpm run migrate:up"
+    profiles:
+      - migration
+    networks:
+      - app
+    depends_on:
+      - psql
+    volumes:
+      - .:/app
+  seed:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    profiles:
+      - seed
+    restart: "no"
+    command: "pnpm run seed"
+    networks:
+      - app
+    depends_on:
+      - psql
+    volumes:
+      - .:/app
+      
+  psql:
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=${PG_PASSWORD}
+      - POSTGRES_USER=${PG_USER}
+      - POSTGRES_DB=${PG_DBNAME}
+    ports:
+      - ${PG_PORT}:5432
+    volumes:
+      - db:/var/lib/postgresql/data
+    networks:
+      - app
+
+  adminer:
+    image: adminer
+    restart: always
+    depends_on:
+      - psql
+    environment:
+      ADMINER_DEFAULT_SERVER: psql
+    ports:
+      - 8080:8080
+    networks:
+      - app
+
+volumes:
+  app:
+  db:
+  public-data:
+
+networks:
+  app:
+    driver: bridge
