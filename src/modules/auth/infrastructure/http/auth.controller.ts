@@ -10,7 +10,6 @@ import { ApiBadRequestResponse, ApiCreatedResponse, ApiOkResponse } from "@nestj
 
 @Controller("auth")
 export class AuthController {
-
     constructor(
         private readonly commandBus: CommandBus
     ) { }

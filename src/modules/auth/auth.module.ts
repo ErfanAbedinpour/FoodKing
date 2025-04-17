@@ -13,6 +13,8 @@ import { UserSessionRepository } from "./domain/repository/user-session.reposito
 import { MikroOrmUserSessionRepository } from "./infrastructure/repository/mikro-orm-user-session.repository";
 import { GenerateTokenUseCase } from "./application/use-cases/generateUserToken";
 import { JwtVerificationGuard } from "./infrastructure/http/guards/jwt-verification.guard";
+import { APP_GUARD } from "@nestjs/core";
+import { AuthorizationGuard } from "./infrastructure/http/guards/authorization.guard";
 
 @Module({
     imports: [UserModule, JwtModule.register({})],
@@ -23,6 +25,10 @@ import { JwtVerificationGuard } from "./infrastructure/http/guards/jwt-verificat
         SendOtpUseCase,
         VerifyOtpUseCase,
         JwtVerificationGuard,
+        {
+            provide: APP_GUARD,
+            useClass: AuthorizationGuard
+        },
         {
             provide: Hashing,
             useClass: ArgonHash
