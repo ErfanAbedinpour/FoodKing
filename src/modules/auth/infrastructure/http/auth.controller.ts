@@ -15,7 +15,7 @@ export class AuthController {
         private readonly commandBus: CommandBus
     ) { }
 
-    @Post("singup")
+    @Post("signup")
     @ApiCreatedResponse({ description: "user Created successfully", schema: { type: "object", properties: { msg: { type: 'string' } } } })
     @ApiBadRequestResponse({ description: "BadRequest Exception" })
     async register(@Body() createdUserDto: CreateUserDTO) {
@@ -23,7 +23,7 @@ export class AuthController {
         return { msg: "user registered successfully" };
     }
 
-    @Post("send-otp")
+    @Post("signin")
     @HttpCode(HttpStatus.OK)
     @ApiOkResponse({ description: "OTP Sended successfully", schema: { type: "object", properties: { msg: { type: 'string' } } } })
     @ApiBadRequestResponse({ description: "BadRequest Exception" })
@@ -33,7 +33,7 @@ export class AuthController {
     }
 
 
-    @Post("verify-otp")
+    @Post("verify")
     @HttpCode(HttpStatus.OK)
     @ApiOkResponse({ description: "user verified successfully", schema: { type: "object", properties: { accessToken: { type: 'string' }, refreshToken: { type: "string" } } } })
     @ApiBadRequestResponse({ description: "BadRequest Exception" })
