@@ -12,6 +12,7 @@
     "baseUrl": "./",
      "paths": {
       "@models/*": ["src/models/*"],
+      "@errors": ["src/ErrorMessages/Error.enum.ts"],
     },
     "incremental": true,
     "skipLibCheck": true,

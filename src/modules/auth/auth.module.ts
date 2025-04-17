@@ -15,6 +15,7 @@ import { GenerateTokenUseCase } from "./application/use-cases/generateUserToken"
 import { JwtVerificationGuard } from "./infrastructure/http/guards/jwt-verification.guard";
 import { APP_GUARD } from "@nestjs/core";
 import { AuthorizationGuard } from "./infrastructure/http/guards/authorization.guard";
+import { RoleAccessGuard } from "./infrastructure/http/guards/role-access.guard";
 
 @Module({
     imports: [UserModule, JwtModule.register({})],
@@ -28,6 +29,10 @@ import { AuthorizationGuard } from "./infrastructure/http/guards/authorization.g
         {
             provide: APP_GUARD,
             useClass: AuthorizationGuard
+        },
+        {
+            provide: APP_GUARD,
+            useClass: RoleAccessGuard
         },
         {
             provide: Hashing,
