@@ -9,7 +9,7 @@ export class AuthorizationGuard implements CanActivate {
 
     async canActivate(ctx: ExecutionContext): Promise<boolean> {
 
-        const isAuthMeta = this.reflector.getAll<boolean[]>(AuthToken, [ctx.getClass(), ctx.getHandler()]) || [false]
+        const isAuthMeta = this.reflector.getAll<boolean[]>(AuthToken, [ctx.getClass(), ctx.getHandler()]) || [undefined]
 
         for (const meta of isAuthMeta) {
             try {
