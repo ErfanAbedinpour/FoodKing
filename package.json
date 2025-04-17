@@ -87,7 +87,8 @@
       "**/*.(t|j)s"
     ],
     "moduleNameMapper": {
-      "^@models": "<rootDir>/models"
+      "^@models": "<rootDir>/models",
+      "@error":"<rootDir>/ErrorMessages/Error.enum.ts"
     },
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
