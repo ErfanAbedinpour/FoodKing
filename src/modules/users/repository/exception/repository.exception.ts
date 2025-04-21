@@ -1,4 +1,4 @@
-export class RoleNotFound extends Error {
+export class RepositoryException extends Error {
     constructor(message: string) {
         super(message)
     }

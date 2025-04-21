@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
-import { UserRepository } from "./domain/repository/user.repository";
-import { MikroUserRepository } from "./infrastructure/repository/user-mikro-orm.repository";
+import { MikroUserRepository } from "./repository/user-mikro-orm.repository";
+import { UserRepository } from "./repository/user.repository";
 
 @Module({
     providers: [
