@@ -1,15 +1,14 @@
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
-import { UserRepository } from "../../../users/domain/repository/user.repository";
 import { BadRequestException } from "@nestjs/common";
 import { ErrorMessage } from "../../../../ErrorMessages/Error.enum";
 import { SendOtpCommand } from "../command/send-otp.command";
-import { OtpRepository } from "../../domain/repository/opt-repository";
-import { Otp } from "../../domain/value-object/otp.vo";
+import { UserService } from "../../../users/user.service";
+import { OtpRepository } from "../../repository/abstract/opt-repository";
 
 @CommandHandler(SendOtpCommand)
 export class SendOtpUseCase implements ICommandHandler<SendOtpCommand, void> {
     constructor(
-        private readonly userRepository: UserRepository,
+        private readonly userService: UserService,
         private readonly otpRepository: OtpRepository
     ) { }
 
@@ -22,15 +21,16 @@ export class SendOtpUseCase implements ICommandHandler<SendOtpCommand, void> {
     async execute(command: SendOtpCommand): Promise<void> {
         try {
 
-            const user = await this.userRepository.findByPhone(command.phone);
+            const user = await this.userService.findByPhone(command.phone);
 
             if (!user)
                 throw new BadRequestException(ErrorMessage.USER_NOT_FOUND);
 
+            const code = this.generateOTP().toString()
+            this.otpRepository.save(command.phone, code, 2 * 60 * 1000 + Date.now());
 
-            const otpCode = new Otp(this.generateOTP().toString(), 2 * 60 * 1000 + Date.now());
-            this.otpRepository.save(command.phone, otpCode);
-            console.log('code is ', otpCode.code);
+            console.log('code is ', code);
+
             return
         } catch (err) {
             throw err;

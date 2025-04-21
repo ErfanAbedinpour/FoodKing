@@ -1,8 +1,7 @@
 import { EntityManager } from "@mikro-orm/postgresql";
-import { UserSessionRepository } from "../../domain/repository/user-session.repository";
 import { Injectable } from "@nestjs/common";
-import { UserEntity } from "../../../users/domain/entities/user.entity";
 import { Session } from '@models/index'
+import { UserSessionRepository } from "./abstract/user-session.repository";
 
 @Injectable()
 export class MikroOrmUserSessionRepository implements UserSessionRepository {

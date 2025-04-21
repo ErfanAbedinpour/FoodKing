@@ -1,10 +1,10 @@
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
-import { UserSessionRepository } from "../../domain/repository/user-session.repository";
 import { HttpException, Injectable, InternalServerErrorException, Logger } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { IAccessTokenPayload } from "../interfaces/accessTokenPayload";
 import { randomUUID } from "crypto";
 import { GenerateUserTokenCommand } from "../command/generate-user-token.command";
+import { UserSessionRepository } from "../../repository/abstract/user-session.repository";
 
 @Injectable()
 @CommandHandler(GenerateUserTokenCommand)

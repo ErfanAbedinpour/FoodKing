@@ -1,9 +1,9 @@
 import { Body, Controller, HttpCode, HttpStatus, Post } from "@nestjs/common";
 import { CreateUserDTO } from "./DTO/auth.DTO";
 import { CommandBus } from "@nestjs/cqrs";
-import { CreateUserCommand } from "../../application/command/createUser.command";
-import { SendOtpCommand } from "../../application/command/send-otp.command";
-import { VerifyOtpCommand } from "../../application/command/verify-otp.command";
+import { CreateUserCommand } from "./application/command/createUser.command";
+import { SendOtpCommand } from "./application/command/send-otp.command";
+import { VerifyOtpCommand } from "./application/command/verify-otp.command";
 import { SendOtpDTO } from "./DTO/send-otp.DTO";
 import { VerifyOtpDTO } from "./DTO/verify-otp.DTO";
 import { ApiBadRequestResponse, ApiCreatedResponse, ApiOkResponse } from "@nestjs/swagger";

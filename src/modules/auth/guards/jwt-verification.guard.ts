@@ -1,8 +1,8 @@
 import { CanActivate, ExecutionContext, ForbiddenException, Injectable, UnauthorizedException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { Request } from "express";
-import { ErrorMessage } from "../../../../../ErrorMessages/Error.enum";
-import { IAccessTokenPayload } from "../../../application/interfaces/accessTokenPayload";
+import { ErrorMessage } from "../../../ErrorMessages/Error.enum";
+import { IAccessTokenPayload } from "../application/interfaces/accessTokenPayload";
 
 @Injectable()
 export class JwtVerificationGuard implements CanActivate {

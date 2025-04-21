@@ -1,8 +1,8 @@
 import { Test } from '@nestjs/testing'
 import { JwtService } from '@nestjs/jwt'
 import { GenerateTokenUseCase } from '../generateUserToken'
-import { UserSessionRepository } from '../../../domain/repository/user-session.repository'
 import { randomUUID, UUID } from 'crypto'
+import { UserSessionRepository } from '../../../repository/abstract/user-session.repository'
 
 jest.mock('crypto', () => ({
     ...jest.requireActual('crypto'),

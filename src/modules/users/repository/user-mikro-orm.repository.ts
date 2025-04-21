@@ -1,5 +1,5 @@
 import { EntityManager, NotFoundError, wrap } from "@mikro-orm/postgresql";
-import { Role, User } from '@models/index'
+import { Role, User, UserRole } from '@models/index'
 import { Injectable } from "@nestjs/common";
 import { ErrorMessage } from "../../../ErrorMessages/Error.enum";
 import { UserRepository } from "./user.repository";
@@ -10,10 +10,10 @@ import { RepositoryException } from "./exception/repository.exception";
 export class MikroUserRepository implements UserRepository {
     constructor(private readonly em: EntityManager) { }
 
-    async create({ email, name, password, phone_number, role }: UserPersist): Promise<User> {
+    async create({ email, name, password, phone_number, role }: UserPersist): Promise<void> {
         try {
 
-            const userRole = await this.em.findOne(Role, { name: role });
+            const userRole = await this.em.findOne(Role, { name: role || UserRole.Customer });
 
             if (!userRole)
                 throw new RepositoryException(ErrorMessage.ROLE_NOT_FOUND)
@@ -27,8 +27,6 @@ export class MikroUserRepository implements UserRepository {
                 cart: {}
             })
             await this.em.persistAndFlush(user)
-
-            return user;
 
         } catch (err) {
             throw err

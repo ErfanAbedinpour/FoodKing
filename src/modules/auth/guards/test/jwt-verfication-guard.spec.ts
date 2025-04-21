@@ -2,7 +2,7 @@ import { JwtService } from "@nestjs/jwt"
 import { Test } from '@nestjs/testing'
 import { JwtVerificationGuard } from "../jwt-verification.guard"
 import { ExecutionContext, ForbiddenException, UnauthorizedException } from "@nestjs/common"
-import { ErrorMessage } from "../../../../../../ErrorMessages/Error.enum"
+import { ErrorMessage } from "../../../../ErrorMessages/Error.enum"
 import { Request } from "express"
 
 describe("JWT Verification Guard", () => {

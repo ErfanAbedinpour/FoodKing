@@ -1,12 +1,12 @@
 import { Test } from '@nestjs/testing'
-import { UserRepository } from '../../../../users/domain/repository/user.repository'
 import { SendOtpUseCase } from '../send-otp'
-import { OtpRepository } from '../../../domain/repository/opt-repository'
-import { userRepository } from './mocks/user-repository.mock'
-import { otpRepository } from './mocks/otp-repository.mock'
-import { UserEntity } from '../../../../users/domain/entities/user.entity'
 import { BadRequestException } from '@nestjs/common'
 import { ErrorMessage } from '../../../../../ErrorMessages/Error.enum'
+import { UserService } from '../../../../users/user.service'
+import { userService } from './mocks/user-service.mock'
+import { OtpRepository } from '../../../repository/abstract/opt-repository'
+import { otpRepository } from './mocks/otp-repository.mock'
+import { User } from '../../../../../models'
 
 describe("SendOTPUseCase", () => {
 
@@ -18,8 +18,8 @@ describe("SendOTPUseCase", () => {
             providers: [
                 SendOtpUseCase,
                 {
-                    provide: UserRepository,
-                    useValue: userRepository
+                    provide: UserService,
+                    useValue: userService
                 },
                 {
                     provide: OtpRepository,
@@ -33,13 +33,13 @@ describe("SendOTPUseCase", () => {
 
     it("Should be defined", () => {
         expect(sendOtpUseCase).toBeDefined()
-        expect(userRepository).toBeDefined()
+        expect(userService).toBeDefined()
         expect(otpRepository).toBeDefined()
     })
 
 
     it("Should be throw BadRequest because use does not found", () => {
-        jest.spyOn(userRepository, 'findByPhone').mockResolvedValueOnce(null)
+        jest.spyOn(userService, 'findByPhone').mockResolvedValueOnce(null)
 
 
         expect(sendOtpUseCase.execute({ phone: 'test-phone' })).rejects.toThrow(BadRequestException)
@@ -48,13 +48,13 @@ describe("SendOTPUseCase", () => {
 
 
     it("Should be Send OTP for User", async () => {
-        const user = UserEntity.create('test', 'test', '1234', '12341234')
-        jest.spyOn(userRepository, 'findByPhone').mockResolvedValueOnce(user)
+        const user = { name: "test", email: "test-mail", phone_number: "1234", password: '12341324' }
+        jest.spyOn(userService, 'findByPhone').mockResolvedValueOnce(user as User)
         jest.spyOn(otpRepository, 'save').mockReturnValue()
 
         const res = await sendOtpUseCase.execute({ phone: '1234' })
 
-        expect(userRepository.findByPhone).toHaveBeenCalledWith('1234')
+        expect(userService.findByPhone).toHaveBeenCalledWith('1234')
         expect(otpRepository.save).toHaveBeenCalled()
         expect(res).toBeUndefined()
     })

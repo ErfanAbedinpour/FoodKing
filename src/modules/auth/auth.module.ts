@@ -1,21 +1,21 @@
 import { Module } from "@nestjs/common";
 import { UserModule } from "../users/user.module";
-import { Hashing } from "./infrastructure/HashStrategies/hash";
-import { ArgonHash } from "./infrastructure/HashStrategies/argon-hash";
-import { AuthController } from "./infrastructure/http/auth.controller";
-import { CreateUserUseCase } from "./application/use-cases/create-user";
-import { OtpRepository } from "./domain/repository/opt-repository";
-import { MemoryOtpRepository } from "./infrastructure/repository/memory.otp.repository";
-import { VerifyOtpUseCase } from "./application/use-cases/verify-otp";
-import { SendOtpUseCase } from "./application/use-cases/send-otp";
+import { AuthController } from "./auth.controller";
+import { CreateUserUseCase } from "./application/handler/create-user";
+import { VerifyOtpUseCase } from "./application/handler/verify-otp";
+import { SendOtpUseCase } from "./application/handler/send-otp";
 import { JwtModule } from "@nestjs/jwt";
-import { UserSessionRepository } from "./domain/repository/user-session.repository";
-import { MikroOrmUserSessionRepository } from "./infrastructure/repository/mikro-orm-user-session.repository";
-import { GenerateTokenUseCase } from "./application/use-cases/generateUserToken";
-import { JwtVerificationGuard } from "./infrastructure/http/guards/jwt-verification.guard";
+import { GenerateTokenUseCase } from "./application/handler/generateUserToken";
+import { JwtVerificationGuard } from "./guards/jwt-verification.guard";
 import { APP_GUARD } from "@nestjs/core";
-import { AuthorizationGuard } from "./infrastructure/http/guards/authorization.guard";
-import { RoleAccessGuard } from "./infrastructure/http/guards/role-access.guard";
+import { AuthorizationGuard } from "./guards/authorization.guard";
+import { RoleAccessGuard } from "./guards/role-access.guard";
+import { Hashing } from "./hashing/hash";
+import { ArgonHash } from "./hashing/argon-hash";
+import { OtpRepository } from "./repository/abstract/opt-repository";
+import { MemoryOtpRepository } from "./repository/memory.otp.repository";
+import { UserSessionRepository } from "./repository/abstract/user-session.repository";
+import { MikroOrmUserSessionRepository } from "./repository/mikro-orm-user-session.repository";
 
 @Module({
     imports: [UserModule, JwtModule.register({})],

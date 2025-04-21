@@ -1,5 +1,3 @@
-import { UserEntity } from "../../../users/domain/entities/user.entity";
-
 export abstract class UserSessionRepository {
 
     abstract create(user: number, token: string, tokenId: string): Promise<void>
