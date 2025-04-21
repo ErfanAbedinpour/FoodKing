@@ -101,6 +101,16 @@
           "nullable": false,
           "mappedType": "bigint"
         },
+        "slug": {
+          "name": "slug",
+          "type": "varchar(50)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 50,
+          "mappedType": "string"
+        },
         "name": {
           "name": "name",
           "type": "varchar(255)",
@@ -120,13 +130,33 @@
           "nullable": false,
           "length": 255,
           "mappedType": "string"
+        },
+        "is_activate": {
+          "name": "is_activate",
+          "type": "boolean",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "default": "true",
+          "mappedType": "boolean"
         }
       },
-      "name": "Restaurant",
+      "name": "categories",
       "schema": "public",
       "indexes": [
         {
-          "keyName": "Restaurant_pkey",
+          "columnNames": [
+            "slug"
+          ],
+          "composite": false,
+          "keyName": "categories_slug_unique",
+          "constraint": true,
+          "primary": false,
+          "unique": true
+        },
+        {
+          "keyName": "categories_pkey",
           "columnNames": [
             "id"
           ],
@@ -472,16 +502,6 @@
           "nullable": false,
           "mappedType": "bigint"
         },
-        "slug": {
-          "name": "slug",
-          "type": "varchar(50)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 50,
-          "mappedType": "string"
-        },
         "name": {
           "name": "name",
           "type": "varchar(255)",
@@ -502,18 +522,18 @@
           "length": 255,
           "mappedType": "string"
         },
-        "is_activate": {
-          "name": "is_activate",
-          "type": "boolean",
+        "slug": {
+          "name": "slug",
+          "type": "varchar(255)",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "default": "true",
-          "mappedType": "boolean"
+          "length": 255,
+          "mappedType": "string"
         },
-        "user_id": {
-          "name": "user_id",
+        "owner_id": {
+          "name": "owner_id",
           "type": "int",
           "unsigned": false,
           "autoincrement": false,
@@ -522,7 +542,7 @@
           "mappedType": "integer"
         }
       },
-      "name": "categoryies",
+      "name": "Restaurant",
       "schema": "public",
       "indexes": [
         {
@@ -530,13 +550,13 @@
             "slug"
           ],
           "composite": false,
-          "keyName": "categoryies_slug_unique",
+          "keyName": "Restaurant_slug_unique",
           "constraint": true,
           "primary": false,
           "unique": true
         },
         {
-          "keyName": "categoryies_pkey",
+          "keyName": "Restaurant_pkey",
           "columnNames": [
             "id"
           ],
@@ -548,16 +568,17 @@
       ],
       "checks": [],
       "foreignKeys": {
-        "categoryies_user_id_foreign": {
-          "constraintName": "categoryies_user_id_foreign",
+        "Restaurant_owner_id_foreign": {
+          "constraintName": "Restaurant_owner_id_foreign",
           "columnNames": [
-            "user_id"
+            "owner_id"
           ],
-          "localTableName": "public.categoryies",
+          "localTableName": "public.Restaurant",
           "referencedColumnNames": [
             "id"
           ],
           "referencedTableName": "public.User",
+          "deleteRule": "cascade",
           "updateRule": "cascade"
         }
       },
@@ -727,7 +748,7 @@
           "referencedColumnNames": [
             "id"
           ],
-          "referencedTableName": "public.categoryies",
+          "referencedTableName": "public.categories",
           "deleteRule": "set null",
           "updateRule": "cascade"
         },
