@@ -7,6 +7,8 @@ import { VerifyOtpCommand } from "./application/command/verify-otp.command";
 import { SendOtpDTO } from "./DTO/send-otp.DTO";
 import { VerifyOtpDTO } from "./DTO/verify-otp.DTO";
 import { ApiBadRequestResponse, ApiCreatedResponse, ApiOkResponse } from "@nestjs/swagger";
+import { GenerateTokenDTO } from "./DTO/generate-token.DTO";
+import { GenerateNewTokensCommand } from "./application/command/generate-new-tokens.command";
 
 @Controller("auth")
 export class AuthController {
@@ -45,5 +47,7 @@ export class AuthController {
 
     @Post("/token")
     @HttpCode(HttpStatus.OK)
-    generateToken() { }
+    generateToken(@Body() generateTokenDto: GenerateTokenDTO) {
+        return this.commandBus.execute(new GenerateNewTokensCommand(generateTokenDto.refreshToken));
+    }
 }

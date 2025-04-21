@@ -43,4 +43,20 @@ export class MikroOrmUserSessionRepository implements UserSessionRepository {
         }
 
     }
+
+    async invalidate(tokenId: string): Promise<boolean> {
+        try {
+            const session = await this.em.findOne(Session, { tokenId })
+
+            if (!session)
+                return false
+
+            await this.em.removeAndFlush(session)
+
+            return true;
+        } catch (err) {
+            throw err
+        }
+
+    }
 }
