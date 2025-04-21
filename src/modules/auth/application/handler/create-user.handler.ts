@@ -5,8 +5,8 @@ import { ErrorMessage } from "../../../../ErrorMessages/Error.enum";
 import { UserService } from "../../../users/user.service";
 
 @CommandHandler(CreateUserCommand)
-export class CreateUserUseCase implements ICommandHandler<CreateUserCommand, void> {
-    private readonly logger = new Logger(CreateUserUseCase.name)
+export class CreateUserHandler implements ICommandHandler<CreateUserCommand, void> {
+    private readonly logger = new Logger(CreateUserHandler.name)
 
     constructor(
         private readonly userService: UserService,

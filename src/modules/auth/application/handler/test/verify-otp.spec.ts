@@ -1,6 +1,6 @@
 import { Test } from '@nestjs/testing'
 import { otpRepository } from './mocks/otp-repository.mock'
-import { VerifyOtpUseCase } from '../verify-otp'
+import { VerifyOtpHandler as VerifyOtpUseCase } from '../verify-otp.handler'
 import { CommandBus } from '@nestjs/cqrs'
 import { VerifyOtpCommand } from '../../command/verify-otp.command'
 import { BadRequestException } from '@nestjs/common'

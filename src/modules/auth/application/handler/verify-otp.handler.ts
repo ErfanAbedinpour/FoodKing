@@ -7,8 +7,8 @@ import { UserService } from "../../../users/user.service";
 import { OtpRepository } from "../../repository/abstract/opt-repository";
 
 @CommandHandler(VerifyOtpCommand)
-export class VerifyOtpUseCase implements ICommandHandler<VerifyOtpCommand> {
-    private logger = new Logger(VerifyOtpUseCase.name)
+export class VerifyOtpHandler implements ICommandHandler<VerifyOtpCommand> {
+    private logger = new Logger(VerifyOtpHandler.name)
 
     constructor(
         private readonly userService: UserService,

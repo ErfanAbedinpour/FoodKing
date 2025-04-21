@@ -1,5 +1,5 @@
 import { Test } from '@nestjs/testing'
-import { CreateUserUseCase } from '../create-user'
+import { CreateUserHandler as CreateUserUseCase } from '../create-user.handler'
 import { BadRequestException } from '@nestjs/common'
 import { ErrorMessage } from '../../../../../ErrorMessages/Error.enum'
 import { UserService } from '../../../../users/user.service'

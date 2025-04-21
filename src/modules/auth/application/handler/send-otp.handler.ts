@@ -1,12 +1,14 @@
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
-import { BadRequestException } from "@nestjs/common";
+import { BadRequestException, HttpException, InternalServerErrorException, Logger } from "@nestjs/common";
 import { ErrorMessage } from "../../../../ErrorMessages/Error.enum";
 import { SendOtpCommand } from "../command/send-otp.command";
 import { UserService } from "../../../users/user.service";
 import { OtpRepository } from "../../repository/abstract/opt-repository";
 
 @CommandHandler(SendOtpCommand)
-export class SendOtpUseCase implements ICommandHandler<SendOtpCommand, void> {
+export class SendOtpHandler implements ICommandHandler<SendOtpCommand, { code: string }> {
+    private readonly logger = new Logger(SendOtpHandler.name);
+
     constructor(
         private readonly userService: UserService,
         private readonly otpRepository: OtpRepository
@@ -18,7 +20,7 @@ export class SendOtpUseCase implements ICommandHandler<SendOtpCommand, void> {
     }
 
 
-    async execute(command: SendOtpCommand): Promise<void> {
+    async execute(command: SendOtpCommand): Promise<{ code: string }> {
         try {
 
             const user = await this.userService.findByPhone(command.phone);
@@ -31,9 +33,12 @@ export class SendOtpUseCase implements ICommandHandler<SendOtpCommand, void> {
 
             console.log('code is ', code);
 
-            return
+            return { code }
         } catch (err) {
-            throw err;
+            if (err instanceof HttpException)
+                throw err
+            this.logger.error(err)
+            throw new InternalServerErrorException()
         }
     }
 }

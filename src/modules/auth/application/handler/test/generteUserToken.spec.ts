@@ -1,6 +1,6 @@
 import { Test } from '@nestjs/testing'
 import { JwtService } from '@nestjs/jwt'
-import { GenerateTokenUseCase } from '../generateUserToken'
+import { GenerateTokenHandler as GenerateTokenUseCase } from '../generateUserToken.handler'
 import { randomUUID, UUID } from 'crypto'
 import { UserSessionRepository } from '../../../repository/abstract/user-session.repository'
 

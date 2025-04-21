@@ -1,5 +1,5 @@
 import { Test } from '@nestjs/testing'
-import { SendOtpUseCase } from '../send-otp'
+import { SendOtpHandler as SendOtpUseCase } from '../send-otp.handler'
 import { BadRequestException } from '@nestjs/common'
 import { ErrorMessage } from '../../../../../ErrorMessages/Error.enum'
 import { UserService } from '../../../../users/user.service'
@@ -56,7 +56,7 @@ describe("SendOTPUseCase", () => {
 
         expect(userService.findByPhone).toHaveBeenCalledWith('1234')
         expect(otpRepository.save).toHaveBeenCalled()
-        expect(res).toBeUndefined()
+        expect(res).toHaveProperty('code')
     })
 
 })

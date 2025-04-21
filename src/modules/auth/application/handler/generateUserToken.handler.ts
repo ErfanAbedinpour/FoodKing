@@ -8,10 +8,10 @@ import { UserSessionRepository } from "../../repository/abstract/user-session.re
 
 @Injectable()
 @CommandHandler(GenerateUserTokenCommand)
-export class GenerateTokenUseCase implements ICommandHandler<GenerateUserTokenCommand> {
+export class GenerateTokenHandler implements ICommandHandler<GenerateUserTokenCommand> {
     constructor(private readonly sessionRepository: UserSessionRepository, private readonly jwt: JwtService) { }
 
-    private readonly logger = new Logger(GenerateTokenUseCase.name);
+    private readonly logger = new Logger(GenerateTokenHandler.name);
 
     async execute({ name, role, userId }: GenerateUserTokenCommand): Promise<{ accessToken: string, refreshToken: string }> {
 
