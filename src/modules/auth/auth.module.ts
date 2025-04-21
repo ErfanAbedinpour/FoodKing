@@ -1,30 +1,30 @@
 import { Module } from "@nestjs/common";
 import { UserModule } from "../users/user.module";
-import { Hashing } from "./infrastructure/HashStrategies/hash";
-import { ArgonHash } from "./infrastructure/HashStrategies/argon-hash";
-import { AuthController } from "./infrastructure/http/auth.controller";
-import { CreateUserUseCase } from "./application/use-cases/create-user";
-import { OtpRepository } from "./domain/repository/opt-repository";
-import { MemoryOtpRepository } from "./infrastructure/repository/memory.otp.repository";
-import { VerifyOtpUseCase } from "./application/use-cases/verify-otp";
-import { SendOtpUseCase } from "./application/use-cases/send-otp";
-import { JwtModule } from "@nestjs/jwt";
-import { UserSessionRepository } from "./domain/repository/user-session.repository";
-import { MikroOrmUserSessionRepository } from "./infrastructure/repository/mikro-orm-user-session.repository";
-import { GenerateTokenUseCase } from "./application/use-cases/generateUserToken";
-import { JwtVerificationGuard } from "./infrastructure/http/guards/jwt-verification.guard";
+import { AuthController } from "./auth.controller";
+import { JwtVerificationGuard } from "./guards/jwt-verification.guard";
 import { APP_GUARD } from "@nestjs/core";
-import { AuthorizationGuard } from "./infrastructure/http/guards/authorization.guard";
-import { RoleAccessGuard } from "./infrastructure/http/guards/role-access.guard";
+import { AuthorizationGuard } from "./guards/authorization.guard";
+import { RoleAccessGuard } from "./guards/role-access.guard";
+import { Hashing } from "./hashing/hash";
+import { ArgonHash } from "./hashing/argon-hash";
+import { OtpRepository } from "./repository/abstract/opt-repository";
+import { MemoryOtpRepository } from "./repository/memory.otp.repository";
+import { UserSessionRepository } from "./repository/abstract/user-session.repository";
+import { MikroOrmUserSessionRepository } from "./repository/mikro-orm-user-session.repository";
+import { GenerateTokenHandler } from "./application/handler/generateUserToken.handler";
+import { JwtModule } from "@nestjs/jwt";
+import { CreateUserHandler } from "./application/handler/create-user.handler";
+import { SendOtpHandler } from "./application/handler/send-otp.handler";
+import { VerifyOtpHandler } from "./application/handler/verify-otp.handler";
 
 @Module({
     imports: [UserModule, JwtModule.register({})],
     controllers: [AuthController],
     providers: [
-        GenerateTokenUseCase,
-        CreateUserUseCase,
-        SendOtpUseCase,
-        VerifyOtpUseCase,
+        GenerateTokenHandler,
+        CreateUserHandler,
+        SendOtpHandler,
+        VerifyOtpHandler,
         JwtVerificationGuard,
         {
             provide: APP_GUARD,

@@ -7,7 +7,7 @@ import { Comment } from "./comment.model";
 import { Cart } from "./cart.model";
 import { Order } from "./order.model";
 import { Product } from "./product.model";
-import { ArgonHash } from "../modules/auth/infrastructure/HashStrategies/argon-hash";
+import { ArgonHash } from "../modules/auth/hashing/argon-hash";
 
 
 @Entity({ tableName: "User" })
