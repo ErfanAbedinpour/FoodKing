@@ -27,8 +27,8 @@ export class AuthController {
     @ApiOkResponse({ description: "OTP Sended successfully", schema: { type: "object", properties: { msg: { type: 'string' } } } })
     @ApiBadRequestResponse({ description: "BadRequest Exception" })
     async sendOTP(@Body() sendOtp: SendOtpDTO) {
-        await this.commandBus.execute(new SendOtpCommand(sendOtp.phone));
-        return { msg: "Otp Sended successfully" }
+        const { code } = await this.commandBus.execute(new SendOtpCommand(sendOtp.phone));
+        return { msg: "Otp Sended successfully", code }
     }
 
 

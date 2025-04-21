@@ -10,21 +10,23 @@ export class RoleAccessGuard implements CanActivate {
     constructor(private readonly reflector: Reflector) { }
     async canActivate(ctx: ExecutionContext) {
 
-        const roleMeta = this.reflector.getAll<UserRole[]>(ROLE_ACCESS, [ctx.getClass(), ctx.getHandler()]) || undefined
+        const roleMeta = this.reflector.getAll<UserRole[]>(ROLE_ACCESS, [ctx.getClass(), ctx.getHandler()]) || [undefined]
 
         if (!roleMeta)
             return true;
 
         const req = ctx.switchToHttp().getRequest<Request>()
 
-        const isAccess = roleMeta.every(role => req.user.role === role);
+        for (const meta of roleMeta) {
+            if (!meta)
+                continue
+
+            else if (meta !== req.user.role)
+                throw new ForbiddenException(ErrorMessage.INVALID_ACCESS)
+        }
 
         try {
-            if (!isAccess)
-                throw new ForbiddenException(ErrorMessage.INVALID_ACCESS)
-
             return true;
-
         } catch (err) {
             throw err
         }
