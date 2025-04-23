@@ -19,7 +19,7 @@ import { AuthModule } from './modules/auth/auth.module';
     }),
     MikroOrmModule.forRoot(),
     UserModule,
-    AuthModule
+    AuthModule,
   ],
   controllers: [AppController]
 
