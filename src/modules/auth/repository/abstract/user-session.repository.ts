@@ -5,4 +5,6 @@ export abstract class UserSessionRepository {
     abstract destroy(tokenId: string): Promise<void>
 
     abstract isValidate(tokenId: string): Promise<boolean>
+
+    abstract invalidate(tokenId: string): Promise<boolean>
 }
