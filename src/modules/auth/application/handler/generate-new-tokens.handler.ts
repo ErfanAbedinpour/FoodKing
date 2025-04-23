@@ -12,8 +12,8 @@ import { GenerateUserTokenCommand } from "../command/generate-user-token.command
 export class GenerateNewTokensHandler implements ICommandHandler<GenerateNewTokensCommand, { accessToken: string, refreshToken: string }> {
 
     constructor(
-        private readonly jwtService: JwtService
-        , private readonly sessionRepo: UserSessionRepository,
+        private readonly jwtService: JwtService,
+        private readonly sessionRepo: UserSessionRepository,
         private readonly userService: UserService,
         private readonly commandBus: CommandBus
     ) { }
