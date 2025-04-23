@@ -6,5 +6,5 @@ export enum ErrorMessage {
     INVALID_HEADER = "Header is empty or is not Bearer",
     INVALID_TOKEN = "Token in invalid or expired.",
     INVALID_ACCESS = "You Have not access to this route",
-
+    INVALID_REFRESH_TOKEN = "Token is invalid please login again."
 }

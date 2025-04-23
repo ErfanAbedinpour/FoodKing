@@ -16,6 +16,7 @@ import { JwtModule } from "@nestjs/jwt";
 import { CreateUserHandler } from "./application/handler/create-user.handler";
 import { SendOtpHandler } from "./application/handler/send-otp.handler";
 import { VerifyOtpHandler } from "./application/handler/verify-otp.handler";
+import { GenerateNewTokensHandler } from "./application/handler/generate-new-tokens.handler";
 
 @Module({
     imports: [UserModule, JwtModule.register({})],
@@ -26,6 +27,7 @@ import { VerifyOtpHandler } from "./application/handler/verify-otp.handler";
         SendOtpHandler,
         VerifyOtpHandler,
         JwtVerificationGuard,
+        GenerateNewTokensHandler,
         {
             provide: APP_GUARD,
             useClass: AuthorizationGuard

@@ -5,3 +5,7 @@ export interface IAccessTokenPayload {
 
     userId: number
 }
+
+export interface IRefreshTokenPayload extends IAccessTokenPayload {
+    tokenId: string
+}
