@@ -6,7 +6,7 @@ import { SendOtpCommand } from "./application/command/send-otp.command";
 import { VerifyOtpCommand } from "./application/command/verify-otp.command";
 import { SendOtpDTO } from "./DTO/send-otp.DTO";
 import { VerifyOtpDTO } from "./DTO/verify-otp.DTO";
-import { ApiBadRequestResponse, ApiCreatedResponse, ApiOkResponse } from "@nestjs/swagger";
+import { ApiBadRequestResponse, ApiBody, ApiCreatedResponse, ApiOkResponse, ApiUnauthorizedResponse } from "@nestjs/swagger";
 import { GenerateTokenDTO } from "./DTO/generate-token.DTO";
 import { GenerateNewTokensCommand } from "./application/command/generate-new-tokens.command";
 
@@ -44,8 +44,10 @@ export class AuthController {
     }
 
 
-
     @Post("/token")
+    @ApiBody({ type: GenerateTokenDTO })
+    @ApiOkResponse({ description: "token generated successfully", schema: { type: 'object', properties: { accessToken: { type: 'string' }, refreshToken: { type: 'string' } } } })
+    @ApiUnauthorizedResponse({ description: "token is invalid" })
     @HttpCode(HttpStatus.OK)
     generateToken(@Body() generateTokenDto: GenerateTokenDTO) {
         return this.commandBus.execute(new GenerateNewTokensCommand(generateTokenDto.refreshToken));
