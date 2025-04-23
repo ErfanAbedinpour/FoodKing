@@ -101,15 +101,93 @@
           "nullable": false,
           "mappedType": "bigint"
         },
-        "slug": {
-          "name": "slug",
-          "type": "varchar(50)",
+        "title": {
+          "name": "title",
+          "type": "varchar(255)",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": 50,
+          "length": 255,
           "mappedType": "string"
+        },
+        "slug": {
+          "name": "slug",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 255,
+          "mappedType": "string"
+        },
+        "en_title": {
+          "name": "en_title",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 255,
+          "mappedType": "string"
+        }
+      },
+      "name": "menu",
+      "schema": "public",
+      "indexes": [
+        {
+          "columnNames": [
+            "slug"
+          ],
+          "composite": false,
+          "keyName": "menu_slug_unique",
+          "constraint": true,
+          "primary": false,
+          "unique": true
+        },
+        {
+          "keyName": "menu_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "constraint": true,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {},
+      "nativeEnums": {}
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "unsigned": false,
+          "autoincrement": true,
+          "primary": true,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "bigint",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "bigint"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "bigint",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "bigint"
         },
         "name": {
           "name": "name",
@@ -130,33 +208,13 @@
           "nullable": false,
           "length": 255,
           "mappedType": "string"
-        },
-        "is_activate": {
-          "name": "is_activate",
-          "type": "boolean",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "default": "true",
-          "mappedType": "boolean"
         }
       },
-      "name": "categories",
+      "name": "Restaurant",
       "schema": "public",
       "indexes": [
         {
-          "columnNames": [
-            "slug"
-          ],
-          "composite": false,
-          "keyName": "categories_slug_unique",
-          "constraint": true,
-          "primary": false,
-          "unique": true
-        },
-        {
-          "keyName": "categories_pkey",
+          "keyName": "Restaurant_pkey",
           "columnNames": [
             "id"
           ],
@@ -242,6 +300,117 @@
       ],
       "checks": [],
       "foreignKeys": {},
+      "nativeEnums": {}
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "unsigned": false,
+          "autoincrement": true,
+          "primary": true,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "bigint",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "bigint"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "bigint",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "bigint"
+        },
+        "title": {
+          "name": "title",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 255,
+          "mappedType": "string"
+        },
+        "slug": {
+          "name": "slug",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 255,
+          "mappedType": "string"
+        },
+        "en_title": {
+          "name": "en_title",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 255,
+          "mappedType": "string"
+        },
+        "menu_id": {
+          "name": "menu_id",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "integer"
+        }
+      },
+      "name": "sub-menu",
+      "schema": "public",
+      "indexes": [
+        {
+          "columnNames": [
+            "slug"
+          ],
+          "composite": false,
+          "keyName": "sub-menu_slug_unique",
+          "constraint": true,
+          "primary": false,
+          "unique": true
+        },
+        {
+          "keyName": "sub-menu_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "constraint": true,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "sub-menu_menu_id_foreign": {
+          "constraintName": "sub-menu_menu_id_foreign",
+          "columnNames": [
+            "menu_id"
+          ],
+          "localTableName": "public.sub-menu",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.menu",
+          "deleteRule": "cascade",
+          "updateRule": "cascade"
+        }
+      },
       "nativeEnums": {}
     },
     {
@@ -504,117 +673,6 @@
         },
         "name": {
           "name": "name",
-          "type": "varchar(255)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 255,
-          "mappedType": "string"
-        },
-        "en_name": {
-          "name": "en_name",
-          "type": "varchar(255)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 255,
-          "mappedType": "string"
-        },
-        "slug": {
-          "name": "slug",
-          "type": "varchar(255)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 255,
-          "mappedType": "string"
-        },
-        "owner_id": {
-          "name": "owner_id",
-          "type": "int",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "integer"
-        }
-      },
-      "name": "Restaurant",
-      "schema": "public",
-      "indexes": [
-        {
-          "columnNames": [
-            "slug"
-          ],
-          "composite": false,
-          "keyName": "Restaurant_slug_unique",
-          "constraint": true,
-          "primary": false,
-          "unique": true
-        },
-        {
-          "keyName": "Restaurant_pkey",
-          "columnNames": [
-            "id"
-          ],
-          "composite": false,
-          "constraint": true,
-          "primary": true,
-          "unique": true
-        }
-      ],
-      "checks": [],
-      "foreignKeys": {
-        "Restaurant_owner_id_foreign": {
-          "constraintName": "Restaurant_owner_id_foreign",
-          "columnNames": [
-            "owner_id"
-          ],
-          "localTableName": "public.Restaurant",
-          "referencedColumnNames": [
-            "id"
-          ],
-          "referencedTableName": "public.User",
-          "deleteRule": "cascade",
-          "updateRule": "cascade"
-        }
-      },
-      "nativeEnums": {}
-    },
-    {
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "serial",
-          "unsigned": false,
-          "autoincrement": true,
-          "primary": true,
-          "nullable": false,
-          "mappedType": "integer"
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "bigint",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "bigint"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "bigint",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "bigint"
-        },
-        "name": {
-          "name": "name",
           "type": "varchar(50)",
           "unsigned": false,
           "autoincrement": false,
@@ -670,15 +728,6 @@
           "precision": 10,
           "scale": 2,
           "mappedType": "decimal"
-        },
-        "category_id": {
-          "name": "category_id",
-          "type": "int",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "integer"
         },
         "restaurant_id": {
           "name": "restaurant_id",
@@ -736,19 +785,6 @@
             "id"
           ],
           "referencedTableName": "public.User",
-          "deleteRule": "set null",
-          "updateRule": "cascade"
-        },
-        "products_category_id_foreign": {
-          "constraintName": "products_category_id_foreign",
-          "columnNames": [
-            "category_id"
-          ],
-          "localTableName": "public.products",
-          "referencedColumnNames": [
-            "id"
-          ],
-          "referencedTableName": "public.categories",
           "deleteRule": "set null",
           "updateRule": "cascade"
         },
@@ -950,6 +986,191 @@
           ],
           "referencedTableName": "public.products",
           "deleteRule": "set null",
+          "updateRule": "cascade"
+        }
+      },
+      "nativeEnums": {}
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "unsigned": false,
+          "autoincrement": true,
+          "primary": true,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "bigint",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "bigint"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "bigint",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "bigint"
+        },
+        "slug": {
+          "name": "slug",
+          "type": "varchar(50)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 50,
+          "mappedType": "string"
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 255,
+          "mappedType": "string"
+        },
+        "en_name": {
+          "name": "en_name",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 255,
+          "mappedType": "string"
+        },
+        "is_activate": {
+          "name": "is_activate",
+          "type": "boolean",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "default": "true",
+          "mappedType": "boolean"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "integer"
+        }
+      },
+      "name": "categories",
+      "schema": "public",
+      "indexes": [
+        {
+          "columnNames": [
+            "slug"
+          ],
+          "composite": false,
+          "keyName": "categories_slug_unique",
+          "constraint": true,
+          "primary": false,
+          "unique": true
+        },
+        {
+          "keyName": "categories_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "constraint": true,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "categories_user_id_foreign": {
+          "constraintName": "categories_user_id_foreign",
+          "columnNames": [
+            "user_id"
+          ],
+          "localTableName": "public.categories",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.User",
+          "updateRule": "cascade"
+        }
+      },
+      "nativeEnums": {}
+    },
+    {
+      "columns": {
+        "product_id": {
+          "name": "product_id",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "category_id": {
+          "name": "category_id",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "integer"
+        }
+      },
+      "name": "product-category",
+      "schema": "public",
+      "indexes": [
+        {
+          "keyName": "product-category_pkey",
+          "columnNames": [
+            "product_id",
+            "category_id"
+          ],
+          "composite": true,
+          "constraint": true,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "product-category_product_id_foreign": {
+          "constraintName": "product-category_product_id_foreign",
+          "columnNames": [
+            "product_id"
+          ],
+          "localTableName": "public.product-category",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.products",
+          "updateRule": "cascade"
+        },
+        "product-category_category_id_foreign": {
+          "constraintName": "product-category_category_id_foreign",
+          "columnNames": [
+            "category_id"
+          ],
+          "localTableName": "public.product-category",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.categories",
           "updateRule": "cascade"
         }
       },

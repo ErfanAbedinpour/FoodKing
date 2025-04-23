@@ -1,16 +1,21 @@
 import { Migration } from '@mikro-orm/migrations';
 
-export class Migration20250421143157 extends Migration {
+export class Migration20250424154139 extends Migration {
 
   override async up(): Promise<void> {
     this.addSql(`create table "attribute" ("id" serial primary key, "created_at" bigint not null, "updated_at" bigint not null, "name" varchar(255) not null);`);
     this.addSql(`alter table "attribute" add constraint "attribute_name_unique" unique ("name");`);
 
-    this.addSql(`create table "categories" ("id" serial primary key, "created_at" bigint not null, "updated_at" bigint not null, "slug" varchar(50) not null, "name" varchar(255) not null, "en_name" varchar(255) not null, "is_activate" boolean not null default true);`);
-    this.addSql(`alter table "categories" add constraint "categories_slug_unique" unique ("slug");`);
+    this.addSql(`create table "menu" ("id" serial primary key, "created_at" bigint not null, "updated_at" bigint not null, "title" varchar(255) not null, "slug" varchar(255) not null, "en_title" varchar(255) not null);`);
+    this.addSql(`alter table "menu" add constraint "menu_slug_unique" unique ("slug");`);
+
+    this.addSql(`create table "Restaurant" ("id" serial primary key, "created_at" bigint not null, "updated_at" bigint not null, "name" varchar(255) not null, "en_name" varchar(255) not null);`);
 
     this.addSql(`create table "Role" ("id" serial primary key, "created_at" bigint not null, "updated_at" bigint not null, "name" text check ("name" in ('Customer', 'Manager', 'Delivery', 'Owner')) not null default 'Customer');`);
     this.addSql(`alter table "Role" add constraint "Role_name_unique" unique ("name");`);
+
+    this.addSql(`create table "sub-menu" ("id" serial primary key, "created_at" bigint not null, "updated_at" bigint not null, "title" varchar(255) not null, "slug" varchar(255) not null, "en_title" varchar(255) not null, "menu_id" int not null);`);
+    this.addSql(`alter table "sub-menu" add constraint "sub-menu_slug_unique" unique ("slug");`);
 
     this.addSql(`create table "User" ("id" serial primary key, "created_at" bigint not null, "updated_at" bigint not null, "name" varchar(255) not null, "email" varchar(255) not null, "password" varchar(255) not null, "role_id" int not null, "phone_number" varchar(255) not null, "is_active" boolean not null);`);
     this.addSql(`alter table "User" add constraint "User_email_unique" unique ("email");`);
@@ -18,15 +23,17 @@ export class Migration20250421143157 extends Migration {
 
     this.addSql(`create table "session" ("id" serial primary key, "token" text not null, "token_id" uuid not null, "user_id" int not null, "created_at" bigint not null, "exp" bigint not null);`);
 
-    this.addSql(`create table "Restaurant" ("id" serial primary key, "created_at" bigint not null, "updated_at" bigint not null, "name" varchar(255) not null, "en_name" varchar(255) not null, "slug" varchar(255) not null, "owner_id" int not null);`);
-    this.addSql(`alter table "Restaurant" add constraint "Restaurant_slug_unique" unique ("slug");`);
-
-    this.addSql(`create table "products" ("id" serial primary key, "created_at" bigint not null, "updated_at" bigint not null, "name" varchar(50) not null, "description" text not null, "slug" varchar(255) not null, "inventory" int not null, "user_id" int not null, "price" numeric(10,2) not null, "category_id" int not null, "restaurant_id" int not null, "is_active" boolean not null default true);`);
+    this.addSql(`create table "products" ("id" serial primary key, "created_at" bigint not null, "updated_at" bigint not null, "name" varchar(50) not null, "description" text not null, "slug" varchar(255) not null, "inventory" int not null, "user_id" int not null, "price" numeric(10,2) not null, "restaurant_id" int not null, "is_active" boolean not null default true);`);
     this.addSql(`alter table "products" add constraint "products_slug_unique" unique ("slug");`);
 
     this.addSql(`create table "productAttributes" ("product_id" int not null, "attribute_id" int not null, "value" varchar(255) not null, constraint "productAttributes_pkey" primary key ("product_id", "attribute_id"));`);
 
     this.addSql(`create table "comments" ("id" serial primary key, "created_at" bigint not null, "updated_at" bigint not null, "body" text not null, "rating" int not null, "user_id" int not null, "product_id" int not null);`);
+
+    this.addSql(`create table "categories" ("id" serial primary key, "created_at" bigint not null, "updated_at" bigint not null, "slug" varchar(50) not null, "name" varchar(255) not null, "en_name" varchar(255) not null, "is_activate" boolean not null default true, "user_id" int not null);`);
+    this.addSql(`alter table "categories" add constraint "categories_slug_unique" unique ("slug");`);
+
+    this.addSql(`create table "product-category" ("product_id" int not null, "category_id" int not null, constraint "product-category_pkey" primary key ("product_id", "category_id"));`);
 
     this.addSql(`create table "carts" ("id" serial primary key, "created_at" bigint not null, "updated_at" bigint not null, "user_id" int not null);`);
     this.addSql(`alter table "carts" add constraint "carts_user_id_unique" unique ("user_id");`);
@@ -42,14 +49,13 @@ export class Migration20250421143157 extends Migration {
 
     this.addSql(`create table "order-items" ("order_id" int not null, "product_id" int not null, "quantity" int not null, "price" numeric(10,2) not null, constraint "order-items_pkey" primary key ("order_id", "product_id"));`);
 
+    this.addSql(`alter table "sub-menu" add constraint "sub-menu_menu_id_foreign" foreign key ("menu_id") references "menu" ("id") on update cascade on delete cascade;`);
+
     this.addSql(`alter table "User" add constraint "User_role_id_foreign" foreign key ("role_id") references "Role" ("id") on update cascade on delete set default;`);
 
     this.addSql(`alter table "session" add constraint "session_user_id_foreign" foreign key ("user_id") references "User" ("id") on update cascade on delete cascade;`);
 
-    this.addSql(`alter table "Restaurant" add constraint "Restaurant_owner_id_foreign" foreign key ("owner_id") references "User" ("id") on update cascade on delete cascade;`);
-
     this.addSql(`alter table "products" add constraint "products_user_id_foreign" foreign key ("user_id") references "User" ("id") on update cascade on delete set null;`);
-    this.addSql(`alter table "products" add constraint "products_category_id_foreign" foreign key ("category_id") references "categories" ("id") on update cascade on delete set null;`);
     this.addSql(`alter table "products" add constraint "products_restaurant_id_foreign" foreign key ("restaurant_id") references "Restaurant" ("id") on update cascade on delete cascade;`);
 
     this.addSql(`alter table "productAttributes" add constraint "productAttributes_product_id_foreign" foreign key ("product_id") references "products" ("id") on update cascade on delete cascade;`);
@@ -57,6 +63,11 @@ export class Migration20250421143157 extends Migration {
 
     this.addSql(`alter table "comments" add constraint "comments_user_id_foreign" foreign key ("user_id") references "User" ("id") on update cascade;`);
     this.addSql(`alter table "comments" add constraint "comments_product_id_foreign" foreign key ("product_id") references "products" ("id") on update cascade on delete set null;`);
+
+    this.addSql(`alter table "categories" add constraint "categories_user_id_foreign" foreign key ("user_id") references "User" ("id") on update cascade;`);
+
+    this.addSql(`alter table "product-category" add constraint "product-category_product_id_foreign" foreign key ("product_id") references "products" ("id") on update cascade;`);
+    this.addSql(`alter table "product-category" add constraint "product-category_category_id_foreign" foreign key ("category_id") references "categories" ("id") on update cascade;`);
 
     this.addSql(`alter table "carts" add constraint "carts_user_id_foreign" foreign key ("user_id") references "User" ("id") on update cascade on delete cascade;`);
 
@@ -73,24 +84,24 @@ export class Migration20250421143157 extends Migration {
 
     this.addSql(`alter table "order-items" add constraint "order-items_order_id_foreign" foreign key ("order_id") references "orders" ("id") on update cascade;`);
     this.addSql(`alter table "order-items" add constraint "order-items_product_id_foreign" foreign key ("product_id") references "products" ("id") on update cascade;`);
-
-    this.addSql(`drop table if exists "categoryies" cascade;`);
   }
 
   override async down(): Promise<void> {
     this.addSql(`alter table "productAttributes" drop constraint "productAttributes_attribute_id_foreign";`);
 
-    this.addSql(`alter table "products" drop constraint "products_category_id_foreign";`);
+    this.addSql(`alter table "sub-menu" drop constraint "sub-menu_menu_id_foreign";`);
+
+    this.addSql(`alter table "products" drop constraint "products_restaurant_id_foreign";`);
 
     this.addSql(`alter table "User" drop constraint "User_role_id_foreign";`);
 
     this.addSql(`alter table "session" drop constraint "session_user_id_foreign";`);
 
-    this.addSql(`alter table "Restaurant" drop constraint "Restaurant_owner_id_foreign";`);
-
     this.addSql(`alter table "products" drop constraint "products_user_id_foreign";`);
 
     this.addSql(`alter table "comments" drop constraint "comments_user_id_foreign";`);
+
+    this.addSql(`alter table "categories" drop constraint "categories_user_id_foreign";`);
 
     this.addSql(`alter table "carts" drop constraint "carts_user_id_foreign";`);
 
@@ -100,15 +111,17 @@ export class Migration20250421143157 extends Migration {
 
     this.addSql(`alter table "payments" drop constraint "payments_user_id_foreign";`);
 
-    this.addSql(`alter table "products" drop constraint "products_restaurant_id_foreign";`);
-
     this.addSql(`alter table "productAttributes" drop constraint "productAttributes_product_id_foreign";`);
 
     this.addSql(`alter table "comments" drop constraint "comments_product_id_foreign";`);
 
+    this.addSql(`alter table "product-category" drop constraint "product-category_product_id_foreign";`);
+
     this.addSql(`alter table "cart_product" drop constraint "cart_product_product_id_foreign";`);
 
     this.addSql(`alter table "order-items" drop constraint "order-items_product_id_foreign";`);
+
+    this.addSql(`alter table "product-category" drop constraint "product-category_category_id_foreign";`);
 
     this.addSql(`alter table "cart_product" drop constraint "cart_product_cart_id_foreign";`);
 
@@ -118,26 +131,29 @@ export class Migration20250421143157 extends Migration {
 
     this.addSql(`alter table "order-items" drop constraint "order-items_order_id_foreign";`);
 
-    this.addSql(`create table "categoryies" ("id" serial primary key, "created_at" int8 not null, "updated_at" int8 not null, "slug" varchar(50) not null, "name" varchar(255) not null, "en_name" varchar(255) not null, "is_activate" bool not null default true, "user_id" int4 not null);`);
-    this.addSql(`alter table "categoryies" add constraint "categoryies_slug_unique" unique ("slug");`);
-
     this.addSql(`drop table if exists "attribute" cascade;`);
 
-    this.addSql(`drop table if exists "categories" cascade;`);
+    this.addSql(`drop table if exists "menu" cascade;`);
+
+    this.addSql(`drop table if exists "Restaurant" cascade;`);
 
     this.addSql(`drop table if exists "Role" cascade;`);
+
+    this.addSql(`drop table if exists "sub-menu" cascade;`);
 
     this.addSql(`drop table if exists "User" cascade;`);
 
     this.addSql(`drop table if exists "session" cascade;`);
-
-    this.addSql(`drop table if exists "Restaurant" cascade;`);
 
     this.addSql(`drop table if exists "products" cascade;`);
 
     this.addSql(`drop table if exists "productAttributes" cascade;`);
 
     this.addSql(`drop table if exists "comments" cascade;`);
+
+    this.addSql(`drop table if exists "categories" cascade;`);
+
+    this.addSql(`drop table if exists "product-category" cascade;`);
 
     this.addSql(`drop table if exists "carts" cascade;`);
 
