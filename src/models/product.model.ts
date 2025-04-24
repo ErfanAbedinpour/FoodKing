@@ -10,9 +10,10 @@ import { OrderItem } from "./order-item.model";
 import { Restaurant } from "./restaurant.model";
 import { Comment } from "./comment.model";
 import { ProductAttribute } from "./product-attribute.model";
+import { ProductCategory } from "./product-category.model";
 
 @Entity({ tableName: "products" })
-export class Product extends BaseModel{
+export class Product extends BaseModel {
     @Property({ length: 50 })
     name!: string
 
@@ -25,15 +26,15 @@ export class Product extends BaseModel{
     @Property()
     inventory!: number
 
-    
+
     @ManyToOne(() => User, { fieldName: "user_id", nullable: false, deleteRule: "set null" })
     user!: Rel<User>
 
     @Property({ type: 'decimal', columnType: 'numeric(10,2)', nullable: false })
     price!: Decimal
 
-    @ManyToOne(() => Category, { fieldName: "category_id", nullable: false, deleteRule: "set null" })
-    category!: Rel<Category>
+    @OneToMany(() => ProductCategory, cp => cp.product)
+    category = new Collection<ProductCategory>(this)
 
     @ManyToMany(() => Cart, cart => cart.products, { pivotEntity: () => CartProduct, owner: true })
     carts = new Collection<Cart>(this)
@@ -47,10 +48,10 @@ export class Product extends BaseModel{
     @OneToMany(() => Comment, comment => comment.product)
     comments = new Collection<Comment>(this)
 
-    @ManyToOne(()=>Restaurant,{fieldName:"restaurant_id",deleteRule:'cascade',updateRule:"cascade",nullable:false})
-    restaurant:Rel<Restaurant>
-    
-    @Property({default:true,nullable:false})
-    is_active:boolean
+    @ManyToOne(() => Restaurant, { fieldName: "restaurant_id", deleteRule: 'cascade', updateRule: "cascade", nullable: false })
+    restaurant: Rel<Restaurant>
+
+    @Property({ default: true, nullable: false })
+    is_active: boolean
 
 } 
