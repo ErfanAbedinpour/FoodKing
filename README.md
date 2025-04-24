@@ -100,7 +100,7 @@ Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
 
 
 ## TODO
-- [] Create Menu Models
-- [] Create SubMenu Models
-- [] CRUD On Menu 
-- [] Test Menu Modules
+- [x] Create Menu Models
+- [ ] Create SubMenu Models
+- [ ] CRUD On Menu 
+- [ ] Test Menu Modules
