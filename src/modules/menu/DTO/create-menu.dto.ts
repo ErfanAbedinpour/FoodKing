@@ -21,6 +21,7 @@ export class CreateMenuDTO {
     en_title: string
 
 
+    @ApiProperty({ type: [CreateSubMenuDTO] })
     @IsArray()
     @ValidateNested({ each: true })
     @ArrayMinSize(1)
