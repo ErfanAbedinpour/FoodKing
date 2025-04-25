@@ -8,6 +8,7 @@ import { ForkEntityManagerMiddleware } from './middleware/fork.middleware';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { UserModule } from './modules/users/user.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { MenuModule } from './modules/menu/menu.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { AuthModule } from './modules/auth/auth.module';
     MikroOrmModule.forRoot(),
     UserModule,
     AuthModule,
+    MenuModule
   ],
   controllers: [AppController]
 
