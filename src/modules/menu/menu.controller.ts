@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Patch, Post } from "@nestjs/common";
 import { CreateMenuDTO } from "./DTO/create-menu.dto";
 import { MenuService } from "./menu.service";
-import { ApiBody } from "@nestjs/swagger";
+import { ApiBody, ApiCreatedResponse } from "@nestjs/swagger";
 
 @Controller("menu")
 export class MenuController {
@@ -9,6 +9,7 @@ export class MenuController {
 
     @Post()
     @ApiBody({ type: CreateMenuDTO })
+    @ApiCreatedResponse({ description: "Menu and subMenu Created", schema: { type: "object", properties: { msg: { type: "string" } } } })
     addMenu(@Body() createMenuDto: CreateMenuDTO) {
         return this.menuService.create(createMenuDto);
     }

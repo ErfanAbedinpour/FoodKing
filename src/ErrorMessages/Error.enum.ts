@@ -7,5 +7,7 @@ export enum ErrorMessage {
     INVALID_TOKEN = "Token in invalid or expired.",
     INVALID_ACCESS = "You Have not access to this route",
     INVALID_REFRESH_TOKEN = "Token is invalid please login again.",
-    MENU_NOT_FOUND = "menu not found"
+    MENU_NOT_FOUND = "menu not found",
+    INVALID_MENU_SLUG = "Menu slug is not valid.",
+    INVALID_SUB_MENU_SLUG = "sub Menu slug is not valid."
 }
