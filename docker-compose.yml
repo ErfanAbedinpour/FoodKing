@@ -14,18 +14,16 @@ services:
     depends_on:
       - psql
     volumes:
-      - .:/app
       - public-data:/app/public
     networks:
       - app
-    command: ["pnpm", "run","start:dev"]
 
   migration:
     build:
       context: .
       dockerfile: Dockerfile
     restart: "no"
-    command: sh -c "pnpm run migrate:create && pnpm run migrate:up"
+    command: sh -c "npm run migrate:create && pnpm run migrate:up"
     profiles:
       - migration
     networks:
@@ -41,7 +39,7 @@ services:
     profiles:
       - seed
     restart: "no"
-    command: "pnpm run seed"
+    command: "npm run seed"
     networks:
       - app
     depends_on:
