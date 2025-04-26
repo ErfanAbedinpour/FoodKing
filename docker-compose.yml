@@ -14,6 +14,7 @@ services:
     depends_on:
       - psql
     volumes:
+      - ./:/app
       - public-data:/app/public
     networks:
       - app
@@ -23,7 +24,7 @@ services:
       context: .
       dockerfile: Dockerfile
     restart: "no"
-    command: sh -c "npm run migrate:create && pnpm run migrate:up"
+    command: sh -c "npm run migrate:create && npm run migrate:up"
     profiles:
       - migration
     networks:

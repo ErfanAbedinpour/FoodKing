@@ -2,8 +2,7 @@ import { BadRequestException, Injectable, InternalServerErrorException, Logger }
 import { MenuRepository } from "./repository/abstract/menu.repository";
 import { CreateMenuDTO } from "./DTO/create-menu.dto";
 import slugify from "slugify";
-import { UniqueConstraintViolationException } from "@mikro-orm/core";
-import { ErrorMessage } from "../../ErrorMessages/Error.enum";
+import { UniqueConstraintViolationException } from "@mikro-orm/core"; import { ErrorMessage } from "../../ErrorMessages/Error.enum";
 
 @Injectable()
 export class MenuService {
@@ -31,13 +30,11 @@ export class MenuService {
                     //@ts-ignore
                     const errorMessage = err.detail;
                     const [_, value] = RegExp(/=(\(\w.+\))/).exec(errorMessage) ?? []
-                    throw new BadRequestException(`${value ?? ""} in ${ErrorMessage.INVALID_SUB_MENU_SLUG}`)
-                } else {
-                    throw new BadRequestException(ErrorMessage.INVALID_MENU_SLUG)
+                    throw new BadRequestException(`${ErrorMessage.INVALID_SUB_MENU_SLUG}(${value})`)
                 }
+                throw new BadRequestException(ErrorMessage.INVALID_MENU_SLUG)
             }
-            throw new BadRequestException(ErrorMessage.INVALID_MENU_SLUG)
-
+            this.logger.error(err)
             throw new InternalServerErrorException()
         }
     }
