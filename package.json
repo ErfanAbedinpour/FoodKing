@@ -1,7 +1,7 @@
 {
-  "name": "foodking",
+  "name": "FoodKing",
   "version": "0.0.1",
-  "description": "<p align=\"center\">   <a href=\"http://nestjs.com/\" target=\"blank\"><img src=\"https://nestjs.com/img/logo-small.svg\" width=\"120\" alt=\"Nest Logo\" /></a> </p>",
+  "description": "",
   "author": "",
   "private": true,
   "license": "UNLICENSED",
@@ -37,19 +37,16 @@
     "@nestjs/platform-express": "^11.0.1",
     "@nestjs/swagger": "^11.1.3",
     "argon2": "^0.41.1",
-    "bindings": "^1.5.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
     "decimal.js": "^10.5.0",
     "dotenv": "^16.5.0",
     "reflect-metadata": "^0.2.2",
-    "rxjs": "^7.8.1",
-    "slugify": "^1.6.6"
+    "rxjs": "^7.8.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
     "@eslint/js": "^9.18.0",
-    "@mikro-orm/better-sqlite": "^6.4.13",
     "@mikro-orm/cli": "^6.4.13",
     "@nestjs/cli": "^11.0.0",
     "@nestjs/schematics": "^11.0.0",
@@ -60,7 +57,6 @@
     "@types/jest": "^29.5.14",
     "@types/node": "^22.10.7",
     "@types/supertest": "^6.0.2",
-    "better-sqlite3": "^11.9.1",
     "eslint": "^9.18.0",
     "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-prettier": "^5.2.2",
@@ -92,15 +88,10 @@
     ],
     "moduleNameMapper": {
       "^@models": "<rootDir>/models",
-      "@error": "<rootDir>/ErrorMessages/Error.enum.ts"
+      "@error":"<rootDir>/ErrorMessages/Error.enum.ts"
     },
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
-  },
-  "main": "index.js",
-  "directories": {
-    "doc": "doc"
-  },
-  "keywords": [],
-  "packageManager": "pnpm@10.9.0+sha512.0486e394640d3c1fb3c9d43d49cf92879ff74f8516959c235308f5a8f62e2e19528a65cdc2a3058f587cde71eba3d5b56327c8c33a97e4c4051ca48a10ca2d5f"
+  }
 }
+
