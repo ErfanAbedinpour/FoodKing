@@ -10,9 +10,19 @@ import {
 } from '@nestjs/common';
 import { CreateMenuDTO } from './DTO/create-menu.dto';
 import { MenuService } from './menu.service';
-import { ApiBody, ApiCreatedResponse } from '@nestjs/swagger';
+import {
+  ApiBody,
+  ApiCreatedResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  getSchemaPath,
+} from '@nestjs/swagger';
+import { MenuDTO } from './DTO/menu.DTO';
+import { ApiExtraModels } from '@nestjs/swagger';
+import { SubMenuDTO } from './DTO/sub-menu.DTO';
 
 @Controller('menu')
+@ApiExtraModels(MenuDTO, SubMenuDTO)
 export class MenuController {
   constructor(private readonly menuService: MenuService) { }
 
@@ -27,11 +37,49 @@ export class MenuController {
   }
 
   @Get()
+  @ApiOkResponse({
+    description: 'findAll Menus and Subs',
+    schema: {
+      type: 'array',
+      items: {
+        allOf: [
+          { $ref: getSchemaPath(MenuDTO) },
+          {
+            type: 'object',
+            properties: {
+              subs_menus: {
+                type: 'array',
+                items: { $ref: getSchemaPath(SubMenuDTO) },
+              },
+            },
+          },
+        ],
+      },
+    },
+  })
   getMenus() {
     return this.menuService.findAll();
   }
 
   @Get(':slug')
+  @ApiOkResponse({
+    description: 'menu and subs are find',
+    schema: {
+      allOf: [
+        { $ref: getSchemaPath(MenuDTO) },
+        {
+          type: 'object',
+          properties: {
+            sub_menus: {
+              type: 'array',
+              items: { $ref: getSchemaPath(SubMenuDTO) },
+            },
+          },
+        },
+      ],
+    },
+  })
+  @ApiNotFoundResponse({ description: 'menu not found' })
   getMenuBySlug(@Param('slug') slug: string) {
     return this.menuService.findBySlug(slug);
   }
@@ -40,6 +88,11 @@ export class MenuController {
   updateMenu() { }
 
   @Delete(':id')
+  @ApiNotFoundResponse({ description: 'menu not found' })
+  @ApiOkResponse({
+    description: 'menu removed',
+    schema: { properties: { msg: { type: 'string' } } },
+  })
   deleteMenu(@Param('id', ParseIntPipe) id: number) {
     return this.menuService.delete(id);
   }

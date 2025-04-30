@@ -56,14 +56,17 @@ export class MenuService {
     }
   }
 
-  findBySlug(slug: string) {
-    return this.menuRepository.findBySlug(slug);
+  async findBySlug(slug: string) {
+    const result = await this.menuRepository.findBySlug(slug, true);
+    if (!result) throw new NotFoundException(ErrorMessage.MENU_NOT_FOUND);
+    return result;
   }
 
   async delete(id: number) {
     try {
       const result = await this.menuRepository.delete(id);
       if (!result) throw new NotFoundException(ErrorMessage.MENU_NOT_FOUND);
+      return { msg: 'Menu Removed successfully' };
     } catch (err) {
       if (err instanceof HttpException) throw err;
 
