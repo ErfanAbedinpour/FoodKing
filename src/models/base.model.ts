@@ -1,13 +1,17 @@
-import { Entity, PrimaryKey, Property } from "@mikro-orm/core";
+import { Entity, PrimaryKey, Property } from '@mikro-orm/core';
 
 @Entity({ abstract: true })
 export abstract class BaseModel {
-    @PrimaryKey()
-    id!: number
+  @PrimaryKey()
+  id!: number;
 
-    @Property({ columnType: 'bigint', type: 'bigint' })
-    createdAt? = Date.now()
+  @Property({ columnType: 'bigint', type: 'bigint' })
+  createdAt? = Date.now();
 
-    @Property({ columnType: 'bigint', type: "bigint", onUpdate: () => Date.now() })
-    updatedAt? = Date.now()
+  @Property({
+    columnType: 'bigint',
+    type: 'bigint',
+    onUpdate: () => Date.now(),
+  })
+  updatedAt? = Date.now();
 }

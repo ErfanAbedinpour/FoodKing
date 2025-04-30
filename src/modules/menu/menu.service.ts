@@ -14,7 +14,7 @@ import { ErrorMessage } from '../../ErrorMessages/Error.enum';
 export class MenuService {
   private logger = new Logger(MenuService.name);
 
-  constructor(private readonly menuRepository: MenuRepository) { }
+  constructor(private readonly menuRepository: MenuRepository) {}
 
   async create(dto: CreateMenuDTO) {
     const serializerSub = dto.sub_menu.map((s) => ({

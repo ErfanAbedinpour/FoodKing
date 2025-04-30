@@ -16,18 +16,17 @@ import { MenuModule } from './modules/menu/menu.module';
     ConfigModule.forRoot({
       envFilePath: join(cwd(), '.env'),
       cache: true,
-      isGlobal: true
+      isGlobal: true,
     }),
     MikroOrmModule.forRoot(),
     UserModule,
     AuthModule,
-    MenuModule
+    MenuModule,
   ],
-  controllers: [AppController]
-
+  controllers: [AppController],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(ForkEntityManagerMiddleware).forRoutes("*")
+    consumer.apply(ForkEntityManagerMiddleware).forRoutes('*');
   }
 }
