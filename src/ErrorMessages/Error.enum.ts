@@ -10,4 +10,5 @@ export enum ErrorMessage {
   MENU_NOT_FOUND = 'menu not found',
   INVALID_MENU_SLUG = 'Menu slug is not valid.',
   INVALID_SUB_MENU_SLUG = 'sub menu slug is not valid.',
+  SUB_MENU_NOT_FOUND = 'sub menu not found',
 }
