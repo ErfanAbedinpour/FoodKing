@@ -1,8 +1,10 @@
 import {
   BadRequestException,
+  HttpException,
   Injectable,
   InternalServerErrorException,
   Logger,
+  NotFoundException,
 } from '@nestjs/common';
 import { MenuRepository } from './repository/abstract/menu.repository';
 import { CreateMenuDTO } from './DTO/create-menu.dto';
@@ -14,7 +16,7 @@ import { ErrorMessage } from '../../ErrorMessages/Error.enum';
 export class MenuService {
   private logger = new Logger(MenuService.name);
 
-  constructor(private readonly menuRepository: MenuRepository) {}
+  constructor(private readonly menuRepository: MenuRepository) { }
 
   async create(dto: CreateMenuDTO) {
     const serializerSub = dto.sub_menu.map((s) => ({
@@ -52,5 +54,25 @@ export class MenuService {
       this.logger.error(err);
       throw new InternalServerErrorException();
     }
+  }
+
+  findBySlug(slug: string) {
+    return this.menuRepository.findBySlug(slug);
+  }
+
+  async delete(id: number) {
+    try {
+      const result = await this.menuRepository.delete(id);
+      if (!result) throw new NotFoundException(ErrorMessage.MENU_NOT_FOUND);
+    } catch (err) {
+      if (err instanceof HttpException) throw err;
+
+      this.logger.error(err);
+      throw new InternalServerErrorException();
+    }
+  }
+
+  async findAll() {
+    return this.menuRepository.findAll(true);
   }
 }

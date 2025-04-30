@@ -1,11 +1,20 @@
-import { Body, Controller, Delete, Get, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { CreateMenuDTO } from './DTO/create-menu.dto';
 import { MenuService } from './menu.service';
 import { ApiBody, ApiCreatedResponse } from '@nestjs/swagger';
 
 @Controller('menu')
 export class MenuController {
-  constructor(private readonly menuService: MenuService) {}
+  constructor(private readonly menuService: MenuService) { }
 
   @Post()
   @ApiBody({ type: CreateMenuDTO })
@@ -18,14 +27,20 @@ export class MenuController {
   }
 
   @Get()
-  getMenus() {}
+  getMenus() {
+    return this.menuService.findAll();
+  }
 
   @Get(':slug')
-  getMenuBySlug() {}
+  getMenuBySlug(@Param('slug') slug: string) {
+    return this.menuService.findBySlug(slug);
+  }
 
   @Patch(':id')
-  updateMenu() {}
+  updateMenu() { }
 
   @Delete(':id')
-  deleteMenu() {}
+  deleteMenu(@Param('id', ParseIntPipe) id: number) {
+    return this.menuService.delete(id);
+  }
 }
