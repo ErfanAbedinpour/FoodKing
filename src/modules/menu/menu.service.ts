@@ -11,6 +11,8 @@ import { CreateMenuDTO } from './DTO/create-menu.dto';
 import slugify from 'slugify';
 import { UniqueConstraintViolationException } from '@mikro-orm/core';
 import { ErrorMessage } from '../../ErrorMessages/Error.enum';
+import { UpdateMenuDTO } from './DTO/update-menu.dto';
+import { RepositoryException } from 'src/exception/repository.exception';
 
 @Injectable()
 export class MenuService {
@@ -77,5 +79,18 @@ export class MenuService {
 
   async findAll() {
     return this.menuRepository.findAll(true);
+  }
+
+  async updateMenu(id: number, data: UpdateMenuDTO) {
+    try {
+      const result = await this.menuRepository.update(id, data);
+      return result;
+    } catch (err) {
+      if (err instanceof RepositoryException)
+        throw new NotFoundException(err.message);
+
+      this.logger.error(err);
+      throw new InternalServerErrorException();
+    }
   }
 }

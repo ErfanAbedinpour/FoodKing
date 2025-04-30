@@ -20,6 +20,7 @@ import {
 import { MenuDTO } from './DTO/menu.DTO';
 import { ApiExtraModels } from '@nestjs/swagger';
 import { SubMenuDTO } from './DTO/sub-menu.DTO';
+import { UpdateMenuDTO } from './DTO/update-menu.dto';
 
 @Controller('menu')
 @ApiExtraModels(MenuDTO, SubMenuDTO)
@@ -85,7 +86,14 @@ export class MenuController {
   }
 
   @Patch(':id')
-  updateMenu() { }
+  @ApiOkResponse({ type: MenuDTO })
+  @ApiNotFoundResponse({})
+  updateMenu(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateDto: UpdateMenuDTO,
+  ) {
+    return this.menuService.updateMenu(id, updateDto);
+  }
 
   @Delete(':id')
   @ApiNotFoundResponse({ description: 'menu not found' })
