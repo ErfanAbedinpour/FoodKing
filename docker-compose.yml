@@ -1,9 +1,8 @@
-
 version: '4.2.0'
 
 services:
   app:
-    build: 
+    build:
       context: .
       dockerfile: Dockerfile
     restart: always
@@ -14,16 +13,17 @@ services:
     depends_on:
       - psql
     volumes:
-      - ./:/app
+      - .:/app
       - public-data:/app/public
     networks:
       - app
+    command: ['npm', 'run', 'start:dev']
 
   migration:
     build:
       context: .
       dockerfile: Dockerfile
-    restart: "no"
+    restart: 'no'
     command: sh -c "npm run migrate:create && npm run migrate:up"
     profiles:
       - migration
@@ -39,15 +39,15 @@ services:
       dockerfile: Dockerfile
     profiles:
       - seed
-    restart: "no"
-    command: "npm run seed"
+    restart: 'no'
+    command: 'npm run seed'
     networks:
       - app
     depends_on:
       - psql
     volumes:
       - .:/app
-      
+
   psql:
     image: postgres
     restart: always
