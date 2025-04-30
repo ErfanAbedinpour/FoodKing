@@ -89,6 +89,9 @@ export class MenuService {
       if (err instanceof RepositoryException)
         throw new NotFoundException(err.message);
 
+      if (err instanceof UniqueConstraintViolationException)
+        throw new BadRequestException(ErrorMessage.INVALID_MENU_SLUG)
+
       this.logger.error(err);
       throw new InternalServerErrorException();
     }

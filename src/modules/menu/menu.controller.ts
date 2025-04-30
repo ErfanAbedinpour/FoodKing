@@ -11,21 +11,29 @@ import {
 import { CreateMenuDTO } from './DTO/create-menu.dto';
 import { MenuService } from './menu.service';
 import {
+  ApiBadRequestResponse,
   ApiBody,
   ApiCreatedResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
+  ApiParam,
   getSchemaPath,
 } from '@nestjs/swagger';
 import { MenuDTO } from './DTO/menu.DTO';
 import { ApiExtraModels } from '@nestjs/swagger';
 import { SubMenuDTO } from './DTO/sub-menu.DTO';
 import { UpdateMenuDTO } from './DTO/update-menu.dto';
+import { CreateSubMenuDTO } from './DTO/create-sub-menu.dto';
+import { SubMenuService } from './sub-menu/sub-menu.service';
+import { UpdateSubMenuDTO } from './DTO/update-sub-menu.dto';
 
 @Controller('menu')
 @ApiExtraModels(MenuDTO, SubMenuDTO)
 export class MenuController {
-  constructor(private readonly menuService: MenuService) { }
+  constructor(
+    private readonly menuService: MenuService,
+    private readonly subMenuService: SubMenuService
+  ) { }
 
   @Post()
   @ApiBody({ type: CreateMenuDTO })
@@ -103,5 +111,33 @@ export class MenuController {
   })
   deleteMenu(@Param('id', ParseIntPipe) id: number) {
     return this.menuService.delete(id);
+  }
+
+  // subMenu
+  @Post(":menuId/sub-menu")
+  @ApiParam({ name: "menuId", description: "menu Id" })
+  @ApiCreatedResponse({ type: SubMenuDTO })
+  @ApiBadRequestResponse({ description: "menuId is invalid." })
+  addSubMenu(@Param("menuId", ParseIntPipe) menuId: number, @Body() createSubMenuDto: CreateSubMenuDTO) {
+    return this.subMenuService.create(menuId, createSubMenuDto)
+  }
+
+
+  @Delete(":subMenuId/sub-menu")
+  @ApiParam({ name: "subMenuId", description: "subMenuId" })
+  @ApiOkResponse({ description: "submenu Removed successfully", schema: { properties: { msg: { type: 'string' } } } })
+  @ApiNotFoundResponse({ description: "sub Menu not found" })
+  deleteSubMenu(@Param("subMenuId", ParseIntPipe) subMenuId: number) {
+    return this.subMenuService.delete(subMenuId)
+  }
+
+
+  @Patch(":subMenuId/sub-menu")
+  @ApiParam({ name: "subMenuId", description: "subMenuId" })
+  @ApiOkResponse({ description: "sub Menu updated", type: SubMenuDTO })
+  @ApiNotFoundResponse({ description: "sub Menu not found" })
+  @ApiBody({ type: UpdateSubMenuDTO })
+  updateSubMenu(@Param("subMenuId", ParseIntPipe) subMenuId: number, @Body() updateSubMenu: UpdateSubMenuDTO) {
+    return this.subMenuService.update(subMenuId, updateSubMenu)
   }
 }
