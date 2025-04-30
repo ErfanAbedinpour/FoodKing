@@ -13,6 +13,10 @@ export class SubMenuModel extends BaseModel {
   @Property({ nullable: false })
   en_title: string;
 
-  @ManyToOne(() => MenuModel, { deleteRule: 'cascade', updateRule: 'cascade' })
+  @ManyToOne(() => MenuModel, {
+    deleteRule: 'cascade',
+    updateRule: 'cascade',
+    hidden: true,
+  })
   menu: MenuModel;
 }
