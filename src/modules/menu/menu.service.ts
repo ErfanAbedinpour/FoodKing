@@ -12,7 +12,7 @@ import slugify from 'slugify';
 import { UniqueConstraintViolationException } from '@mikro-orm/core';
 import { ErrorMessage } from '../../ErrorMessages/Error.enum';
 import { UpdateMenuDTO } from './DTO/update-menu.dto';
-import { RepositoryException } from 'src/exception/repository.exception';
+import { RepositoryException } from '../../exception/repository.exception';
 
 @Injectable()
 export class MenuService {

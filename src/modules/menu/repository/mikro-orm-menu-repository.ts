@@ -8,9 +8,9 @@ import { ErrorMessage } from '../../../ErrorMessages/Error.enum';
 
 @Injectable()
 export class MikroMenuRepository implements MenuRepository {
-  constructor(private readonly em: EntityManager) {}
+  constructor(private readonly em: EntityManager) { }
 
-  async create(menu: MenuPersist): Promise<MenuModel> {
+  async create(menu: MenuPersist): Promise<void> {
     const persisMenu = this.em.create(
       MenuModel,
       { slug: menu.slug, en_title: menu.en_title, title: menu.title },
@@ -30,7 +30,6 @@ export class MikroMenuRepository implements MenuRepository {
 
     try {
       await this.em.flush();
-      return persisMenu;
     } catch (err) {
       throw err;
     }

@@ -2,7 +2,7 @@ import { MenuModel } from '@models/menu.model';
 import { MenuPersist } from './persist/menu.persist';
 
 export abstract class MenuRepository {
-  abstract create(menu: MenuPersist): Promise<MenuModel>;
+  abstract create(menu: MenuPersist): Promise<void>;
   abstract findBySlug(
     slug: string,
     withSubs?: boolean,
