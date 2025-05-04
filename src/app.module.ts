@@ -8,6 +8,7 @@ import { ForkEntityManagerMiddleware } from './middleware/fork.middleware';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { UserModule } from './modules/users/user.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { MenuModule } from './modules/menu/menu.module';
 
 @Module({
   imports: [
@@ -15,17 +16,17 @@ import { AuthModule } from './modules/auth/auth.module';
     ConfigModule.forRoot({
       envFilePath: join(cwd(), '.env'),
       cache: true,
-      isGlobal: true
+      isGlobal: true,
     }),
     MikroOrmModule.forRoot(),
     UserModule,
-    AuthModule
+    AuthModule,
+    MenuModule,
   ],
-  controllers: [AppController]
-
+  controllers: [AppController],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(ForkEntityManagerMiddleware).forRoutes("*")
+    consumer.apply(ForkEntityManagerMiddleware).forRoutes('*');
   }
 }

@@ -1,4 +1,4 @@
 export interface IOtp {
-    code: string,
-    exp: number
+  code: string;
+  exp: number;
 }
