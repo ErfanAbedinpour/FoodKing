@@ -1,24 +1,24 @@
-import { Entity, ManyToOne, OneToOne, Property, Rel } from "@mikro-orm/core";
-import { BaseModel } from "./base.model";
-import { User } from "./user.model";
+import { Entity, ManyToOne, OneToOne, Property, Rel } from '@mikro-orm/core';
+import { BaseModel } from './base.model';
+import { User } from './user.model';
 
-@Entity({tableName:"Address"})
-export class Address extends BaseModel{
-    @Property()
-    postal_code!: string
+@Entity({ tableName: 'Address' })
+export class Address extends BaseModel {
+  @Property()
+  postal_code!: string;
 
-    @Property({ type: 'text' })
-    street!: string
-    
-    @Property({})
-    province:string
+  @Property({ type: 'text' })
+  street!: string;
 
-    @Property()
-    latitude:number
+  @Property({})
+  province: string;
 
-    @Property()
-    longitude:number
+  @Property()
+  latitude: number;
 
-    @ManyToOne(() => User)
-    user: Rel<User>
+  @Property()
+  longitude: number;
+
+  @ManyToOne(() => User)
+  user: Rel<User>;
 }

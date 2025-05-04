@@ -1,10 +1,10 @@
-import { UserRole } from "../../../../models";
+import { UserRole } from '../../../../models';
 
 export class CreateUserCommand {
-    constructor(
-        public name: string,
-        public phone: string,
-        public email: string,
-        public password: string,
-    ) { }
+  constructor(
+    public name: string,
+    public phone: string,
+    public email: string,
+    public password: string,
+  ) {}
 }

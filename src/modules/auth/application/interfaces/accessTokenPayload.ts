@@ -1,11 +1,11 @@
 export interface IAccessTokenPayload {
-    name: string
+  name: string;
 
-    role: string;
+  role: string;
 
-    userId: number
+  userId: number;
 }
 
 export interface IRefreshTokenPayload extends IAccessTokenPayload {
-    tokenId: string
+  tokenId: string;
 }

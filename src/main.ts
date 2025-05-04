@@ -7,13 +7,13 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
-  app.setGlobalPrefix(process.env.PREFIX)
+  app.setGlobalPrefix(process.env.PREFIX);
 
-  app.useGlobalPipes(new ValidationPipe({ whitelist: true }))
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
 
   app.enableVersioning({
     type: VersioningType.URI,
-    defaultVersion: process.env.VERSION
+    defaultVersion: process.env.VERSION,
   });
 
   app.enableCors({
