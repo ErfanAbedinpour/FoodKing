@@ -41,10 +41,11 @@ export class MikroProductRepository implements ProductRepository {
     }
 
     async findById(id: number): Promise<Product> {
-        const product = await this.em.findOne(Product,{ id });
+        const product = await this.em.findOneOrFail(Product,{ id });
         if (!product) {
-            throw new Error(`Product with id ${id} not found`);
+            throw new RepositoryException(`Product with id ${id} not found`);
         }
+
         return product;
     }
 

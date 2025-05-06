@@ -16,4 +16,6 @@ export class ProductPersist{
     category_ids:number[]
 
     restaurant_id:number
+
+    is_active?:boolean
 }

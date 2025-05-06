@@ -10,6 +10,6 @@ export abstract class ProductRepository{
 
     abstract delete(id:number):Promise<Product>
 
-    abstract update(id:number,data:Partial<Omit<ProductPersist,"user_id">>):Promise<Product>
+    abstract update(id:number,data:Partial<Omit<ProductPersist,"user_id"|"category_ids">>):Promise<Product>
 
 }
