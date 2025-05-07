@@ -11,5 +11,15 @@ export enum ErrorMessage {
   INVALID_MENU_SLUG = 'Menu slug is not valid.',
   INVALID_SUB_MENU_SLUG = 'sub-menu slug is not valid.',
   SUB_MENU_NOT_FOUND = 'sub menu not found',
-  PRODUCT_NOT_FOUND= 'Product Not found',
+  PRODUCT_NOT_FOUND = 'Product Not found',
+  PRODUCT_CREATE_FAILED = 'Failed to create product',
+  PRODUCT_FETCH_FAILED = 'Failed to fetch products',
+  PRODUCT_DELETE_FAILED = 'Failed to delete product',
+  PRODUCT_UPDATE_FAILED = 'Failed to update product',
+  RESTAURANT_NOT_FOUND = 'Restaurant not found',
+  RESTAURANT_CREATE_FAILED = 'Failed to create restaurant',
+  RESTAURANT_FETCH_FAILED = 'Failed to fetch restaurants',
+  RESTAURANT_UPDATE_FAILED = 'Failed to update restaurant',
+  RESTAURANT_DELETE_FAILED = 'Failed to delete restaurant',
+  RESTAURANT_PRODUCTS_FETCH_FAILED = 'Failed to fetch restaurant products'
 }
