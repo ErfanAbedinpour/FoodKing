@@ -3,12 +3,13 @@ import { CreateRestaurantDto } from "./dto/create-restaurant.dto";
 import { GetUser } from "../common/decorator/getUser.decorator";
 import { RestaurantService } from "./restaurant.service";
 import { UpdateRestaurantDto } from "./dto/update-restaurant.dto";
+import { IsAuth } from "../common/decorator/auth.decorator";
 
 @Controller("restaurants")
+@IsAuth()
 export class RestaurantController {
-
-
     constructor(private readonly restaurantService:RestaurantService){}
+
     @Post()
     createRestaurant(@Body() createdRestaurant:CreateRestaurantDto, @GetUser('userId') userId:number) {
         return this.restaurantService.create(createdRestaurant,userId);

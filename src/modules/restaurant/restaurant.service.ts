@@ -24,7 +24,7 @@ export class RestaurantService {
   }
 
   async findAll(): Promise<Restaurant[]> {
-    return await this.restaurantRepository.findAll();
+    return this.restaurantRepository.findAll();
   }
 
   async findOne(id: number): Promise<Restaurant> {
