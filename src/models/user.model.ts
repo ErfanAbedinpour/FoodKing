@@ -17,10 +17,15 @@ import { Cart } from './cart.model';
 import { Order } from './order.model';
 import { Product } from './product.model';
 import { ArgonHash } from '../modules/auth/hashing/argon-hash';
+import { Hashing } from '../modules/auth/hashing/hash';
 
 @Entity({ tableName: 'User' })
 export class User extends BaseModel {
-  private hashService = new ArgonHash();
+  private hashService:Hashing 
+  constructor(){
+    super()
+    this.hashService = new ArgonHash();
+  }
 
   @Property({ nullable: false })
   name: string;
@@ -63,12 +68,13 @@ export class User extends BaseModel {
   comments = new Collection<Comment>(this);
 
   @OneToOne(() => Cart, (cart) => cart.user)
-  cart: Rel<Cart>;
+  cart: Cart;
 
   @BeforeCreate()
   async beforeCreate(args: EventArgs<this>) {
-    args.entity.password = await this.hashService.hash(args.entity.password);
-    args.entity.email = args.entity.email.toLowerCase();
-    return args;
+    // console.l
+    // args.entity.password = await this.hashService.hash(args.entity.password);
+    // args.entity.email = args.entity.email.toLowerCase();
+    // return args;
   }
 }
