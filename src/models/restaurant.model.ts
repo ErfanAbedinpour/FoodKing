@@ -13,6 +13,6 @@ export class Restaurant extends BaseModel {
   @OneToMany(() => Product, (p) => p.restaurant,{nullable:false})
   products? = new Collection<Product>(this);
 
-  @ManyToOne({nullable:false,deleteRule:'cascade',updateRule:'cascade'})
-  ownerId:User
+  @ManyToOne(()=>User,{nullable:false,deleteRule:'cascade',updateRule:'cascade'})
+  ownerId!:User
 }
