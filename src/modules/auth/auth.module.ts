@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { UserModule } from '../users/user.module';
 import { AuthController } from './auth.controller';
-import { JwtVerificationGuard } from './guards/jwt-verification.guard';
+import { JwtVerificationGuard } from '../common/guards/jwt-verification.guard';
 import { APP_GUARD } from '@nestjs/core';
-import { AuthorizationGuard } from './guards/authorization.guard';
-import { RoleAccessGuard } from './guards/role-access.guard';
+import { AuthorizationGuard } from '../common/guards/authorization.guard';
+import { RoleAccessGuard } from '../common/guards/role-access.guard';
 import { Hashing } from './hashing/hash';
 import { ArgonHash } from './hashing/argon-hash';
 import { OtpRepository } from './repository/abstract/opt-repository';
@@ -26,16 +26,7 @@ import { GenerateNewTokensHandler } from './application/handler/generate-new-tok
     CreateUserHandler,
     SendOtpHandler,
     VerifyOtpHandler,
-    JwtVerificationGuard,
     GenerateNewTokensHandler,
-    {
-      provide: APP_GUARD,
-      useClass: AuthorizationGuard,
-    },
-    {
-      provide: APP_GUARD,
-      useClass: RoleAccessGuard,
-    },
     {
       provide: Hashing,
       useClass: ArgonHash,

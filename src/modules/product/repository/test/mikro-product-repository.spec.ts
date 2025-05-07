@@ -17,17 +17,9 @@ describe('MikroProductRepository Behavior Tests', () => {
   let repository: MikroProductRepository;
   let em: EntityManager;
   let orm:MikroORM
-
   let mockRole: Role
-
-
-
   let mockUser: User;
-
-
   let mockRestaurant: Restaurant
-
-
   let mockCategory: Category;
 
   const mockProductData: ProductPersist = {
@@ -37,7 +29,7 @@ describe('MikroProductRepository Behavior Tests', () => {
     inventory: 10,
     user_id: 1,
     price: new Decimal('99.99'),
-    category_ids: [1],
+    categories: [1],
     restaurant_id: 1,
   };
 

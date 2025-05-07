@@ -10,6 +10,7 @@ import { MenuModule } from './modules/menu/menu.module';
 import { CommonModule } from './modules/common/common.module';
 import {ConfigModule} from '@nestjs/config'
 import {CqrsModule}from '@nestjs/cqrs';
+import { ProductModule } from './modules/product/product.module';
 
 @Module({
   imports: [
@@ -23,7 +24,8 @@ import {CqrsModule}from '@nestjs/cqrs';
     UserModule,
     AuthModule,
     MenuModule,
-    CommonModule
+    CommonModule,
+    ProductModule
   ],
   controllers: [AppController],
 })

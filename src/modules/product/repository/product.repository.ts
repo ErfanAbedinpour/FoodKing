@@ -8,8 +8,10 @@ export abstract class ProductRepository{
 
     abstract findBySlug(slug:string):Promise<Product>
 
+    abstract getAll():Promise<Product[]>
+
     abstract delete(id:number):Promise<Product>
 
-    abstract update(id:number,data:Partial<Omit<ProductPersist,"user_id"|"category_ids">>):Promise<Product>
+    abstract update(id:number,data:Partial<Omit<ProductPersist,"user_id">>):Promise<Product>
 
 }

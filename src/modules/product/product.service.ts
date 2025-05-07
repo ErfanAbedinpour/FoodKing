@@ -14,7 +14,7 @@ export class ProductService {
 
   async createProduct(productData: CreateProductDTO,userId:number): Promise<Product> {
     return this.productRepository.create({
-        category_ids:productData.categories,
+        categories:productData.categories,
         description:productData.description,
         inventory:productData.inventory,
         name:productData.name,
@@ -51,6 +51,12 @@ export class ProductService {
         throw new InternalServerErrorException()
     }
   }
+
+
+  async getAllProduct():Promise<Product[]>{
+    return this.productRepository.getAll();
+  }
+
 
   async updateProduct(
     id: number,

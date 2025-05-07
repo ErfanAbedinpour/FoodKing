@@ -13,7 +13,7 @@ export class ProductPersist{
 
     price:Decimal
 
-    category_ids:number[]
+    categories:number[]
 
     restaurant_id:number
 

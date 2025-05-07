@@ -7,6 +7,7 @@ import { Restaurant } from '@models/restaurant.model';
 import { ProductCategory } from '@models/product-category.model';
 import { RepositoryException } from '../../../exception/repository.exception';
 import { Injectable } from '@nestjs/common';
+import { Category } from '../../../models';
 
 @Injectable()
 export class MikroProductRepository implements ProductRepository {
@@ -18,6 +19,7 @@ export class MikroProductRepository implements ProductRepository {
         const user = this.em.getReference(User, product.user_id);
         const restaurant = this.em.getReference(Restaurant, product.restaurant_id);
         
+        const productCategories:ProductCategory[] = []
         const newProduct = this.em.create(Product,{
             name: product.name,
             description: product.description,
@@ -27,9 +29,10 @@ export class MikroProductRepository implements ProductRepository {
             user,
             restaurant,
             is_active: true,
+            category:productCategories
         },{persist:true});
 
-        product.category_ids.forEach((category)=> this.em.create(ProductCategory,{category,product:newProduct},{persist:true}));
+        product.categories.forEach((category)=> productCategories.push(this.em.create(ProductCategory,{category,product:newProduct},{partial:true})));
 
         try{
             await this.em.flush();
@@ -41,7 +44,7 @@ export class MikroProductRepository implements ProductRepository {
     }
 
     async findById(id: number): Promise<Product> {
-        const product = await this.em.findOneOrFail(Product,{ id });
+        const product = await this.em.findOne(Product,id);
         if (!product) {
             throw new RepositoryException(`Product with id ${id} not found`);
         }
@@ -73,5 +76,10 @@ export class MikroProductRepository implements ProductRepository {
         const updatedProduct= wrap(product).assign(data);
         await this.em.flush();
         return updatedProduct ;
+   }
+
+
+   getAll(): Promise<Product[]> {
+        return this.em.findAll(Product,{});
    }
 }

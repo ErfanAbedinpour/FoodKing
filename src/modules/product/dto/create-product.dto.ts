@@ -1,48 +1,43 @@
 import { Type } from "class-transformer";
-import { IsArray, IsNotEmpty, IsNumber, IsNumberString, isString, IsString, IsTaxId } from "class-validator";
+import {  IsNotEmpty, IsNumber, IsNumberString,  IsString} from "class-validator";
 import Decimal from "decimal.js";
 import {ApiProperty} from '@nestjs/swagger'
 
 export class CreateProductDTO{
-    @ApiProperty()
+    @ApiProperty({example:"burger"})
     @IsNotEmpty()
     @IsString()
     name:string
 
 
-    @ApiProperty()
+    @ApiProperty({example:"burger"})
     @IsNotEmpty()
     @IsString()
     slug:string
 
-    @ApiProperty()
-    @IsNotEmpty()
-    @IsString()
-    en_name:string
-
-    @ApiProperty()
+    @ApiProperty({example:5})
     @IsNotEmpty()
     @IsNumber()
     inventory:number
 
 
-    @ApiProperty()
+    @ApiProperty({type:[Number],example:[1,2,3]})
     @IsNotEmpty()
     @IsNumber({},{each: true})
     categories:number[]
 
-    @ApiProperty()
+    @ApiProperty({type:'string',example:"1200000"})
     @IsNumberString()
     @IsNotEmpty()
     @Type(()=>Decimal)
     price:Decimal
 
-    @ApiProperty()
+    @ApiProperty({description:"This burger was created with the best materials. The taste is perfect!"})
     @IsNotEmpty()
     @IsString()
     description:string
 
-    @ApiProperty()
+    @ApiProperty({example:1})
     @IsNumber()
     @IsNotEmpty()
     restaurant_id:number
