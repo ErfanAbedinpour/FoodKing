@@ -8,6 +8,7 @@ export class ProductAttribute {
     primary: true,
     fieldName: 'product_id',
     deleteRule: 'cascade',
+    updateRule:'cascade'
   })
   product!: Rel<Product>;
 
@@ -15,6 +16,7 @@ export class ProductAttribute {
     primary: true,
     fieldName: 'attribute_id',
     deleteRule: 'cascade',
+    updateRule:'cascade'
   })
   attribute!: Rel<Attribute>;
 

@@ -16,3 +16,4 @@ export { CartProduct } from './cart-product.model';
 export { MenuModel } from './menu.model';
 export { SubMenuModel } from './sub-menu.model';
 export { ProductCategory } from './product-category.model';
+export {Restaurant} from './restaurant.model'
