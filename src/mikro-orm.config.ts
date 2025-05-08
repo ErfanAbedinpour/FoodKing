@@ -23,7 +23,7 @@ export default defineConfig({
   logger: (msg) => logger.debug(msg),
   metadataCache: { enabled: true },
   seeder: {
-    path: './src/seeder',
+    path: './dist/seeder',
     pathTs: './src/seeder',
     defaultSeeder: DatabaseSeeder.name,
     glob: '!(*.d).{js,ts}',
