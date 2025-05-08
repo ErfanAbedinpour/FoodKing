@@ -8,7 +8,7 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import { ErrorMessage } from '../../../ErrorMessages/Error.enum';
-import { IAccessTokenPayload } from '../application/interfaces/accessTokenPayload';
+import { IAccessTokenPayload } from '../../auth/application/interfaces/accessTokenPayload';
 
 @Injectable()
 export class JwtVerificationGuard implements CanActivate {

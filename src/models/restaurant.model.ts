@@ -1,6 +1,6 @@
-import { Collection, Entity, OneToMany, Property } from '@mikro-orm/core';
+import { Collection, Entity, ManyToOne, OneToMany, Property } from '@mikro-orm/core';
 import { BaseModel } from './base.model';
-import { Product } from '.';
+import { Product, User } from '.';
 
 @Entity({ tableName: 'Restaurant' })
 export class Restaurant extends BaseModel {
@@ -10,6 +10,9 @@ export class Restaurant extends BaseModel {
   @Property({ nullable: false })
   en_name: string;
 
-  @OneToMany(() => Product, (p) => p.restaurant)
-  products = new Collection<Product>(this);
+  @OneToMany(() => Product, (p) => p.restaurant,{nullable:false})
+  products? = new Collection<Product>(this);
+
+  @ManyToOne(()=>User,{nullable:false,deleteRule:'cascade',updateRule:'cascade'})
+  ownerId!:User
 }

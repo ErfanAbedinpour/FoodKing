@@ -1,7 +1,5 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import {  MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
-import { CqrsModule } from '@nestjs/cqrs';
-import { ConfigModule } from '@nestjs/config';
 import { join } from 'path';
 import { cwd } from 'process';
 import { ForkEntityManagerMiddleware } from './middleware/fork.middleware';
@@ -9,6 +7,10 @@ import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { UserModule } from './modules/users/user.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { MenuModule } from './modules/menu/menu.module';
+import { CommonModule } from './modules/common/common.module';
+import {ConfigModule} from '@nestjs/config'
+import {CqrsModule}from '@nestjs/cqrs';
+import { ProductModule } from './modules/product/product.module';
 
 @Module({
   imports: [
@@ -22,6 +24,8 @@ import { MenuModule } from './modules/menu/menu.module';
     UserModule,
     AuthModule,
     MenuModule,
+    CommonModule,
+    ProductModule
   ],
   controllers: [AppController],
 })
