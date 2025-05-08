@@ -1,6 +1,6 @@
 import { EntityManager } from '@mikro-orm/core';
 import { Seeder } from '@mikro-orm/seeder';
-import { Role, UserRole } from '@models/index';
+import { Role, UserRole } from '@models/role.model';
 
 export class DatabaseSeeder extends Seeder {
   async run(em: EntityManager): Promise<void> {
