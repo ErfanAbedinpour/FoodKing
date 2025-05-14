@@ -16,6 +16,7 @@ async function bootstrap() {
     defaultVersion: process.env.VERSION,
   });
 
+
   app.enableCors({
     origin: '*',
     credentials: true,
