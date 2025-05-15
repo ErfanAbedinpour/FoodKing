@@ -9,7 +9,7 @@ describe('JWT Verification Guard', () => {
   let guard: RoleAccessGuard;
 
   let mockReflector = {
-    getAll: jest.fn(),
+    getAllAndOverride: jest.fn(),
   } as unknown as Reflector;
 
   beforeEach(async () => {
@@ -39,14 +39,14 @@ describe('JWT Verification Guard', () => {
   });
 
   it('Should be return true if no role was set', async () => {
-    jest.spyOn(mockReflector, 'getAll').mockReturnValueOnce(undefined as never);
+    jest.spyOn(mockReflector, 'getAllAndOverride').mockReturnValueOnce(undefined as never);
     expect(await guard.canActivate(mockCtx)).toEqual(true);
   });
 
   it('Should be Throw Forbidden if role is Invalid', () => {
     jest
-      .spyOn(mockReflector, 'getAll')
-      .mockReturnValue([UserRole.Manager] as never);
+      .spyOn(mockReflector, 'getAllAndOverride')
+      .mockReturnValue([UserRole.Owner] as never);
 
     const res = guard.canActivate(mockCtx);
     expect(res).rejects.toThrow(ForbiddenException);
@@ -55,7 +55,7 @@ describe('JWT Verification Guard', () => {
 
   it('Should be true', async () => {
     jest
-      .spyOn(mockReflector, 'getAll')
+      .spyOn(mockReflector, 'getAllAndOverride')
       .mockReturnValue([UserRole.Customer] as never);
 
     const res = await guard.canActivate(mockCtx);

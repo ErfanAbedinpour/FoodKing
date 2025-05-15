@@ -191,74 +191,6 @@
         },
         "name": {
           "name": "name",
-          "type": "varchar(255)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 255,
-          "mappedType": "string"
-        },
-        "en_name": {
-          "name": "en_name",
-          "type": "varchar(255)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 255,
-          "mappedType": "string"
-        }
-      },
-      "name": "Restaurant",
-      "schema": "public",
-      "indexes": [
-        {
-          "keyName": "Restaurant_pkey",
-          "columnNames": [
-            "id"
-          ],
-          "composite": false,
-          "constraint": true,
-          "primary": true,
-          "unique": true
-        }
-      ],
-      "checks": [],
-      "foreignKeys": {},
-      "nativeEnums": {}
-    },
-    {
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "serial",
-          "unsigned": false,
-          "autoincrement": true,
-          "primary": true,
-          "nullable": false,
-          "mappedType": "integer"
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "bigint",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "bigint"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "bigint",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "bigint"
-        },
-        "name": {
-          "name": "name",
           "type": "text",
           "unsigned": false,
           "autoincrement": false,
@@ -267,7 +199,6 @@
           "default": "'Customer'",
           "enumItems": [
             "Customer",
-            "Manager",
             "Delivery",
             "Owner"
           ],
@@ -632,6 +563,97 @@
             "user_id"
           ],
           "localTableName": "public.session",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.User",
+          "deleteRule": "cascade",
+          "updateRule": "cascade"
+        }
+      },
+      "nativeEnums": {}
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "unsigned": false,
+          "autoincrement": true,
+          "primary": true,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "bigint",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "bigint"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "bigint",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "bigint"
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 255,
+          "mappedType": "string"
+        },
+        "en_name": {
+          "name": "en_name",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 255,
+          "mappedType": "string"
+        },
+        "owner_id_id": {
+          "name": "owner_id_id",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "integer"
+        }
+      },
+      "name": "Restaurant",
+      "schema": "public",
+      "indexes": [
+        {
+          "keyName": "Restaurant_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "constraint": true,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "Restaurant_owner_id_id_foreign": {
+          "constraintName": "Restaurant_owner_id_id_foreign",
+          "columnNames": [
+            "owner_id_id"
+          ],
+          "localTableName": "public.Restaurant",
           "referencedColumnNames": [
             "id"
           ],
@@ -1159,6 +1181,7 @@
             "id"
           ],
           "referencedTableName": "public.products",
+          "deleteRule": "cascade",
           "updateRule": "cascade"
         },
         "product-category_category_id_foreign": {
@@ -1171,6 +1194,7 @@
             "id"
           ],
           "referencedTableName": "public.categories",
+          "deleteRule": "cascade",
           "updateRule": "cascade"
         }
       },

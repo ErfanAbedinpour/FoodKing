@@ -11,7 +11,7 @@ describe('JWT Verification Guard', () => {
 
   let mockReflector = {
     getAll: jest.fn(),
-  } as unknown as Reflector;
+  } ;
 
   let guard: AuthorizationGuard;
 

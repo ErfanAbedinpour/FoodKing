@@ -3,9 +3,8 @@ import { BaseModel } from './base.model';
 
 export enum UserRole {
   Customer = 'Customer',
-  Manager = 'Manager',
   Delivery = 'Delivery',
-  RestaurantOwner = 'Owner',
+  Owner= 'Owner',
 }
 
 @Entity({ tableName: 'Role' })
