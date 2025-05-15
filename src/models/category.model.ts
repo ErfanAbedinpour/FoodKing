@@ -28,6 +28,6 @@ export class Category extends BaseModel {
   @ManyToOne(() => User, { fieldName: 'user_id' })
   user: Rel<User>;
 
-  @OneToMany(() => ProductCategory, (cp) => cp.category)
+  @OneToMany(() => ProductCategory, (cp) => cp.category,{hidden:true})
   products = new Collection<ProductCategory>(this);
 }

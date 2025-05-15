@@ -16,7 +16,12 @@ export class CategoryDTO{
     @ApiProperty()
     isActivate:boolean
 
+    @ApiProperty({readOnly:true,description:"Created at"})
+    createdAt:Date
 
-    @ApiProperty()
-    userId:number
+    @ApiProperty({readOnly:true,description:"Updated at"})
+    updatedAt:Date
+
+    @ApiProperty({readOnly:true,description:"User ID"})
+    user:number
 }

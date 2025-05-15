@@ -76,7 +76,7 @@ export class CategoryService {
                 throw new NotFoundException(error.message);
 
             if(error instanceof UniqueConstraintViolationException)
-                throw new BadRequestException({message:ErrorMessage.CATEGORY_SLUG_IS_INVALID})
+                throw new BadRequestException(ErrorMessage.CATEGORY_SLUG_IS_INVALID)
 
             this.logger.error(error)
             throw new NotFoundException(`Category with ID ${id} not found`);
@@ -85,7 +85,7 @@ export class CategoryService {
 
     async remove(id: string) {
         try {
-            const result = await this.categoryRepository.delete(id);
+            await this.categoryRepository.delete(id);
             return {msg:"Removed successfully"}
         } catch (error) {
             if(error instanceof RepositoryException)

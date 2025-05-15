@@ -10,13 +10,13 @@ export class CreateCategoryDto {
   @IsString()
   en_name: string;
 
+  @ApiProperty({required:true})
+  @IsNotEmpty()
+  @IsString()
+  slug:string
+
   @ApiProperty({required:false})
   @IsBoolean()
   @IsOptional()
   isActivate?: boolean;
-
-
-  @IsNotEmpty()
-  @IsString()
-  slug:string
 } 

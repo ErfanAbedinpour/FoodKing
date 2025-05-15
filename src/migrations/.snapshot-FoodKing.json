@@ -199,7 +199,6 @@
           "default": "'Customer'",
           "enumItems": [
             "Customer",
-            "Manager",
             "Delivery",
             "Owner"
           ],
