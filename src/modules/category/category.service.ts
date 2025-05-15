@@ -98,4 +98,8 @@ export class CategoryService {
     async findActiveCategories(): Promise<Category[]> {
         return this.categoryRepository.findActiveCategories();
     }
+
+    async findIds(ids:number[]):Promise<Category[]>{
+        return this.categoryRepository.findIds(ids);
+    }
 }

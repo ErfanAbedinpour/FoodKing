@@ -1,4 +1,4 @@
-import {  EntityManager, wrap } from '@mikro-orm/core';
+import {  EntityManager, Loaded, wrap } from '@mikro-orm/core';
 import { Product } from '@models/product.model';
 import { ProductPersist } from './persistance/product';
 import { ProductRepository } from './product.repository';
@@ -7,7 +7,7 @@ import { Restaurant } from '@models/restaurant.model';
 import { ProductCategory } from '@models/product-category.model';
 import { RepositoryException } from '../../../exception/repository.exception';
 import { Injectable } from '@nestjs/common';
-import { Category } from '../../../models';
+import { Category, ProductAttribute } from '../../../models';
 
 @Injectable()
 export class MikroProductRepository implements ProductRepository {
@@ -17,9 +17,9 @@ export class MikroProductRepository implements ProductRepository {
     async create(product: ProductPersist): Promise<Product> {
 
         const user = this.em.getReference(User, product.user_id);
-        const restaurant = this.em.getReference(Restaurant, product.restaurant_id);
-        
-        const productCategories:ProductCategory[] = []
+
+        let productCategories:ProductCategory[] = []
+
         const newProduct = this.em.create(Product,{
             name: product.name,
             description: product.description,
@@ -27,12 +27,12 @@ export class MikroProductRepository implements ProductRepository {
             inventory: product.inventory,
             price: product.price,
             user,
-            restaurant,
+            restaurant:product.restaurant,
             is_active: true,
-            category:productCategories
+            category:productCategories,
         },{persist:true});
 
-        product.categories.forEach((category)=> productCategories.push(this.em.create(ProductCategory,{category,product:newProduct},{partial:true})));
+        product.categories.forEach((category)=> productCategories.push(this.em.create(ProductCategory,{category,product:newProduct},{persist:true})));
 
         try{
             await this.em.flush();

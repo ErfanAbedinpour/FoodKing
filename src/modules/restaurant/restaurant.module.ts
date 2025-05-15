@@ -12,6 +12,7 @@ import { RestaurantRepository } from './respository/abstract/restaurant.reposito
             provide:RestaurantRepository,
             useClass:MikroRestaurantRepository
         }
-    ]
+    ],
+    exports:[RestaurantService]
 })
 export class RestaurantModule{}

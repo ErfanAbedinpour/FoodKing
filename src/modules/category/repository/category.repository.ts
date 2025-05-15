@@ -10,4 +10,5 @@ export abstract class CategoryRepository {
     abstract update(id: string, data: Partial<Omit<CategoryPersist,'userId'>>): Promise<Category>;
     abstract delete(id: string): Promise<Category>;
     abstract findActiveCategories(): Promise<Category[]>;
+    abstract findIds(ids:number[]):Promise<Category[]>
 } 

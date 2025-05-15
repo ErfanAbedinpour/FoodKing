@@ -69,4 +69,9 @@ export class MikroCategoryRepository implements CategoryRepository {
     async findActiveCategories(): Promise<Category[]> {
         return this.em.find(Category, { isActivate: true });
     }
+
+    async findIds(ids: number[]): Promise<Category[]> {
+        return this.em.find(Category, { id: { $in: ids } });
+    }
+
 }
