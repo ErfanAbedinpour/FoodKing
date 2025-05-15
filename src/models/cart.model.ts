@@ -6,12 +6,12 @@ import { CartProduct } from './cart-product.model';
 
 @Entity({ tableName: 'carts' })
 export class Cart extends BaseModel {
-  @OneToOne(() => User, {
+  @OneToOne(() => User,user=>user.cart, {
     fieldName: 'user_id',
     owner: true,
     deleteRule: 'cascade',
   })
-  user: Rel<User>;
+  user: User;
 
   @ManyToMany(() => Product, (product) => product.carts, {
     pivotEntity: () => CartProduct,

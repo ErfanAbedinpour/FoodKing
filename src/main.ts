@@ -16,9 +16,11 @@ async function bootstrap() {
     defaultVersion: process.env.VERSION,
   });
 
+
   app.enableCors({
+    origin: '*',
     credentials: true,
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
     allowedHeaders: ['Content-type', 'Authorization'],
     optionsSuccessStatus: 204,
   });

@@ -21,5 +21,6 @@ export enum ErrorMessage {
   RESTAURANT_FETCH_FAILED = 'Failed to fetch restaurants',
   RESTAURANT_UPDATE_FAILED = 'Failed to update restaurant',
   RESTAURANT_DELETE_FAILED = 'Failed to delete restaurant',
-  RESTAURANT_PRODUCTS_FETCH_FAILED = 'Failed to fetch restaurant products'
+  RESTAURANT_PRODUCTS_FETCH_FAILED = 'Failed to fetch restaurant products',
+  CATEGORY_SLUG_IS_INVALID= 'Category Slug is Invalid'
 }

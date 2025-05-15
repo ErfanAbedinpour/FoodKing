@@ -31,7 +31,7 @@ export class JwtVerificationGuard implements CanActivate {
       );
 
       req.user = {
-        id: jwtPayload.userId,
+        userId: jwtPayload.userId,
         name: jwtPayload.name,
         role: jwtPayload.role,
       };
@@ -46,7 +46,7 @@ declare global {
   namespace Express {
     interface Request {
       user: {
-        id: number;
+        userId: number;
         name: string;
         role: string;
       };

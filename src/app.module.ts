@@ -11,6 +11,8 @@ import { CommonModule } from './modules/common/common.module';
 import {ConfigModule} from '@nestjs/config'
 import {CqrsModule}from '@nestjs/cqrs';
 import { ProductModule } from './modules/product/product.module';
+import { RestaurantModule } from './modules/restaurant/restaurant.module';
+import { CategoryModule } from './modules/category/category.module';
 
 @Module({
   imports: [
@@ -25,7 +27,9 @@ import { ProductModule } from './modules/product/product.module';
     AuthModule,
     MenuModule,
     CommonModule,
-    ProductModule
+    ProductModule,
+    RestaurantModule,
+    CategoryModule
   ],
   controllers: [AppController],
 })
