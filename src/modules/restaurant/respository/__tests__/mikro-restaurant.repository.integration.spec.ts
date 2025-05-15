@@ -41,7 +41,7 @@ describe('MikroRestaurantRepository Integration Tests', () => {
 
 
         testRole = em.create(Role, {
-            name: UserRole.RestaurantOwner
+            name: UserRole.Owner
         },{persist:true});
 
         testUser = em.create(User, {
