@@ -14,7 +14,7 @@ import { ROLE_ACCESS } from '../decorator/role-access.decorator';
 export class RoleAccessGuard implements CanActivate {
   constructor(private readonly reflector: Reflector) {}
   async canActivate(ctx: ExecutionContext) {
-    const roleMeta = this.reflector.getAll<UserRole[]>(ROLE_ACCESS, [
+    const roleMeta = this.reflector.getAllAndOverride<UserRole[]>(ROLE_ACCESS, [
       ctx.getClass(),
       ctx.getHandler(),
     ]) || [undefined];

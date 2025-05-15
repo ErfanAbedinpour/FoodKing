@@ -7,7 +7,6 @@ export class DatabaseSeeder extends Seeder {
     // create role
     em.create(Role, { name: UserRole.Customer });
     em.create(Role, { name: UserRole.Delivery });
-    em.create(Role, { name: UserRole.RestaurantOwner });
-    em.create(Role, { name: UserRole.Manager });
+    em.create(Role, { name: UserRole.Owner});
   }
 }
