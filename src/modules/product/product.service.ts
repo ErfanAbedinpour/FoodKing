@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Injectable,
   InternalServerErrorException,
   Logger,
@@ -95,12 +96,16 @@ export class ProductService {
 
     const updatedPayload = {};
 
-    for(const key in updateData){
-      if(key === 'categories' && updateData[key]){
-        updatedPayload[key] = await this.categoryService.findIds(updateData[key]);
-      } else if(key === 'restaurant_id' && updateData[key]){
-        updatedPayload[key] = await this.restaurantService.findOne(updateData[key]);
-      }else{
+    for (const key in updateData) {
+      if (key === 'categories' && updateData[key]) {
+        updatedPayload[key] = await this.categoryService.findIds(
+          updateData[key],
+        );
+      } else if (key === 'restaurant_id' && updateData[key]) {
+        updatedPayload[key] = await this.restaurantService.findOne(
+          updateData[key],
+        );
+      } else {
         updatedPayload[key] = updateData[key];
       }
     }
@@ -115,30 +120,35 @@ export class ProductService {
   async updateInventory(id: number, quantity: number): Promise<Product> {
     const product = await this.getProductById(id);
     if (product.inventory < quantity) {
-      throw new Error('Insufficient inventory');
+      throw new BadRequestException('Insufficient inventory');
     }
-    return this.productRepository.update(id, {
-      inventory: product.inventory - quantity,
-    });
+    try {
+      const result = await this.productRepository.update(id, {
+        inventory: product.inventory - quantity,
+      });
+
+      return result;
+    } catch (err) {
+      this.logger.error(err);
+      throw new InternalServerErrorException();
+    }
   }
 
   async toggleProductStatus(id: number): Promise<Product> {
-    try{
+    try {
       const product = await this.getProductById(id);
 
       const result = await this.productRepository.update(id, {
         is_active: !product.is_active,
       });
 
-      return result; 
-
-    }catch(err){ 
-      if(err instanceof RepositoryException)
+      return result;
+    } catch (err) {
+      if (err instanceof RepositoryException)
         throw new NotFoundException(err.message);
 
       this.logger.error(err);
       throw new InternalServerErrorException();
     }
   }
-
 }
