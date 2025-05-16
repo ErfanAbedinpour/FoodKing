@@ -13,7 +13,6 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { CategoryService } from '../category/category.service';
 import { RestaurantService } from '../restaurant/restaurant.service';
 import slugify from 'slugify';
-import { Loaded } from '@mikro-orm/core';
 
 @Injectable()
 export class ProductService {
@@ -31,7 +30,7 @@ export class ProductService {
   ): Promise<Product> {
     const [restaurant, categories] = await Promise.all([
       this.restaurantService.findOne(productData.restaurant_id),
-      this.categoryService.findIds(productData.categories),
+      this.categoryService.findAllByIds(productData.categories),
     ]);
 
     try {
@@ -92,36 +91,51 @@ export class ProductService {
     id: number,
     updateData: UpdateProductDto,
   ): Promise<Product> {
-    await this.getProductById(id);
-
     const updatedPayload = {};
 
     for (const key in updateData) {
       if (key === 'categories' && updateData[key]) {
-        updatedPayload[key] = await this.categoryService.findIds(
+        updatedPayload[key] = await this.categoryService.findAllByIds(
           updateData[key],
         );
       } else if (key === 'restaurant_id' && updateData[key]) {
-        updatedPayload[key] = await this.restaurantService.findOne(
+        updatedPayload['restaurant'] = await this.restaurantService.findOne(
           updateData[key],
         );
       } else {
         updatedPayload[key] = updateData[key];
       }
     }
-    return this.productRepository.update(id, updatedPayload);
+    try {
+      const result = await this.productRepository.update(id, updatedPayload);
+      return result;
+    } catch (err) {
+      if (err instanceof RepositoryException)
+        throw new NotFoundException(err.message);
+      this.logger.error(err);
+      throw new InternalServerErrorException();
+    }
   }
 
   async deleteProduct(id: number): Promise<Product> {
-    await this.getProductById(id);
-    return this.productRepository.delete(id);
+    try {
+      const result = await this.productRepository.delete(id);
+      return result;
+    } catch (err) {
+      if (err instanceof RepositoryException)
+        throw new NotFoundException(err.message);
+      this.logger.error(err);
+      throw new InternalServerErrorException();
+    }
   }
 
   async updateInventory(id: number, quantity: number): Promise<Product> {
     const product = await this.getProductById(id);
+
     if (product.inventory < quantity) {
       throw new BadRequestException('Insufficient inventory');
     }
+
     try {
       const result = await this.productRepository.update(id, {
         inventory: product.inventory - quantity,
@@ -135,9 +149,9 @@ export class ProductService {
   }
 
   async toggleProductStatus(id: number): Promise<Product> {
-    try {
-      const product = await this.getProductById(id);
+    const product = await this.getProductById(id);
 
+    try {
       const result = await this.productRepository.update(id, {
         is_active: !product.is_active,
       });
