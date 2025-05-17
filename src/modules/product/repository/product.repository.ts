@@ -1,5 +1,6 @@
 import { Product } from "@models/product.model";
 import { ProductPersist } from "./persistance/product";
+import { Loaded } from "@mikro-orm/core";
 
 export abstract class ProductRepository{
     abstract create(product:ProductPersist):Promise<Product>

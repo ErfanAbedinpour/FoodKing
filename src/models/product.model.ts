@@ -1,5 +1,4 @@
 import {
-  Cascade,
   Collection,
   Entity,
   ManyToMany,
@@ -39,6 +38,7 @@ export class Product extends BaseModel {
     fieldName: 'user_id',
     nullable: false,
     deleteRule: 'set null',
+    hidden:true,
   })
   user!: Rel<User>;
 
@@ -51,18 +51,20 @@ export class Product extends BaseModel {
   @ManyToMany(() => Cart, (cart) => cart.products, {
     pivotEntity: () => CartProduct,
     owner: true,
+    hidden:true,
   })
   carts = new Collection<Cart>(this);
 
   @ManyToMany(() => Order, (order) => order.products, {
     pivotEntity: () => OrderItem,
+    hidden:true,
   })
   orders = new Collection<Order>(this);
 
   @OneToMany(() => ProductAttribute, (attr) => attr.product)
   attributes = new Collection<ProductAttribute>(this);
 
-  @OneToMany(() => Comment, (comment) => comment.product)
+  @OneToMany(() => Comment, (comment) => comment.product,{hidden:true})
   comments = new Collection<Comment>(this);
 
   @ManyToOne(() => Restaurant, {
