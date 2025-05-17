@@ -1,4 +1,5 @@
 import Decimal from "decimal.js"
+import { Category, Restaurant } from "../../../../models"
 
 export class ProductPersist{
     name:string
@@ -13,9 +14,9 @@ export class ProductPersist{
 
     price:Decimal
 
-    categories:number[]
+    categories:Category[]
 
-    restaurant_id:number
+    restaurant:Restaurant
 
     is_active?:boolean
 }
