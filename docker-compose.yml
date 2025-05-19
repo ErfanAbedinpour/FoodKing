@@ -14,7 +14,7 @@ services:
       - psql
     volumes:
       - .:/app
-      - public-data:/app/public
+      - ./public:/app/public
     networks:
       - app
     command: ['npm', 'run', 'start:dev']

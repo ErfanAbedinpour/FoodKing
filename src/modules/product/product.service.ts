@@ -13,10 +13,14 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { CategoryService } from '../category/category.service';
 import { RestaurantService } from '../restaurant/restaurant.service';
 import slugify from 'slugify';
+import { UniqueConstraintViolationException } from '@mikro-orm/core';
+import { createWriteStream, existsSync, stat, unlinkSync } from 'node:fs';
 
 @Injectable()
 export class ProductService {
   private readonly logger = new Logger(ProductService.name);
+
+  private readonly IMAGE_PATH = `${process.cwd()}/public/product-images`;
 
   constructor(
     private readonly productRepository: ProductRepository,
@@ -24,23 +28,49 @@ export class ProductService {
     private readonly restaurantService: RestaurantService,
   ) {}
 
+  private generateFileName(image: Express.Multer.File) {
+    return `${Date.now()}-${image.originalname}`;
+  }
+  private removeImage(fileName: string) {
+    const path = `${this.IMAGE_PATH}/${fileName}`;
+    if (!existsSync(path)) return;
+    unlinkSync(path);
+  }
+
+  private uploadImage(fileName: string, image: Express.Multer.File) {
+    const path = `${this.IMAGE_PATH}/${fileName}`;
+
+    const writeStream = createWriteStream(path);
+
+    writeStream.write(image.buffer);
+
+    writeStream.on('error', (err) => {
+      this.logger.error(err);
+    });
+  }
+
   async createProduct(
     productData: CreateProductDTO,
     userId: number,
-  ): Promise<Product> {
+    image?: Express.Multer.File,
+  ) {
     const [restaurant, categories] = await Promise.all([
       this.restaurantService.findOne(productData.restaurant_id),
       this.categoryService.findAllByIds(productData.categories),
     ]);
 
     try {
-      const result = await this.productRepository.create({
+      let imagePath;
+      if (image) imagePath = this.generateFileName(image);
+
+      await this.productRepository.create({
         categories,
         description: productData.description,
         inventory: productData.inventory,
         name: productData.name,
         price: productData.price,
         restaurant: restaurant,
+        image: imagePath,
         slug: slugify(productData.slug, {
           lower: true,
           strict: true,
@@ -50,8 +80,19 @@ export class ProductService {
         user_id: userId,
       });
 
-      return result;
+      this.uploadImage(imagePath, image!);
+      return {
+        categories,
+        description: productData.description,
+        inventory: productData.inventory,
+        name: productData.name,
+        price: productData.price,
+        restaurant: restaurant,
+        image: imagePath,
+      };
     } catch (err) {
+      if (err instanceof UniqueConstraintViolationException)
+        throw new BadRequestException('Slug is already exists');
       this.logger.error(err);
       throw new InternalServerErrorException();
     }
@@ -120,6 +161,7 @@ export class ProductService {
   async deleteProduct(id: number): Promise<Product> {
     try {
       const result = await this.productRepository.delete(id);
+      this.removeImage(result.image || '');
       return result;
     } catch (err) {
       if (err instanceof RepositoryException)
