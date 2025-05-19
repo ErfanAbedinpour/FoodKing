@@ -1,22 +1,24 @@
-import Decimal from "decimal.js"
-import { Category, Restaurant } from "../../../../models"
+import Decimal from 'decimal.js';
+import { Category, Restaurant } from '../../../../models';
 
-export class ProductPersist{
-    name:string
+export class ProductPersist {
+  name: string;
 
-    description:string
+  description: string;
 
-    slug:string
+  slug: string;
 
-    inventory:number
+  inventory: number;
 
-    user_id:number
+  user_id: number;
 
-    price:Decimal
+  price: Decimal;
 
-    categories:Category[]
+  categories: Category[];
 
-    restaurant:Restaurant
+  restaurant: Restaurant;
 
-    is_active?:boolean
+  is_active?: boolean;
+
+  image?: string;
 }
