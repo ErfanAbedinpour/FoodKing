@@ -7,16 +7,13 @@ import { Restaurant } from '@models/restaurant.model';
 import { ProductCategory } from '@models/product-category.model';
 import { RepositoryException } from '../../../exception/repository.exception';
 import { Injectable } from '@nestjs/common';
-import { Category, ProductAttribute } from '../../../models';
 
 @Injectable()
 export class MikroProductRepository implements ProductRepository {
   constructor(private readonly em: EntityManager) {}
 
-  async create(product: ProductPersist): Promise<Product> {
+  async create(product: ProductPersist): Promise<void> {
     const user = this.em.getReference(User, product.user_id);
-
-    let productCategories: ProductCategory[] = [];
 
     const newProduct = this.em.create(
       Product,
@@ -29,13 +26,13 @@ export class MikroProductRepository implements ProductRepository {
         user,
         restaurant: product.restaurant,
         is_active: true,
-        category: productCategories,
+        image: product.image,
       },
       { persist: true },
     );
 
     product.categories.forEach((category) =>
-      productCategories.push(
+      newProduct.category.add(
         this.em.create(
           ProductCategory,
           { category, product: newProduct },
@@ -46,7 +43,6 @@ export class MikroProductRepository implements ProductRepository {
 
     try {
       await this.em.flush();
-      return newProduct;
     } catch (err) {
       throw err;
     }
