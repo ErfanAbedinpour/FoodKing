@@ -13,7 +13,7 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { CategoryService } from '../category/category.service';
 import { RestaurantService } from '../restaurant/restaurant.service';
 import slugify from 'slugify';
-import { createWriteStream } from 'node:fs';
+import { createWriteStream, existsSync, stat, unlinkSync } from 'node:fs';
 import { UniqueConstraintViolationException } from '@mikro-orm/core';
 
 @Injectable()
@@ -31,6 +31,12 @@ export class ProductService {
   private generateFileName(image: Express.Multer.File) {
     return `${Date.now()}-${image.originalname}`;
   }
+  private removeImage(fileName: string) {
+    const path = `${this.IMAGE_PATH}/${fileName}`;
+    if (!existsSync(path)) return;
+    unlinkSync(path);
+  }
+
   private uploadImage(fileName: string, image: Express.Multer.File) {
     const path = `${this.IMAGE_PATH}/${fileName}`;
 
@@ -155,6 +161,7 @@ export class ProductService {
   async deleteProduct(id: number): Promise<Product> {
     try {
       const result = await this.productRepository.delete(id);
+      this.removeImage(result.image || '');
       return result;
     } catch (err) {
       if (err instanceof RepositoryException)
