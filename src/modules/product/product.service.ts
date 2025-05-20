@@ -13,8 +13,8 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { CategoryService } from '../category/category.service';
 import { RestaurantService } from '../restaurant/restaurant.service';
 import slugify from 'slugify';
-import { createWriteStream, existsSync, stat, unlinkSync } from 'node:fs';
 import { UniqueConstraintViolationException } from '@mikro-orm/core';
+import { createWriteStream, existsSync, stat, unlinkSync } from 'node:fs';
 
 @Injectable()
 export class ProductService {
