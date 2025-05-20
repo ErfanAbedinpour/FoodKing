@@ -769,6 +769,16 @@
           "nullable": false,
           "default": "true",
           "mappedType": "boolean"
+        },
+        "image": {
+          "name": "image",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "length": 255,
+          "mappedType": "string"
         }
       },
       "name": "products",
@@ -780,6 +790,16 @@
           ],
           "composite": false,
           "keyName": "products_slug_unique",
+          "constraint": true,
+          "primary": false,
+          "unique": true
+        },
+        {
+          "columnNames": [
+            "image"
+          ],
+          "composite": false,
+          "keyName": "products_image_unique",
           "constraint": true,
           "primary": false,
           "unique": true
