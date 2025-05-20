@@ -44,7 +44,7 @@ import { memoryStorage } from 'multer';
 @ApiExtraModels(CreateProductDTO)
 @IsAuth()
 export class ProductController {
-  constructor(private readonly productService: ProductService) {}
+  constructor(private readonly productService: ProductService) { }
 
   @Post()
   @UseInterceptors(FileInterceptor('image', { storage: memoryStorage() }))
@@ -81,7 +81,7 @@ export class ProductController {
         ],
       }),
     )
-    image?: Express.Multer.File,
+    image: Express.Multer.File,
   ) {
     return this.productService.createProduct(createProductDto, userId, image);
   }
