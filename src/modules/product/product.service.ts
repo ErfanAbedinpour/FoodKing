@@ -14,7 +14,7 @@ import { CategoryService } from '../category/category.service';
 import { RestaurantService } from '../restaurant/restaurant.service';
 import slugify from 'slugify';
 import { UniqueConstraintViolationException } from '@mikro-orm/core';
-import { createWriteStream, existsSync, stat, unlinkSync } from 'node:fs';
+import { createWriteStream, existsSync, unlinkSync } from 'node:fs';
 
 @Injectable()
 export class ProductService {
@@ -26,7 +26,7 @@ export class ProductService {
     private readonly productRepository: ProductRepository,
     private readonly categoryService: CategoryService,
     private readonly restaurantService: RestaurantService,
-  ) {}
+  ) { }
 
   private generateFileName(image: Express.Multer.File) {
     return `${Date.now()}-${image.originalname}`;
@@ -52,7 +52,7 @@ export class ProductService {
   async createProduct(
     productData: CreateProductDTO,
     userId: number,
-    image?: Express.Multer.File,
+    image: Express.Multer.File,
   ) {
     const [restaurant, categories] = await Promise.all([
       this.restaurantService.findOne(productData.restaurant_id),
@@ -60,8 +60,7 @@ export class ProductService {
     ]);
 
     try {
-      let imagePath;
-      if (image) imagePath = this.generateFileName(image);
+      const imagePath = this.generateFileName(image);
 
       await this.productRepository.create({
         categories,
@@ -80,7 +79,7 @@ export class ProductService {
         user_id: userId,
       });
 
-      this.uploadImage(imagePath, image!);
+      this.uploadImage(imagePath, image);
       return {
         categories,
         description: productData.description,
