@@ -70,6 +70,7 @@ describe('ProductService', () => {
     price: Decimal('120000'),
     en_name: 'test Product',
     is_active: true,
+    image: 'test-image',
   });
   describe('createProduct', () => {
     const createProductDto: CreateProductDTO = Object.freeze({
@@ -83,20 +84,26 @@ describe('ProductService', () => {
     });
 
     it('should create a product successfully', async () => {
+      jest.spyOn(Date, 'now').mockReturnValue(1234567890);
       mockProductRepository.create.mockResolvedValue({
         id: 1,
-        name: 'something',
+        name: 'Test Product',
       } as Product);
+
       mockCategoryService.findAllByIds.mockResolvedValue([
         { id: 1, name: 'Category 1' },
         { id: 2, name: 'Category 2' },
       ] as Category[]);
+
       mockRestaurantService.findOne.mockResolvedValue({} as Restaurant);
 
-      const result = await service.createProduct(createProductDto, 1);
+      const result = await service.createProduct(createProductDto, 1, {
+        originalname: 'test-name',
+        buffer: Buffer.from('test-buffer'),
+      } as Express.Multer.File);
 
       expect(result.id).toEqual(1);
-      expect(result.name).toEqual('something');
+      expect(result.name).toEqual('Test Product');
 
       const copyDto = { ...createProductDto, user_id: 1 };
       Reflect.deleteProperty(copyDto, 'restaurant_id');
@@ -108,6 +115,7 @@ describe('ProductService', () => {
           { id: 1, name: 'Category 1' },
           { id: 2, name: 'Category 2' },
         ],
+        image: '1234567890-test-name',
       });
 
       expect(mockCategoryService.findAllByIds).toHaveBeenCalledWith([1]);
@@ -118,9 +126,9 @@ describe('ProductService', () => {
         new NotFoundException('Restaurant Not Founded'),
       );
 
-      expect(service.createProduct(createProductDto, 1)).rejects.toThrow(
-        'Restaurant Not Founded',
-      );
+      expect(
+        service.createProduct(createProductDto, 1, {} as Express.Multer.File),
+      ).rejects.toThrow('Restaurant Not Founded');
     });
 
     describe('getProductById', () => {
@@ -223,7 +231,7 @@ describe('ProductService', () => {
     });
 
     describe('deleteProduct', () => {
-      it('should delete a product successfully', async () => {
+      it('should delete The product successfully', async () => {
         mockProductRepository.delete.mockResolvedValue(mockProduct);
 
         const result = await service.deleteProduct(1);

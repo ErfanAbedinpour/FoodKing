@@ -12,7 +12,7 @@ import { Injectable } from '@nestjs/common';
 export class MikroProductRepository implements ProductRepository {
   constructor(private readonly em: EntityManager) {}
 
-  async create(product: ProductPersist): Promise<void> {
+  async create(product: ProductPersist): Promise<Product> {
     const user = this.em.getReference(User, product.user_id);
 
     const newProduct = this.em.create(
@@ -43,6 +43,7 @@ export class MikroProductRepository implements ProductRepository {
 
     try {
       await this.em.flush();
+      return newProduct;
     } catch (err) {
       throw err;
     }
