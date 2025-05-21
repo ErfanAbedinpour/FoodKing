@@ -26,7 +26,7 @@ export class ProductService {
     private readonly productRepository: ProductRepository,
     private readonly categoryService: CategoryService,
     private readonly restaurantService: RestaurantService,
-  ) { }
+  ) {}
 
   private generateFileName(image: Express.Multer.File) {
     return `${Date.now()}-${image.originalname}`;
@@ -62,7 +62,7 @@ export class ProductService {
     try {
       const imagePath = this.generateFileName(image);
 
-      await this.productRepository.create({
+      const result = await this.productRepository.create({
         categories,
         description: productData.description,
         inventory: productData.inventory,
@@ -81,6 +81,7 @@ export class ProductService {
 
       this.uploadImage(imagePath, image);
       return {
+        id: result.id,
         categories,
         description: productData.description,
         inventory: productData.inventory,
