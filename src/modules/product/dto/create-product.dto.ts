@@ -30,9 +30,11 @@ export class CreateProductDTO {
   @IsNotEmpty()
   @IsNumber({}, { each: true })
   @Transform(({ value }) => {
-    if (typeof value === 'string') {
+    console.log('value is ', value);
+    if (typeof value === 'string')
       return value.split(',').map((v) => Number(v.trim()));
-    }
+    if (Array.isArray(value)) return value.map((v) => Number(v));
+
     return value;
   })
   categories: number[];
