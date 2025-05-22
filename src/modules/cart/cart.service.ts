@@ -10,6 +10,7 @@ import { CartRepository } from './repository/cart.repository';
 import { RepositoryException } from '../../exception/repository.exception';
 import { ProductService } from '../product/product.service';
 import { ErrorMessage } from '../../ErrorMessages/Error.enum';
+import Decimal from 'decimal.js';
 
 @Injectable()
 export class CartService {
@@ -24,7 +25,15 @@ export class CartService {
       const userCart = await this.cartRepository.getCartByUserId(userId);
 
       const result = await this.cartRepository.getCartWithItems(userCart!.id);
-      return result;
+
+      const totalPrice = result.reduce(
+        (acc, item) => acc.plus(Decimal.mul(item.product.price, item.count)),
+        new Decimal(0),
+      );
+      return {
+        data: result,
+        totalPrice: totalPrice.toNumber(),
+      };
     } catch (err) {
       if (err instanceof RepositoryException) {
         throw new BadRequestException(err.message);

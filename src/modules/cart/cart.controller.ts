@@ -9,6 +9,7 @@ import {
   ApiBearerAuth,
   ApiOkResponse,
   ApiOperation,
+  getSchemaPath,
 } from '@nestjs/swagger';
 import { CartDTO } from './dto/cart.dto';
 
@@ -22,7 +23,15 @@ export class CartController {
   @ApiOperation({ summary: 'Get user cart' })
   @ApiOkResponse({
     description: 'User cart',
-    type: [CartDTO],
+    schema: {
+      properties: {
+        data: {
+          type: 'array',
+          items: { type: 'object', $ref: getSchemaPath(CartDTO) },
+        },
+        totalPrice: { type: 'number' },
+      },
+    },
   })
   async getCart(@GetUser('userId') userId: number) {
     return this.cartService.getCart(userId);
