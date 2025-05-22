@@ -16,6 +16,7 @@ export class MikroCartRepository implements CartRepository {
         product: product,
         count: 1,
       });
+
       await this.em.persistAndFlush(cartProduct);
       return cartProduct;
     } catch (err) {
@@ -39,15 +40,9 @@ export class MikroCartRepository implements CartRepository {
     }
   }
 
-  async getCartByUserId(userId: number): Promise<Cart> {
-    try {
-      const userCart = await this.em.findOneOrFail(Cart, { user: userId });
-      return userCart;
-    } catch (err) {
-      if (err instanceof NotFoundError)
-        throw new RepositoryException(ErrorMessage.CART_NOT_FOUND);
-      throw err;
-    }
+  async getCartByUserId(userId: number): Promise<Cart | null> {
+    const userCart = await this.em.findOne(Cart, { user: userId });
+    return userCart;
   }
 
   async getCartWithItems(cartId: number): Promise<CartProduct[]> {
@@ -86,6 +81,52 @@ export class MikroCartRepository implements CartRepository {
       if (err instanceof NotFoundError)
         throw new RepositoryException(ErrorMessage.CART_NOT_FOUND);
       throw err;
+    }
+  }
+
+  async createCart(userId: number): Promise<Cart> {
+    const cart = this.em.create(Cart, {
+      user: userId,
+    });
+    try {
+      await this.em.persistAndFlush(cart);
+      return cart;
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  async getItemFromCart(
+    cartId: number,
+    productId: number,
+  ): Promise<CartProduct | null> {
+    const item = await this.em.findOne(
+      CartProduct,
+      {
+        cart: cartId,
+        product: productId,
+      },
+      { populate: ['product'] },
+    );
+    return item;
+  }
+
+  async updateItemCount(
+    cartId: number,
+    productId: number,
+    count: number,
+  ): Promise<CartProduct> {
+    try {
+      const cartProduct = await this.em.findOneOrFail(CartProduct, {
+        cart: cartId,
+        product: productId,
+      });
+
+      cartProduct.count = count;
+      await this.em.persistAndFlush(cartProduct);
+      return cartProduct;
+    } catch (err) {
+      throw new RepositoryException(ErrorMessage.CART_NOT_FOUND);
     }
   }
 }
