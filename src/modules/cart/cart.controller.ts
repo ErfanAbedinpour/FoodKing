@@ -1,12 +1,20 @@
-import { Body, Controller, Delete, Get, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+} from '@nestjs/common';
 import { IsAuth } from '../common/decorator/auth.decorator';
 import { GetUser } from '../common/decorator/getUser.decorator';
 import { AddItemDto } from './dto/add-item.dto';
 import { CartService } from './cart.service';
-import { RemoveItemDto } from './dto/remove-item.dto';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
+  ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
   getSchemaPath,
@@ -33,6 +41,9 @@ export class CartController {
       },
     },
   })
+  @ApiNotFoundResponse({
+    description: 'Cart is empty',
+  })
   async getCart(@GetUser('userId') userId: number) {
     return this.cartService.getCart(userId);
   }
@@ -53,7 +64,20 @@ export class CartController {
     return this.cartService.addItemToCart(userId, body);
   }
 
-  @Delete()
+  @Delete('clear')
+  @ApiOperation({ summary: 'Clear cart' })
+  @ApiOkResponse({
+    description: 'Cart cleared',
+    schema: { properties: { msg: { type: 'string' } } },
+  })
+  @ApiNotFoundResponse({
+    description: 'Cart not found',
+  })
+  async clearCart(@GetUser('userId') userId: number) {
+    return this.cartService.clearCart(userId);
+  }
+
+  @Delete(':productId')
   @ApiOperation({ summary: 'Remove item from cart' })
   @ApiOkResponse({
     description: 'Item removed from cart',
@@ -64,18 +88,8 @@ export class CartController {
   })
   async removeItemFromCart(
     @GetUser('userId') userId: number,
-    @Body() body: RemoveItemDto,
+    @Param('productId', ParseIntPipe) productId: number,
   ) {
-    return this.cartService.removeItemFromCart(userId, body);
-  }
-
-  @Delete('clear')
-  @ApiOperation({ summary: 'Clear cart' })
-  @ApiOkResponse({
-    description: 'Cart cleared',
-    schema: { properties: { msg: { type: 'string' } } },
-  })
-  async clearCart(@GetUser('userId') userId: number) {
-    return this.cartService.clearCart(userId);
+    return this.cartService.removeItemFromCart(userId, productId);
   }
 }

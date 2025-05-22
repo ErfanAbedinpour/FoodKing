@@ -58,23 +58,18 @@ export class MikroCartRepository implements CartRepository {
     }
   }
 
-  async removeItemFromCart(userId: number, productId: number): Promise<Cart> {
-    const cart = await this.getCartByUserId(userId);
-    if (!cart) throw new RepositoryException(ErrorMessage.CART_NOT_FOUND);
+  async removeItemFromCart(
+    cartId: number,
+    productId: number,
+  ): Promise<CartProduct> {
     try {
       const cartItem = await this.em.findOneOrFail(CartProduct, {
-        cart: cart,
+        cart: cartId,
         product: productId,
       });
 
-      if (cartItem.count > 1) {
-        cartItem.count--;
-        await this.em.persistAndFlush(cartItem);
-      } else {
-        await this.em.removeAndFlush(cartItem);
-      }
-
-      return cart;
+      await this.em.removeAndFlush(cartItem);
+      return cartItem;
     } catch (err) {
       if (err instanceof NotFoundError)
         throw new RepositoryException(ErrorMessage.CART_ITEM_NOT_FOUND);
