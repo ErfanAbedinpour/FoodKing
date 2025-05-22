@@ -1,72 +1,91 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { CartRepository } from './cart.repository';
-import { Collection, EntityManager, Loaded } from '@mikro-orm/postgresql';
+import { EntityManager, Loaded, NotFoundError } from '@mikro-orm/postgresql';
 import { Cart, CartProduct, Product } from '../../../models';
 import { RepositoryException } from '../../../exception/repository.exception';
+import { ErrorMessage } from '../../../ErrorMessages/Error.enum';
 
 @Injectable()
 export class MikroCartRepository implements CartRepository {
   constructor(private readonly em: EntityManager) {}
 
-  async addItemToCart(
-    userId: number,
-    item: { productId: number; quantity: number },
-  ): Promise<Cart> {
+  async addItemToCart(cartId: number, product: Product): Promise<CartProduct> {
     try {
-      const cart = await this.em.findOneOrFail(Cart, { user: userId });
-
-      const cartItems = await this.em.find(
-        CartProduct,
-        { cart: cart.id },
-        { populate: ['cart', 'product'] },
-      );
-
-      const cartProduct = cartItems.find(
-        (cartItem) => cartItem.product.id === item.productId,
-      );
-
-      if (!cartProduct) {
-        const product = await this.em.findOne(Product, {
-          id: item.productId,
-        });
-
-        if (!product) {
-          throw new RepositoryException('Product not found');
-        }
-
-        if (item.quantity > product.inventory) {
-          throw new RepositoryException('Inventory is not enough');
-        }
-
-        cartItems.push(
-          this.em.create(
-            CartProduct,
-            {
-              cart: cart,
-              product: item.productId,
-              count: item.quantity,
-            },
-            { persist: true },
-          ),
-        );
-      } else {
-        if (cartProduct.count + item.quantity > cartProduct.product.inventory) {
-          throw new RepositoryException('Inventory is not enough');
-        }
-
-        cartProduct.count += item.quantity;
-      }
-
-      await this.em.flush();
-      return cart;
+      const cartProduct = this.em.create(CartProduct, {
+        cart: cartId,
+        product: product,
+        count: 1,
+      });
+      await this.em.persistAndFlush(cartProduct);
+      return cartProduct;
     } catch (err) {
       throw err;
     }
   }
 
-  //   clearCart(userId: number): Promise<void> {}
+  async clearCart(userId: number): Promise<void> {
+    try {
+      const userCart = await this.em.findOneOrFail(Cart, { user: userId });
 
-  //   getCartWithItems(userId: number): Promise<Cart> {}
+      const cartItems = await this.em.findAll(CartProduct, {
+        where: { cart: userCart },
+      });
 
-  //   removeItemFromCart(userId: number, itemId: number): Promise<Cart> {}
+      await this.em.removeAndFlush(cartItems);
+    } catch (err) {
+      if (err instanceof NotFoundError)
+        throw new RepositoryException(ErrorMessage.CART_NOT_FOUND);
+      throw err;
+    }
+  }
+
+  async getCartByUserId(userId: number): Promise<Cart> {
+    try {
+      const userCart = await this.em.findOneOrFail(Cart, { user: userId });
+      return userCart;
+    } catch (err) {
+      if (err instanceof NotFoundError)
+        throw new RepositoryException(ErrorMessage.CART_NOT_FOUND);
+      throw err;
+    }
+  }
+
+  async getCartWithItems(cartId: number): Promise<CartProduct[]> {
+    try {
+      const items = await this.em.findAll(CartProduct, {
+        where: { cart: cartId },
+        populate: ['product'],
+      });
+
+      return items;
+    } catch (err) {
+      if (err instanceof NotFoundError)
+        throw new RepositoryException(ErrorMessage.CART_NOT_FOUND);
+      throw err;
+    }
+  }
+
+  async removeItemFromCart(userId: number, productId: number): Promise<Cart> {
+    try {
+      const cart = await this.em.findOneOrFail(Cart, { user: userId });
+
+      const cartItem = await this.em.findOneOrFail(CartProduct, {
+        cart: cart,
+        product: productId,
+      });
+
+      if (cartItem.count > 1) {
+        cartItem.count--;
+        await this.em.persistAndFlush(cartItem);
+      } else {
+        await this.em.removeAndFlush(cartItem);
+      }
+
+      return cart;
+    } catch (err) {
+      if (err instanceof NotFoundError)
+        throw new RepositoryException(ErrorMessage.CART_NOT_FOUND);
+      throw err;
+    }
+  }
 }
