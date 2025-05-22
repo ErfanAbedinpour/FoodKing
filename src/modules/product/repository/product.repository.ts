@@ -3,7 +3,7 @@ import { ProductPersist } from './persistance/product';
 import { Loaded } from '@mikro-orm/core';
 
 export abstract class ProductRepository {
-  abstract create(product: ProductPersist): Promise<void>;
+  abstract create(product: ProductPersist): Promise<Product>;
 
   abstract findById(id: number): Promise<Product>;
 
