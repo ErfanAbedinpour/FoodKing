@@ -25,4 +25,5 @@ export enum ErrorMessage {
   CATEGORY_SLUG_IS_INVALID = 'Category Slug is Invalid',
   CART_NOT_FOUND = 'Cart not found',
   PRODUCT_OUT_OF_STOCK = 'Product is out of stock',
+  CART_ITEM_NOT_FOUND = 'Cart item not found',
 }

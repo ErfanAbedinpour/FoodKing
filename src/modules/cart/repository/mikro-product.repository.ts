@@ -24,12 +24,10 @@ export class MikroCartRepository implements CartRepository {
     }
   }
 
-  async clearCart(userId: number): Promise<void> {
+  async clearCart(cartId: number): Promise<void> {
     try {
-      const userCart = await this.em.findOneOrFail(Cart, { user: userId });
-
       const cartItems = await this.em.findAll(CartProduct, {
-        where: { cart: userCart },
+        where: { cart: cartId },
       });
 
       await this.em.removeAndFlush(cartItems);
@@ -61,9 +59,9 @@ export class MikroCartRepository implements CartRepository {
   }
 
   async removeItemFromCart(userId: number, productId: number): Promise<Cart> {
+    const cart = await this.getCartByUserId(userId);
+    if (!cart) throw new RepositoryException(ErrorMessage.CART_NOT_FOUND);
     try {
-      const cart = await this.em.findOneOrFail(Cart, { user: userId });
-
       const cartItem = await this.em.findOneOrFail(CartProduct, {
         cart: cart,
         product: productId,
@@ -79,7 +77,7 @@ export class MikroCartRepository implements CartRepository {
       return cart;
     } catch (err) {
       if (err instanceof NotFoundError)
-        throw new RepositoryException(ErrorMessage.CART_NOT_FOUND);
+        throw new RepositoryException(ErrorMessage.CART_ITEM_NOT_FOUND);
       throw err;
     }
   }

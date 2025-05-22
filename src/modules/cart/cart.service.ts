@@ -1,4 +1,9 @@
-import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+} from '@nestjs/common';
 import { AddItemDto } from './dto/add-item.dto';
 import { RemoveItemDto } from './dto/remove-item.dto';
 import { CartRepository } from './repository/cart.repository';
@@ -25,7 +30,7 @@ export class CartService {
         throw new BadRequestException(err.message);
       }
       this.logger.error(err);
-      throw err;
+      throw new InternalServerErrorException(err);
     }
   }
 
@@ -82,15 +87,42 @@ export class CartService {
         throw new BadRequestException(err.message);
       }
       this.logger.error(err);
-      throw err;
+      throw new InternalServerErrorException(err);
     }
   }
 
-  async removeItemFromCart(userId: number, body: RemoveItemDto) {
-    return 'Cart';
+  async removeItemFromCart(userId: number, { productId }: RemoveItemDto) {
+    try {
+      const userCart = await this.cartRepository.getCartByUserId(userId);
+      await this.cartRepository.removeItemFromCart(userCart!.id, productId);
+
+      return {
+        msg: 'Item removed from cart',
+      };
+    } catch (err) {
+      if (err instanceof RepositoryException) {
+        throw new BadRequestException(err.message);
+      }
+      this.logger.error(err);
+      throw new InternalServerErrorException(err);
+    }
   }
 
   async clearCart(userId: number) {
-    return 'Cart';
+    try {
+      const userCart = await this.cartRepository.getCartByUserId(userId);
+      await this.cartRepository.clearCart(userCart!.id);
+
+      return {
+        msg: 'Cart cleared',
+      };
+    } catch (err) {
+      if (err instanceof RepositoryException) {
+        throw new BadRequestException(err.message);
+      }
+
+      this.logger.error(err);
+      throw new InternalServerErrorException(err);
+    }
   }
 }

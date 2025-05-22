@@ -4,7 +4,13 @@ import { GetUser } from '../common/decorator/getUser.decorator';
 import { AddItemDto } from './dto/add-item.dto';
 import { CartService } from './cart.service';
 import { RemoveItemDto } from './dto/remove-item.dto';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiBearerAuth,
+  ApiOkResponse,
+  ApiOperation,
+} from '@nestjs/swagger';
+import { CartDTO } from './dto/cart.dto';
 
 @Controller('cart')
 @IsAuth()
@@ -13,11 +19,24 @@ export class CartController {
   constructor(private readonly cartService: CartService) {}
 
   @Get()
+  @ApiOperation({ summary: 'Get user cart' })
+  @ApiOkResponse({
+    description: 'User cart',
+    type: [CartDTO],
+  })
   async getCart(@GetUser('userId') userId: number) {
     return this.cartService.getCart(userId);
   }
 
   @Post()
+  @ApiOperation({ summary: 'Add item to cart' })
+  @ApiOkResponse({
+    description: 'Item added to cart',
+    type: CartDTO,
+  })
+  @ApiBadRequestResponse({
+    description: 'Product not found',
+  })
   async addItemToCart(
     @GetUser('userId') userId: number,
     @Body() body: AddItemDto,
@@ -26,6 +45,14 @@ export class CartController {
   }
 
   @Delete()
+  @ApiOperation({ summary: 'Remove item from cart' })
+  @ApiOkResponse({
+    description: 'Item removed from cart',
+    schema: { properties: { msg: { type: 'string' } } },
+  })
+  @ApiBadRequestResponse({
+    description: 'Product not found',
+  })
   async removeItemFromCart(
     @GetUser('userId') userId: number,
     @Body() body: RemoveItemDto,
@@ -34,6 +61,11 @@ export class CartController {
   }
 
   @Delete('clear')
+  @ApiOperation({ summary: 'Clear cart' })
+  @ApiOkResponse({
+    description: 'Cart cleared',
+    schema: { properties: { msg: { type: 'string' } } },
+  })
   async clearCart(@GetUser('userId') userId: number) {
     return this.cartService.clearCart(userId);
   }
