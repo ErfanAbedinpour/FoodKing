@@ -16,7 +16,9 @@ export class CartService {
 
   async getCart(userId: number) {
     try {
-      const result = await this.cartRepository.getCartWithItems(userId);
+      const userCart = await this.cartRepository.getCartByUserId(userId);
+
+      const result = await this.cartRepository.getCartWithItems(userCart!.id);
       return result;
     } catch (err) {
       if (err instanceof RepositoryException) {

@@ -24,4 +24,5 @@ export enum ErrorMessage {
   RESTAURANT_PRODUCTS_FETCH_FAILED = 'Failed to fetch restaurant products',
   CATEGORY_SLUG_IS_INVALID = 'Category Slug is Invalid',
   CART_NOT_FOUND = 'Cart not found',
+  PRODUCT_OUT_OF_STOCK = 'Product is out of stock',
 }
