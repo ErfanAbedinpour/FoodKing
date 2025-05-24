@@ -10,6 +10,7 @@ import { IsAuth } from '../common/decorator/auth.decorator';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { OrderService } from './order.service';
 import { GetUser } from '../common/decorator/getUser.decorator';
+import { CreateOrderDto } from './dtos/create-order.dto';
 
 @Controller('orders')
 @IsAuth()
@@ -17,8 +18,11 @@ import { GetUser } from '../common/decorator/getUser.decorator';
 export class OrderController {
   constructor(private readonly orderService: OrderService) {}
   @Post()
-  async createOrder(@GetUser('userId') userId: number) {
-    return this.orderService.createOrder(userId);
+  async createOrder(
+    @GetUser('userId') userId: number,
+    @Body() createOrderDto: CreateOrderDto,
+  ) {
+    return this.orderService.createOrder(userId, createOrderDto);
   }
 
   @Get()
