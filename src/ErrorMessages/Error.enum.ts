@@ -22,5 +22,9 @@ export enum ErrorMessage {
   RESTAURANT_UPDATE_FAILED = 'Failed to update restaurant',
   RESTAURANT_DELETE_FAILED = 'Failed to delete restaurant',
   RESTAURANT_PRODUCTS_FETCH_FAILED = 'Failed to fetch restaurant products',
-  CATEGORY_SLUG_IS_INVALID= 'Category Slug is Invalid'
+  CATEGORY_SLUG_IS_INVALID = 'Category Slug is Invalid',
+  CART_NOT_FOUND = 'Cart not found',
+  PRODUCT_OUT_OF_STOCK = 'Product is out of stock',
+  CART_ITEM_NOT_FOUND = 'Cart item not found',
+  CART_IS_EMPTY = 'Cart is empty',
 }

@@ -1,4 +1,4 @@
-import {  MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { join } from 'path';
 import { cwd } from 'process';
@@ -8,11 +8,12 @@ import { UserModule } from './modules/users/user.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { MenuModule } from './modules/menu/menu.module';
 import { CommonModule } from './modules/common/common.module';
-import {ConfigModule} from '@nestjs/config'
-import {CqrsModule}from '@nestjs/cqrs';
+import { ConfigModule } from '@nestjs/config';
+import { CqrsModule } from '@nestjs/cqrs';
 import { ProductModule } from './modules/product/product.module';
 import { RestaurantModule } from './modules/restaurant/restaurant.module';
 import { CategoryModule } from './modules/category/category.module';
+import { CartModule } from './modules/cart/cart.module';
 
 @Module({
   imports: [
@@ -29,7 +30,8 @@ import { CategoryModule } from './modules/category/category.module';
     CommonModule,
     ProductModule,
     RestaurantModule,
-    CategoryModule
+    CategoryModule,
+    CartModule,
   ],
   controllers: [AppController],
 })
