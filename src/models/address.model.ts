@@ -5,19 +5,22 @@ import { User } from './user.model';
 @Entity({ tableName: 'Address' })
 export class Address extends BaseModel {
   @Property()
-  postal_code!: string;
+  zip_code!: string;
 
   @Property({ type: 'text' })
   street!: string;
 
-  @Property({})
-  province: string;
+  @Property({ type: 'text' })
+  city!: string;
 
-  @Property()
-  latitude: number;
+  @Property({ type: 'text' })
+  state!: string;
 
-  @Property()
-  longitude: number;
+  @Property({ nullable: true })
+  latitude?: number;
+
+  @Property({ nullable: true })
+  longitude?: number;
 
   @ManyToOne(() => User)
   user: Rel<User>;
