@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { OrderRepository } from './order.repository';
-import { EntityManager } from '@mikro-orm/postgresql';
+import { EntityManager, Loaded } from '@mikro-orm/postgresql';
 import { CartProduct, Order, OrderItem } from '../../../models';
 import { OrderStatus, PaymentMethod } from '../../../models/order.model';
 import { OrderPersist } from './persist/order.persist';
@@ -14,7 +14,7 @@ export class MikroOrderRepository implements OrderRepository {
     paymentMethod,
     products,
     userId,
-  }: OrderPersist): Promise<void> {
+  }: OrderPersist): Promise<Loaded<Order>> {
     const order = this.em.create(
       Order,
       {
@@ -47,6 +47,7 @@ export class MikroOrderRepository implements OrderRepository {
 
     try {
       await this.em.flush();
+      return order;
     } catch (err) {
       throw err;
     }

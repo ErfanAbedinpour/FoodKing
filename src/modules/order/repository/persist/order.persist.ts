@@ -1,5 +1,5 @@
 import { CartProduct } from '../../../../models';
-import { PaymentMethod } from '../../../../models/order.model';
+import { OrderStatus, PaymentMethod } from '../../../../models/order.model';
 
 export class OrderPersist {
   addressId: number;
