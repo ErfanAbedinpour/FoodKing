@@ -1,13 +1,14 @@
-import { Module } from "@nestjs/common";
-import { ProductService } from "./product.service";
-import { MikroProductRepository } from "./repository/mikro-product.repository";
-import { ProductRepository } from "./repository/product.repository";
-import { ProductController } from "./product.controller";
-import { CategoryModule } from "../category/category.module";
-import { RestaurantModule } from "../restaurant/restaurant.module";
+import { Module } from '@nestjs/common';
+import { ProductService } from './product.service';
+import { MikroProductRepository } from './repository/mikro-product.repository';
+import { ProductRepository } from './repository/product.repository';
+import { ProductController } from './product.controller';
+import { CategoryModule } from '../category/category.module';
+import { RestaurantModule } from '../restaurant/restaurant.module';
+import { OrderCreatedHandler } from './events/order-created.handler';
 
 @Module({
-  imports:[CategoryModule,RestaurantModule],
+  imports: [CategoryModule, RestaurantModule],
   controllers: [ProductController],
   providers: [
     ProductService,
@@ -15,6 +16,7 @@ import { RestaurantModule } from "../restaurant/restaurant.module";
       provide: ProductRepository,
       useClass: MikroProductRepository,
     },
+    OrderCreatedHandler,
   ],
   exports: [ProductService],
 })

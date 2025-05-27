@@ -15,6 +15,7 @@ import { RestaurantModule } from './modules/restaurant/restaurant.module';
 import { CategoryModule } from './modules/category/category.module';
 import { CartModule } from './modules/cart/cart.module';
 import { AddressModule } from './modules/address/address.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { AddressModule } from './modules/address/address.module';
       isGlobal: true,
     }),
     MikroOrmModule.forRoot(),
+    EventEmitterModule.forRoot(),
     UserModule,
     AuthModule,
     MenuModule,
