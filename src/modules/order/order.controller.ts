@@ -33,7 +33,7 @@ export class OrderController {
   }
 
   @Get(':id')
-  getOrderById(@GetUser("userId") userId: number, @Param('id', ParseIntPipe) id: string) {
+  getOrderById(@GetUser("userId") userId: number, @Param('id', ParseIntPipe) id: number) {
     return this.orderService.getOrderById(userId, id);
   }
 

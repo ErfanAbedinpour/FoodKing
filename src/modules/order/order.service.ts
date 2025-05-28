@@ -2,6 +2,7 @@ import {
   Injectable,
   InternalServerErrorException,
   Logger,
+  NotFoundException,
 } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { OrderRepository } from './repository/order.repository';
@@ -11,6 +12,7 @@ import { AddressService } from '../address/address.service';
 import { OrderStatus, PaymentMethod } from '../../models/order.model';
 import { OrderCreatedEvent } from './events/order-created.event';
 import { OrderItem } from '../../models/order-item.model';
+import { ErrorMessage } from '../../ErrorMessages/Error.enum';
 
 /**
  *
@@ -83,11 +85,17 @@ export class OrderService {
     }
   }
 
-  getOrders(userId: number) {
-    return 'getOrders';
+  async getOrders(userId: number) {
+    const orders = await this.orderRepository.getAllUserOrder(userId);
+    return orders;
   }
 
-  getOrderById(orderId: number, id: string) {
-    return `getOrderById ${id}`;
+  async getOrderById(userId: number, orderId: number) {
+    const order = await this.orderRepository.getUserOrder(userId, orderId);
+    if (!order)
+      throw new NotFoundException(ErrorMessage.ORDER_NOT_FOUND)
+
+    return order;
   }
+
 }
