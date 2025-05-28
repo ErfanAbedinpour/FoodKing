@@ -16,6 +16,7 @@ import { CategoryModule } from './modules/category/category.module';
 import { CartModule } from './modules/cart/cart.module';
 import { AddressModule } from './modules/address/address.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { OrderModule } from './modules/order/order.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     CategoryModule,
     CartModule,
     AddressModule,
+    OrderModule
   ],
   controllers: [AppController],
 })
