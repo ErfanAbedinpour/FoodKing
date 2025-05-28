@@ -5,10 +5,13 @@ import { CartProduct, Order, OrderItem } from '../../../models';
 import { OrderStatus, PaymentMethod } from '../../../models/order.model';
 import { OrderPersist } from './persist/order.persist';
 import Decimal from 'decimal.js';
+import { NotFoundError } from 'rxjs';
+import { RepositoryException } from '../../../exception/repository.exception';
+import { ErrorMessage } from '../../../ErrorMessages/Error.enum';
 
 @Injectable()
 export class MikroOrderRepository implements OrderRepository {
-  constructor(private readonly em: EntityManager) {}
+  constructor(private readonly em: EntityManager) { }
   async createOrder({
     addressId,
     paymentMethod,
@@ -52,4 +55,29 @@ export class MikroOrderRepository implements OrderRepository {
       throw err;
     }
   }
+
+
+  async getAllUserOrder(userId: number): Promise<Order[]> {
+    const orders = await this.em.findAll(Order, { where: { user: userId } });
+    return orders;
+  }
+
+  async getOrderById(orderId: number): Promise<Loaded<Order> | null> {
+    const order = await this.em.findOne(Order, orderId, { populate: ['products', 'address'] });
+    return order;
+  }
+
+
+  async deleteOrder(orderId: number): Promise<Order> {
+    try {
+      const order = await this.em.findOneOrFail(Order, orderId);
+      await this.em.removeAndFlush(order)
+      return order;
+    } catch (err) {
+      if (err instanceof NotFoundError)
+        throw new RepositoryException(ErrorMessage.ORDER_NOT_FOUND)
+      throw err;
+    }
+  }
 }
+

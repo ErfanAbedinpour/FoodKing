@@ -37,7 +37,7 @@ export class OrderService {
     private readonly cartService: CartService,
     private readonly addressService: AddressService,
     private readonly eventEmitter: EventEmitter2,
-  ) {}
+  ) { }
 
   async createOrder(
     userId: number,
@@ -83,11 +83,11 @@ export class OrderService {
     }
   }
 
-  getOrders() {
+  getOrders(userId: number) {
     return 'getOrders';
   }
 
-  getOrderById(id: string) {
+  getOrderById(orderId: number, id: string) {
     return `getOrderById ${id}`;
   }
 }

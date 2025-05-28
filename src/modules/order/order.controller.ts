@@ -28,12 +28,16 @@ export class OrderController {
   }
 
   @Get()
-  async getOrders() {
-    return this.orderService.getOrders();
+  async getOrders(@GetUser("userId") userId: number) {
+    return this.orderService.getOrders(userId);
   }
 
   @Get(':id')
-  getOrderById(@Param('id', ParseIntPipe) id: string) {
-    return this.orderService.getOrderById(id);
+  getOrderById(@GetUser("userId") userId: number, @Param('id', ParseIntPipe) id: string) {
+    return this.orderService.getOrderById(userId, id);
   }
+
+
+  @Get(":id/price")
+  getOrderPrice(@Param("id", ParseIntPipe) orderId: number) { }
 }
