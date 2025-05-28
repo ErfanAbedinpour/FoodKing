@@ -1,12 +1,17 @@
-import { CartProduct } from '../../../../models';
-import { OrderStatus, PaymentMethod } from '../../../../models/order.model';
+import { Product } from '../../../../models';
+import { PaymentMethod } from '../../../../models/order.model';
+
+export class OrderProductPersist {
+  product: Product;
+  quantity: number;
+}
 
 export class OrderPersist {
   addressId: number;
 
   userId: number;
 
-  products: CartProduct[];
+  products: OrderProductPersist[];
 
   paymentMethod: PaymentMethod;
 }

@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   ParseIntPipe,
@@ -38,6 +39,14 @@ export class OrderController {
   }
 
 
-  @Get(":id/price")
-  getOrderPrice(@Param("id", ParseIntPipe) orderId: number) { }
+  @Delete(":id")
+  async deleteOrder(@GetUser("userId") userId: number, @Param("id", ParseIntPipe) orderId: number) {
+
+    await this.orderService.deleteOrder(userId, orderId);
+
+    return {
+      msg: "Order Removed successfully"
+    }
+  }
+
 }

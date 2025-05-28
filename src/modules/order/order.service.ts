@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Injectable,
   InternalServerErrorException,
   Logger,
@@ -9,10 +10,12 @@ import { OrderRepository } from './repository/order.repository';
 import { CreateOrderDto } from './dtos/create-order.dto';
 import { CartService } from '../cart/cart.service';
 import { AddressService } from '../address/address.service';
-import { OrderStatus, PaymentMethod } from '../../models/order.model';
 import { OrderCreatedEvent } from './events/order-created.event';
 import { OrderItem } from '../../models/order-item.model';
 import { ErrorMessage } from '../../ErrorMessages/Error.enum';
+import { OrderStatus } from '../../models/order.model';
+import { ProductService } from '../product/product.service';
+import { OrderProductPersist } from './repository/persist/order.persist';
 
 /**
  *
@@ -36,43 +39,48 @@ export class OrderService {
   private readonly logger = new Logger(OrderService.name);
   constructor(
     private readonly orderRepository: OrderRepository,
-    private readonly cartService: CartService,
     private readonly addressService: AddressService,
     private readonly eventEmitter: EventEmitter2,
+    private readonly productService: ProductService,
   ) { }
 
   async createOrder(
     userId: number,
-    { addressId, paymentMethod }: CreateOrderDto,
+    { addressId, paymentMethod, products }: CreateOrderDto,
   ) {
-    const [userCartProducts, _] = await Promise.all([
-      this.cartService.getCart(userId),
-      this.addressService.findOne(userId, addressId),
-    ]);
-    console.log('userCartProducts', userCartProducts);
+    const address = await this.addressService.findOne(userId, addressId);
+    console.log('address', address);
+
+    const orderProducts: OrderProductPersist[] = [];
+
+    //TODO: Here should be optimized later.
+    for (const { productId, quantity } of products) {
+      const product = await this.productService.getProductById(productId);
+      if (product.inventory < quantity)
+        throw new BadRequestException(ErrorMessage.PRODUCT_OUT_OF_STOCK)
+
+      orderProducts.push({ product, quantity })
+    }
 
     try {
       const order = await this.orderRepository.createOrder({
         addressId: addressId,
-        products: userCartProducts.data,
+        products: orderProducts,
         paymentMethod,
         userId,
       });
-      console.log('order', order);
 
-      // Clear the cart after successful order creation
-      await this.cartService.clearCart(userId);
+      // TODO: Here should be optimized later.
       // Emit order created event
-      const orderItems = userCartProducts.data.map((product) => {
+      const orderItems = orderProducts.map((product) => {
         const orderItem = new OrderItem();
         orderItem.product = product.product;
         orderItem.order = order;
-        orderItem.quantity = product.count;
+        orderItem.quantity = product.quantity;
         orderItem.price = product.product.price;
         return orderItem;
       });
 
-      console.log('orderItems', orderItems);
       this.eventEmitter.emit(
         'order.created',
         new OrderCreatedEvent(orderItems),
@@ -92,10 +100,22 @@ export class OrderService {
 
   async getOrderById(userId: number, orderId: number) {
     const order = await this.orderRepository.getUserOrder(userId, orderId);
-    if (!order)
-      throw new NotFoundException(ErrorMessage.ORDER_NOT_FOUND)
+    if (!order) throw new NotFoundException(ErrorMessage.ORDER_NOT_FOUND);
 
     return order;
   }
 
+  async deleteOrder(userId: number, orderId: number) {
+    const order = await this.getOrderById(userId, orderId);
+    if (order.status !== OrderStatus.Processing)
+      throw new BadRequestException(ErrorMessage.ORDER_CANNOT_BE_REMOVED);
+
+    try {
+      await this.orderRepository.deleteOrder(orderId);
+      return;
+    } catch (err) {
+      this.logger.error(err);
+      throw new InternalServerErrorException();
+    }
+  }
 }

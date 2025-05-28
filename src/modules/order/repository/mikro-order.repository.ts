@@ -18,6 +18,7 @@ export class MikroOrderRepository implements OrderRepository {
     products,
     userId,
   }: OrderPersist): Promise<Loaded<Order>> {
+
     const order = this.em.create(
       Order,
       {
@@ -33,13 +34,13 @@ export class MikroOrderRepository implements OrderRepository {
       { persist: true },
     );
 
-    for (const { product, count } of products) {
+    for (const { product, quantity } of products) {
       const orderItem = this.em.create(
         OrderItem,
         {
           order,
           product: product,
-          quantity: count,
+          quantity: quantity,
           price: product.price,
         },
         { persist: true },
@@ -70,7 +71,7 @@ export class MikroOrderRepository implements OrderRepository {
 
   async deleteOrder(orderId: number): Promise<Order> {
     try {
-      const order = await this.em.findOneOrFail(Order, orderId);
+      const order = this.em.getReference(Order, orderId);
       await this.em.removeAndFlush(order)
       return order;
     } catch (err) {
