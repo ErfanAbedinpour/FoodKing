@@ -35,6 +35,8 @@ export class MikroOrderRepository implements OrderRepository {
     );
 
     for (const { product, quantity } of products) {
+      console.log("Product is ", product)
+      console.log("quantity is ", quantity)
       const orderItem = this.em.create(
         OrderItem,
         {

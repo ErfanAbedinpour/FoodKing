@@ -62,7 +62,7 @@ export class OrderService {
       orderProducts.push({ product, quantity });
     }
 
-    console.log('orderProducts ', orderProducts);
+    // console.log('orderProducts ', orderProducts);
 
     try {
       const order = await this.orderRepository.createOrder({
