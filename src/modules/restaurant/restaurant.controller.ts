@@ -8,13 +8,14 @@ import { ApiBearerAuth, ApiBody, ApiCreatedResponse, ApiNotFoundResponse, ApiOkR
 import { RestaurantDTO } from "./dto/restaurant.dto";
 
 @Controller("restaurants")
-@ApiBearerAuth("JWT-AUTH")
 @ApiUnauthorizedResponse({ description: "Unauthorized" })
-@IsAuth()
 export class RestaurantController {
     constructor(private readonly restaurantService: RestaurantService) { }
 
     @Post()
+    @ApiBearerAuth("JWT-AUTH")
+    @IsAuth()
+
     @ApiCreatedResponse({ description: "Restaurant Created", type: RestaurantDTO })
     @ApiBody({ type: CreateRestaurantDto })
     @ApiOperation({ summary: "Create Restaurant" })
@@ -56,6 +57,9 @@ export class RestaurantController {
 
 
     @Delete(":id")
+    @ApiBearerAuth("JWT-AUTH")
+    @IsAuth()
+
     @ApiOkResponse({ description: "Restaurant Deleted" })
     @ApiNotFoundResponse({ description: "Restaurant Not Found" })
     @ApiOperation({ summary: "Delete Restaurant" })
@@ -65,6 +69,8 @@ export class RestaurantController {
 
 
     @Patch(":id")
+    @ApiBearerAuth("JWT-AUTH")
+    @IsAuth()
     @ApiOkResponse({ description: "Restaurant Updated", type: RestaurantDTO })
     @ApiNotFoundResponse({ description: "Restaurant Not Found" })
     @ApiOperation({ summary: "Update Restaurant" })

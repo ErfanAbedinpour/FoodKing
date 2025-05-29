@@ -12,8 +12,10 @@ import { CreateMenuDTO } from './DTO/create-menu.dto';
 import { MenuService } from './menu.service';
 import {
   ApiBadRequestResponse,
+  ApiBearerAuth,
   ApiBody,
   ApiCreatedResponse,
+  ApiForbiddenResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiParam,
@@ -26,9 +28,14 @@ import { UpdateMenuDTO } from './DTO/update-menu.dto';
 import { CreateSubMenuDTO } from './DTO/create-sub-menu.dto';
 import { SubMenuService } from './sub-menu/sub-menu.service';
 import { UpdateSubMenuDTO } from './DTO/update-sub-menu.dto';
+import { IsAuth } from '../common/decorator/auth.decorator';
+import { RoleAccess } from '../common/decorator/role-access.decorator';
+import { UserRole } from '../../models';
+import { ErrorMessage } from '../../ErrorMessages/Error.enum';
 
 @Controller('menu')
 @ApiExtraModels(MenuDTO, SubMenuDTO)
+@ApiForbiddenResponse({ description: ErrorMessage.INVALID_ACCESS })
 export class MenuController {
   constructor(
     private readonly menuService: MenuService,
@@ -36,6 +43,9 @@ export class MenuController {
   ) { }
 
   @Post()
+  @IsAuth()
+  @RoleAccess(UserRole.Owner)
+  @ApiBearerAuth("JWT-AUTH")
   @ApiBody({ type: CreateMenuDTO })
   @ApiCreatedResponse({
     description: 'Menu and subMenu Created',
@@ -94,6 +104,9 @@ export class MenuController {
   }
 
   @Patch(':id')
+  @IsAuth()
+  @RoleAccess(UserRole.Owner)
+  @ApiBearerAuth("JWT-AUTH")
   @ApiOkResponse({ type: MenuDTO })
   @ApiNotFoundResponse({})
   updateMenu(
@@ -104,6 +117,9 @@ export class MenuController {
   }
 
   @Delete(':id')
+  @IsAuth()
+  @RoleAccess(UserRole.Owner)
+  @ApiBearerAuth("JWT-AUTH")
   @ApiNotFoundResponse({ description: 'menu not found' })
   @ApiOkResponse({
     description: 'menu removed',
@@ -115,6 +131,10 @@ export class MenuController {
 
   // subMenu
   @Post(":menuId/sub-menu")
+  @IsAuth()
+  @RoleAccess(UserRole.Owner)
+  @ApiBearerAuth("JWT-AUTH")
+
   @ApiParam({ name: "menuId", description: "menu Id" })
   @ApiCreatedResponse({ type: SubMenuDTO })
   @ApiBadRequestResponse({ description: "menuId is invalid." })
@@ -124,6 +144,10 @@ export class MenuController {
 
 
   @Delete(":subMenuId/sub-menu")
+  @IsAuth()
+  @RoleAccess(UserRole.Owner)
+  @ApiBearerAuth("JWT-AUTH")
+
   @ApiParam({ name: "subMenuId", description: "subMenuId" })
   @ApiOkResponse({ description: "submenu Removed successfully", schema: { properties: { msg: { type: 'string' } } } })
   @ApiNotFoundResponse({ description: "sub Menu not found" })
@@ -133,6 +157,9 @@ export class MenuController {
 
 
   @Patch(":subMenuId/sub-menu")
+  @IsAuth()
+  @RoleAccess(UserRole.Owner)
+  @ApiBearerAuth("JWT-AUTH")
   @ApiParam({ name: "subMenuId", description: "subMenuId" })
   @ApiOkResponse({ description: "sub Menu updated", type: SubMenuDTO })
   @ApiNotFoundResponse({ description: "sub Menu not found" })

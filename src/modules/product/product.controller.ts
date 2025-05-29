@@ -40,13 +40,13 @@ import { memoryStorage } from 'multer';
 
 @ApiTags('products')
 @Controller('products')
-@ApiBearerAuth('JWT-AUTH')
 @ApiExtraModels(CreateProductDTO)
-@IsAuth()
 export class ProductController {
   constructor(private readonly productService: ProductService) { }
 
   @Post()
+  @IsAuth()
+  @ApiBearerAuth('JWT-AUTH')
   @UseInterceptors(FileInterceptor('image', { storage: memoryStorage() }))
   @ApiOperation({ summary: 'Create a new product' })
   @ApiCreatedResponse({
@@ -103,6 +103,8 @@ export class ProductController {
   }
 
   @Patch(':id')
+  @IsAuth()
+  @ApiBearerAuth('JWT-AUTH')
   @ApiOperation({ summary: 'Update a product' })
   @ApiResponse({
     status: 200,
@@ -120,6 +122,8 @@ export class ProductController {
   }
 
   @Delete(':id')
+  @IsAuth()
+  @ApiBearerAuth('JWT-AUTH')
   @ApiOperation({ summary: 'Delete a product' })
   @ApiResponse({
     status: 200,
@@ -133,6 +137,8 @@ export class ProductController {
   }
 
   @Patch(':id/inventory')
+  @IsAuth()
+  @ApiBearerAuth('JWT-AUTH')
   @ApiOperation({ summary: 'Update product inventory' })
   @ApiOkResponse({
     description: 'Inventory successfully updated',
@@ -155,6 +161,8 @@ export class ProductController {
   }
 
   @Patch(':id/toggle-status')
+  @IsAuth()
+  @ApiBearerAuth('JWT-AUTH')
   @ApiOperation({ summary: 'Toggle product active status' })
   @ApiResponse({
     status: 200,
