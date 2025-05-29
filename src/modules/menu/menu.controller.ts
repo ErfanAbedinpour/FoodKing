@@ -34,9 +34,6 @@ import { UserRole } from '../../models';
 import { ErrorMessage } from '../../ErrorMessages/Error.enum';
 
 @Controller('menu')
-@IsAuth()
-@RoleAccess(UserRole.Owner)
-@ApiBearerAuth("JWT-AUTH")
 @ApiExtraModels(MenuDTO, SubMenuDTO)
 @ApiForbiddenResponse({ description: ErrorMessage.INVALID_ACCESS })
 export class MenuController {
@@ -46,6 +43,9 @@ export class MenuController {
   ) { }
 
   @Post()
+  @IsAuth()
+  @RoleAccess(UserRole.Owner)
+  @ApiBearerAuth("JWT-AUTH")
   @ApiBody({ type: CreateMenuDTO })
   @ApiCreatedResponse({
     description: 'Menu and subMenu Created',
@@ -104,6 +104,9 @@ export class MenuController {
   }
 
   @Patch(':id')
+  @IsAuth()
+  @RoleAccess(UserRole.Owner)
+  @ApiBearerAuth("JWT-AUTH")
   @ApiOkResponse({ type: MenuDTO })
   @ApiNotFoundResponse({})
   updateMenu(
@@ -114,6 +117,9 @@ export class MenuController {
   }
 
   @Delete(':id')
+  @IsAuth()
+  @RoleAccess(UserRole.Owner)
+  @ApiBearerAuth("JWT-AUTH")
   @ApiNotFoundResponse({ description: 'menu not found' })
   @ApiOkResponse({
     description: 'menu removed',
@@ -125,6 +131,10 @@ export class MenuController {
 
   // subMenu
   @Post(":menuId/sub-menu")
+  @IsAuth()
+  @RoleAccess(UserRole.Owner)
+  @ApiBearerAuth("JWT-AUTH")
+
   @ApiParam({ name: "menuId", description: "menu Id" })
   @ApiCreatedResponse({ type: SubMenuDTO })
   @ApiBadRequestResponse({ description: "menuId is invalid." })
@@ -134,6 +144,10 @@ export class MenuController {
 
 
   @Delete(":subMenuId/sub-menu")
+  @IsAuth()
+  @RoleAccess(UserRole.Owner)
+  @ApiBearerAuth("JWT-AUTH")
+
   @ApiParam({ name: "subMenuId", description: "subMenuId" })
   @ApiOkResponse({ description: "submenu Removed successfully", schema: { properties: { msg: { type: 'string' } } } })
   @ApiNotFoundResponse({ description: "sub Menu not found" })
@@ -143,6 +157,9 @@ export class MenuController {
 
 
   @Patch(":subMenuId/sub-menu")
+  @IsAuth()
+  @RoleAccess(UserRole.Owner)
+  @ApiBearerAuth("JWT-AUTH")
   @ApiParam({ name: "subMenuId", description: "subMenuId" })
   @ApiOkResponse({ description: "sub Menu updated", type: SubMenuDTO })
   @ApiNotFoundResponse({ description: "sub Menu not found" })
