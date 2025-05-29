@@ -13,8 +13,9 @@ import {
   Post,
 } from '@nestjs/common';
 import { IsAuth } from '../common/decorator/auth.decorator';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiCreatedResponse, ApiForbiddenResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiProperty, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { GetUser } from '../common/decorator/getUser.decorator';
+import { AddressDto } from './dto/address.dto';
 
 @Controller('addresses')
 @IsAuth()
@@ -23,6 +24,9 @@ export class AddressController {
   constructor(private readonly addressService: AddressService) { }
 
   @Post()
+  @ApiBody({ type: CreateAddressDto })
+  @ApiCreatedResponse({ type: AddressDto })
+  @ApiOperation({ summary: "Create new Address" })
   async createAddress(
     @GetUser("userId") userId: number,
     @Body() createAddressDto: CreateAddressDto
@@ -31,19 +35,26 @@ export class AddressController {
   }
 
   @Get()
+  @ApiOkResponse({ type: [AddressDto] })
+  @ApiOperation({ summary: "Get All Addresses" })
   async addresses(@GetUser("userId") userId: number): Promise<Address[]> {
     return this.addressService.findAll(userId);
   }
 
   @Get(':id')
+  @ApiOkResponse({ type: AddressDto })
+  @ApiParam({ name: "id", description: "AddressId" })
+  @ApiOperation({ summary: "Get Address By Id" })
+  @ApiNotFoundResponse({ description: "Address Not Found" })
   async address(@Param('id', ParseIntPipe) id: number,
     @GetUser("userId") userId: number
   ): Promise<Address> {
-
     return this.addressService.findOne(userId, id);
   }
 
   @Patch(':id')
+  @ApiOkResponse({ type: AddressDto })
+  @ApiParam({ name: "id", description: "AddressId" })
   async updateAddress(
     @GetUser("userId") userId: number,
     @Param('id') id: number,
@@ -53,6 +64,8 @@ export class AddressController {
   }
 
   @Delete(':id')
+  @ApiOkResponse({ schema: { type: 'boolean' } })
+  @ApiParam({ name: "id", description: "AddressId" })
   async removeAddress(@Param('id', ParseIntPipe) id: number,
     @GetUser("userId") userId: number
   ): Promise<boolean> {
