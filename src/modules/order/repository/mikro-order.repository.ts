@@ -27,7 +27,7 @@ export class MikroOrderRepository implements OrderRepository {
         address: addressId,
         paymentMethod,
         total_price: products.reduce(
-          (acc, product) => acc.plus(product.product.price),
+          (acc, { product, quantity }) => acc.plus(Decimal.mul(product.price, quantity)),
           new Decimal(0),
         ),
       },

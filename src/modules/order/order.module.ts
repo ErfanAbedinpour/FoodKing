@@ -4,9 +4,10 @@ import { OrderService } from './order.service';
 import { MikroOrderRepository } from './repository/mikro-order.repository';
 import { OrderRepository } from './repository/order.repository';
 import { AddressModule } from '../address/address.module';
+import { ProductModule } from '../product/product.module';
 
 @Module({
-  imports:[AddressModule,],
+  imports: [AddressModule, ProductModule],
   controllers: [OrderController],
   providers: [
     OrderService,
@@ -17,4 +18,4 @@ import { AddressModule } from '../address/address.module';
   ],
   exports: [OrderService],
 })
-export class OrderModule {}
+export class OrderModule { }

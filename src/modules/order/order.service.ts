@@ -8,7 +8,6 @@ import {
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { OrderRepository } from './repository/order.repository';
 import { CreateOrderDto } from './dtos/create-order.dto';
-import { CartService } from '../cart/cart.service';
 import { AddressService } from '../address/address.service';
 import { OrderCreatedEvent } from './events/order-created.event';
 import { OrderItem } from '../../models/order-item.model';
@@ -54,13 +53,16 @@ export class OrderService {
     const orderProducts: OrderProductPersist[] = [];
 
     //TODO: Here should be optimized later.
+    //TODO: Here we can Get Entire Product at once
     for (const { productId, quantity } of products) {
       const product = await this.productService.getProductById(productId);
       if (product.inventory < quantity)
         throw new BadRequestException(ErrorMessage.PRODUCT_OUT_OF_STOCK)
 
-      orderProducts.push({ product, quantity })
+      orderProducts.push({ product, quantity });
     }
+
+    console.log('orderProducts ', orderProducts);
 
     try {
       const order = await this.orderRepository.createOrder({
@@ -72,18 +74,18 @@ export class OrderService {
 
       // TODO: Here should be optimized later.
       // Emit order created event
-      const orderItems = orderProducts.map((product) => {
+      const orderItems = orderProducts.map(({ product, quantity }) => {
         const orderItem = new OrderItem();
-        orderItem.product = product.product;
+        orderItem.product = product;
         orderItem.order = order;
-        orderItem.quantity = product.quantity;
-        orderItem.price = product.product.price;
+        orderItem.quantity = quantity;
+        orderItem.price = product.price;
         return orderItem;
       });
 
       this.eventEmitter.emit(
         'order.created',
-        new OrderCreatedEvent(orderItems),
+        new OrderCreatedEvent(orderItems, userId),
       );
 
       return order;
