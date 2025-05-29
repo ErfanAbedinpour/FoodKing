@@ -12,8 +12,10 @@ import { CreateMenuDTO } from './DTO/create-menu.dto';
 import { MenuService } from './menu.service';
 import {
   ApiBadRequestResponse,
+  ApiBearerAuth,
   ApiBody,
   ApiCreatedResponse,
+  ApiForbiddenResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiParam,
@@ -26,9 +28,17 @@ import { UpdateMenuDTO } from './DTO/update-menu.dto';
 import { CreateSubMenuDTO } from './DTO/create-sub-menu.dto';
 import { SubMenuService } from './sub-menu/sub-menu.service';
 import { UpdateSubMenuDTO } from './DTO/update-sub-menu.dto';
+import { IsAuth } from '../common/decorator/auth.decorator';
+import { RoleAccess } from '../common/decorator/role-access.decorator';
+import { UserRole } from '../../models';
+import { ErrorMessage } from '../../ErrorMessages/Error.enum';
 
 @Controller('menu')
+@IsAuth()
+@RoleAccess(UserRole.Owner)
+@ApiBearerAuth("JWT-AUTH")
 @ApiExtraModels(MenuDTO, SubMenuDTO)
+@ApiForbiddenResponse({ description: ErrorMessage.INVALID_ACCESS })
 export class MenuController {
   constructor(
     private readonly menuService: MenuService,

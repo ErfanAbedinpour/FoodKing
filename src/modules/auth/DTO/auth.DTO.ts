@@ -26,6 +26,6 @@ export class CreateUserDTO {
 
   @ApiProperty({ minLength: 8 })
   @IsNotEmpty()
-  @MaxLength(8, { message: 'password cannot less than 8 character' })
+  @MinLength(8, { message: 'password cannot less than 8 character' })
   password: string;
 }
