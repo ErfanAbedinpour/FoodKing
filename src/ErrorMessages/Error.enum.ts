@@ -29,4 +29,5 @@ export enum ErrorMessage {
   CART_IS_EMPTY = 'Cart is empty',
   ADDRESS_NOT_FOUND = 'Address not found',
   ORDER_NOT_FOUND = 'Order Not Found',
+  ORDER_CANNOT_BE_REMOVED = "The Order on this situation cannot be removed"
 }
