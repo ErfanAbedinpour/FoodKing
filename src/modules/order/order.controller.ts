@@ -8,7 +8,7 @@ import {
   Post,
 } from '@nestjs/common';
 import { IsAuth } from '../common/decorator/auth.decorator';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody } from '@nestjs/swagger';
 import { OrderService } from './order.service';
 import { GetUser } from '../common/decorator/getUser.decorator';
 import { CreateOrderDto } from './dtos/create-order.dto';
@@ -21,6 +21,7 @@ export class OrderController {
   constructor(private readonly orderService: OrderService) { }
 
   @Post()
+  @ApiBody({ type: CreateOrderDto })
   async createOrder(
     @GetUser('userId') userId: number,
     @Body() createOrderDto: CreateOrderDto,
