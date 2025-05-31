@@ -39,7 +39,7 @@ export class S3Storage implements StorageService,OnModuleInit{
                 Bucket:this.bucketName,
                 Key:key
             }))
-            return `https://${process.env.S3_END_POINT}/${this.bucketName}/${key}`;
+            return this.signImageUrl(key);
         } catch (error) {
             this.logger.error(`file not found`, error);
             throw new NotFoundException(ErrorMessage.FILE_NOT_FOUND)
@@ -84,5 +84,10 @@ export class S3Storage implements StorageService,OnModuleInit{
             this.logger.error('Failed to upload file', error);
             throw new InternalServerErrorException()
         }
+    }
+
+
+    signImageUrl(key: string): string {
+        return `https://${process.env.S3_END_POINT}/${this.bucketName}/${key}`;
     }
 }
