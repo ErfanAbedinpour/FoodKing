@@ -37,6 +37,15 @@ import { GetUser } from '../common/decorator/getUser.decorator';
 import { IsAuth } from '../common/decorator/auth.decorator';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { memoryStorage } from 'multer';
+import { 
+  CreateProductSwagger, 
+  GetProductBySlug, 
+  GetAllProductsSwagger, 
+  UpdateProductSwagger, 
+  DeleteProductSwagger, 
+  UpdateInventorySwagger, 
+  ToggleProductStatusSwagger 
+} from './product.swagger';
 
 @ApiTags('products')
 @Controller('products')
@@ -46,27 +55,8 @@ export class ProductController {
 
   @Post()
   @IsAuth()
-  @ApiBearerAuth('JWT-AUTH')
   @UseInterceptors(FileInterceptor('image', { storage: memoryStorage() }))
-  @ApiOperation({ summary: 'Create a new product' })
-  @ApiCreatedResponse({
-    description: 'Product successfully created',
-  })
-  @ApiBody({
-    schema: {
-      allOf: [
-        {
-          $ref: getSchemaPath(CreateProductDTO),
-        },
-        {
-          properties: {
-            image: { type: 'string', format: 'binary' },
-          },
-        },
-      ],
-    },
-  })
-  @ApiConsumes('multipart/form-data')
+  @CreateProductSwagger()
   async create(
     @Body() createProductDto: CreateProductDTO,
     @GetUser('userId') userId: number,
@@ -87,33 +77,20 @@ export class ProductController {
   }
 
   @Get(':slug')
-  @ApiOperation({ summary: 'Get a product by slug' })
-  @ApiResponse({ status: 200, description: 'Product found', type: Product })
-  @ApiResponse({ status: 404, description: 'Product not found' })
-  @ApiParam({ name: 'slug', type: 'string', description: 'Product Slug' })
+  @GetProductBySlug()
   async findBySlug(@Param('slug') slug: string): Promise<Product> {
     return this.productService.getProductBySlug(slug);
   }
 
   @Get()
-  @ApiOperation({ summary: 'Get Products List' })
-  @ApiOkResponse({ description: 'Get a products', type: [ProductDTO] })
+  @GetAllProductsSwagger()
   getProducts() {
     return this.productService.getAllProduct();
   }
 
   @Patch(':id')
   @IsAuth()
-  @ApiBearerAuth('JWT-AUTH')
-  @ApiOperation({ summary: 'Update a product' })
-  @ApiResponse({
-    status: 200,
-    description: 'Product successfully updated',
-    type: Product,
-  })
-  @ApiResponse({ status: 404, description: 'Product not found' })
-  @ApiParam({ name: 'id', type: 'number', description: 'Product ID' })
-  @ApiBody({ type: UpdateProductDto })
+  @UpdateProductSwagger()
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateProductDto: UpdateProductDto,
@@ -123,36 +100,14 @@ export class ProductController {
 
   @Delete(':id')
   @IsAuth()
-  @ApiBearerAuth('JWT-AUTH')
-  @ApiOperation({ summary: 'Delete a product' })
-  @ApiResponse({
-    status: 200,
-    description: 'Product successfully deleted',
-    type: Product,
-  })
-  @ApiResponse({ status: 404, description: 'Product not found' })
-  @ApiParam({ name: 'id', type: 'number', description: 'Product ID' })
+  @DeleteProductSwagger()
   async remove(@Param('id', ParseIntPipe) id: number): Promise<Product> {
     return this.productService.deleteProduct(id);
   }
 
   @Patch(':id/inventory')
   @IsAuth()
-  @ApiBearerAuth('JWT-AUTH')
-  @ApiOperation({ summary: 'Update product inventory' })
-  @ApiOkResponse({
-    description: 'Inventory successfully updated',
-    type: ProductDTO,
-  })
-  @ApiNotFoundResponse({ description: 'Product not found' })
-  @ApiBadRequestResponse({ description: 'Insufficient inventory' })
-  @ApiBody({
-    schema: {
-      properties: { quantity: { type: 'number' } },
-      required: ['quantity'],
-    },
-  })
-  @ApiParam({ name: 'id', type: 'number', description: 'Product ID' })
+  @UpdateInventorySwagger()
   async updateInventory(
     @Param('id', ParseIntPipe) id: number,
     @Body('quantity', ParseIntPipe) quantity: number,
@@ -162,15 +117,7 @@ export class ProductController {
 
   @Patch(':id/toggle-status')
   @IsAuth()
-  @ApiBearerAuth('JWT-AUTH')
-  @ApiOperation({ summary: 'Toggle product active status' })
-  @ApiResponse({
-    status: 200,
-    description: 'Status successfully toggled',
-    type: ProductDTO,
-  })
-  @ApiResponse({ status: 404, description: 'Product not found' })
-  @ApiParam({ name: 'id', type: 'number', description: 'Product ID' })
+  @ToggleProductStatusSwagger()
   async toggleStatus(@Param('id', ParseIntPipe) id: number): Promise<Product> {
     return this.productService.toggleProductStatus(id);
   }
