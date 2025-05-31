@@ -43,9 +43,9 @@ async function bootstrap() {
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, documentFactory);
 
-  app.useStaticAssets(join(__dirname, '..', 'public/product-images'), {
-    prefix: '/public/',
+  const PORT = process.env.PORT ?? 3000
+  await app.listen(PORT,()=>{
+    console.log(`Server Litening on ${PORT}\n OPENAPI is \\api`)
   });
-  await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();

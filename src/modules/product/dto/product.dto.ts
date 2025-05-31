@@ -23,10 +23,10 @@ export class ProductDTO {
   attributes: object[];
 
   @ApiProperty()
-  restaurant_id: number;
+  restaurant: number;
 
   @ApiProperty()
-  isActivate: boolean;
+  is_active: boolean;
 
   @ApiProperty()
   image: string;
