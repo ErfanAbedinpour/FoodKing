@@ -1,2 +1,2 @@
-
-npm run migrate
+# npm run migrate:create
+# npm run migrate
