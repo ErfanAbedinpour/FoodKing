@@ -15,22 +15,18 @@ import { MenuDTO } from './DTO/menu.DTO';
 import { ApiExtraModels } from '@nestjs/swagger';
 import { SubMenuDTO } from './DTO/sub-menu.DTO';
 import { UpdateMenuDTO } from './DTO/update-menu.dto';
-import { CreateSubMenuDTO } from './DTO/create-sub-menu.dto';
-import { SubMenuService } from './sub-menu/sub-menu.service';
-import { UpdateSubMenuDTO } from './DTO/update-sub-menu.dto';
 import { IsAuth } from '../common/decorator/auth.decorator';
 import { RoleAccess } from '../common/decorator/role-access.decorator';
 import { UserRole } from '../../models';
 import { ErrorMessage } from '../../ErrorMessages/Error.enum';
-import { AddSubMenuSwagger, CreateMenuSwagger, DeleteMenuSwagger, DeleteSubMenuSwagger, GetMenuBySlugSwagger, GetMenusSwagger, UpdateMenuSwagger, UpdateSubMenuSwagger } from './menu.swagger';
+import { CreateMenuSwagger, DeleteMenuSwagger, GetMenuBySlugSwagger, GetMenusSwagger, UpdateMenuSwagger } from './menu.swagger';
 
-@Controller('menu')
+@Controller('menus')
 @ApiExtraModels(MenuDTO, SubMenuDTO)
 @ApiForbiddenResponse({ description: ErrorMessage.INVALID_ACCESS })
 export class MenuController {
   constructor(
-    private readonly menuService: MenuService,
-    private readonly subMenuService: SubMenuService
+    private readonly menuService: MenuService
   ) { }
 
   @Post()
@@ -73,29 +69,5 @@ export class MenuController {
   }
 
   // subMenu
-  @Post(":menuId/sub-menu")
-  @IsAuth()
-  @RoleAccess(UserRole.Owner)
-  @AddSubMenuSwagger()
-  addSubMenu(@Param("menuId", ParseIntPipe) menuId: number, @Body() createSubMenuDto: CreateSubMenuDTO) {
-    return this.subMenuService.create(menuId, createSubMenuDto)
-  }
 
-
-  @Delete(":subMenuId/sub-menu")
-  @IsAuth()
-  @RoleAccess(UserRole.Owner)
-  @DeleteSubMenuSwagger()
-  deleteSubMenu(@Param("subMenuId", ParseIntPipe) subMenuId: number) {
-    return this.subMenuService.delete(subMenuId)
-  }
-
-
-  @Patch(":subMenuId/sub-menu")
-  @IsAuth()
-  @RoleAccess(UserRole.Owner)
-  @UpdateSubMenuSwagger()
-  updateSubMenu(@Param("subMenuId", ParseIntPipe) subMenuId: number, @Body() updateSubMenu: UpdateSubMenuDTO) {
-    return this.subMenuService.update(subMenuId, updateSubMenu)
-  }
 }
