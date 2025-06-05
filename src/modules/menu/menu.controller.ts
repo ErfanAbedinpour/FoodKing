@@ -10,17 +10,7 @@ import {
 } from '@nestjs/common';
 import { CreateMenuDTO } from './DTO/create-menu.dto';
 import { MenuService } from './menu.service';
-import {
-  ApiBadRequestResponse,
-  ApiBearerAuth,
-  ApiBody,
-  ApiCreatedResponse,
-  ApiForbiddenResponse,
-  ApiNotFoundResponse,
-  ApiOkResponse,
-  ApiParam,
-  getSchemaPath,
-} from '@nestjs/swagger';
+import { ApiForbiddenResponse } from '@nestjs/swagger';
 import { MenuDTO } from './DTO/menu.DTO';
 import { ApiExtraModels } from '@nestjs/swagger';
 import { SubMenuDTO } from './DTO/sub-menu.DTO';
@@ -32,6 +22,7 @@ import { IsAuth } from '../common/decorator/auth.decorator';
 import { RoleAccess } from '../common/decorator/role-access.decorator';
 import { UserRole } from '../../models';
 import { ErrorMessage } from '../../ErrorMessages/Error.enum';
+import { AddSubMenuSwagger, CreateMenuSwagger, DeleteMenuSwagger, DeleteSubMenuSwagger, GetMenuBySlugSwagger, GetMenusSwagger, UpdateMenuSwagger, UpdateSubMenuSwagger } from './menu.swagger';
 
 @Controller('menu')
 @ApiExtraModels(MenuDTO, SubMenuDTO)
@@ -45,60 +36,19 @@ export class MenuController {
   @Post()
   @IsAuth()
   @RoleAccess(UserRole.Owner)
-  @ApiBearerAuth("JWT-AUTH")
-  @ApiBody({ type: CreateMenuDTO })
-  @ApiCreatedResponse({
-    description: 'Menu and subMenu Created',
-    schema: { type: 'object', properties: { msg: { type: 'string' } } },
-  })
+  @CreateMenuSwagger()
   addMenu(@Body() createMenuDto: CreateMenuDTO) {
     return this.menuService.create(createMenuDto);
   }
 
   @Get()
-  @ApiOkResponse({
-    description: 'findAll Menus and Subs',
-    schema: {
-      type: 'array',
-      items: {
-        allOf: [
-          { $ref: getSchemaPath(MenuDTO) },
-          {
-            type: 'object',
-            properties: {
-              subs_menus: {
-                type: 'array',
-                items: { $ref: getSchemaPath(SubMenuDTO) },
-              },
-            },
-          },
-        ],
-      },
-    },
-  })
+  @GetMenusSwagger()
   getMenus() {
     return this.menuService.findAll();
   }
 
   @Get(':slug')
-  @ApiOkResponse({
-    description: 'menu and subs are find',
-    schema: {
-      allOf: [
-        { $ref: getSchemaPath(MenuDTO) },
-        {
-          type: 'object',
-          properties: {
-            sub_menus: {
-              type: 'array',
-              items: { $ref: getSchemaPath(SubMenuDTO) },
-            },
-          },
-        },
-      ],
-    },
-  })
-  @ApiNotFoundResponse({ description: 'menu not found' })
+  @GetMenuBySlugSwagger()
   getMenuBySlug(@Param('slug') slug: string) {
     return this.menuService.findBySlug(slug);
   }
@@ -106,9 +56,7 @@ export class MenuController {
   @Patch(':id')
   @IsAuth()
   @RoleAccess(UserRole.Owner)
-  @ApiBearerAuth("JWT-AUTH")
-  @ApiOkResponse({ type: MenuDTO })
-  @ApiNotFoundResponse({})
+  @UpdateMenuSwagger()
   updateMenu(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateDto: UpdateMenuDTO,
@@ -119,12 +67,7 @@ export class MenuController {
   @Delete(':id')
   @IsAuth()
   @RoleAccess(UserRole.Owner)
-  @ApiBearerAuth("JWT-AUTH")
-  @ApiNotFoundResponse({ description: 'menu not found' })
-  @ApiOkResponse({
-    description: 'menu removed',
-    schema: { properties: { msg: { type: 'string' } } },
-  })
+  @DeleteMenuSwagger()
   deleteMenu(@Param('id', ParseIntPipe) id: number) {
     return this.menuService.delete(id);
   }
@@ -133,11 +76,7 @@ export class MenuController {
   @Post(":menuId/sub-menu")
   @IsAuth()
   @RoleAccess(UserRole.Owner)
-  @ApiBearerAuth("JWT-AUTH")
-
-  @ApiParam({ name: "menuId", description: "menu Id" })
-  @ApiCreatedResponse({ type: SubMenuDTO })
-  @ApiBadRequestResponse({ description: "menuId is invalid." })
+  @AddSubMenuSwagger()
   addSubMenu(@Param("menuId", ParseIntPipe) menuId: number, @Body() createSubMenuDto: CreateSubMenuDTO) {
     return this.subMenuService.create(menuId, createSubMenuDto)
   }
@@ -146,11 +85,7 @@ export class MenuController {
   @Delete(":subMenuId/sub-menu")
   @IsAuth()
   @RoleAccess(UserRole.Owner)
-  @ApiBearerAuth("JWT-AUTH")
-
-  @ApiParam({ name: "subMenuId", description: "subMenuId" })
-  @ApiOkResponse({ description: "submenu Removed successfully", schema: { properties: { msg: { type: 'string' } } } })
-  @ApiNotFoundResponse({ description: "sub Menu not found" })
+  @DeleteSubMenuSwagger()
   deleteSubMenu(@Param("subMenuId", ParseIntPipe) subMenuId: number) {
     return this.subMenuService.delete(subMenuId)
   }
@@ -159,11 +94,7 @@ export class MenuController {
   @Patch(":subMenuId/sub-menu")
   @IsAuth()
   @RoleAccess(UserRole.Owner)
-  @ApiBearerAuth("JWT-AUTH")
-  @ApiParam({ name: "subMenuId", description: "subMenuId" })
-  @ApiOkResponse({ description: "sub Menu updated", type: SubMenuDTO })
-  @ApiNotFoundResponse({ description: "sub Menu not found" })
-  @ApiBody({ type: UpdateSubMenuDTO })
+  @UpdateSubMenuSwagger()
   updateSubMenu(@Param("subMenuId", ParseIntPipe) subMenuId: number, @Body() updateSubMenu: UpdateSubMenuDTO) {
     return this.subMenuService.update(subMenuId, updateSubMenu)
   }
