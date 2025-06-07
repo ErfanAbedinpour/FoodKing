@@ -6,9 +6,10 @@ import { MikroMenuRepository } from './repository/mikro-orm-menu-repository';
 import { SubMenuRepository } from './repository/abstract/sub-menu.repository';
 import { MikroSubMenuRepository } from './repository/mikro-orm.sub-menu-repository';
 import { SubMenuService } from './sub-menu/sub-menu.service';
+import { SubMenuController } from './sub-menu/sub-menu.controller';
 
 @Module({
-  controllers: [MenuController],
+  controllers: [MenuController, SubMenuController],
   providers: [
     MenuService,
     SubMenuService,

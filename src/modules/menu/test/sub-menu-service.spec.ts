@@ -107,30 +107,30 @@ describe('SubMenuService', () => {
 
       repository.update.mockResolvedValueOnce(expectedResult);
 
-      const result = await service.update(subMenuId, updateSubMenuDto);
+      const result = await service.update(1, subMenuId, updateSubMenuDto);
 
-      expect(repository.update).toHaveBeenCalledWith(subMenuId, updateSubMenuDto);
+      expect(repository.update).toHaveBeenCalledWith(1, subMenuId, updateSubMenuDto);
       expect(result).toEqual(expectedResult);
     });
 
     it('should throw NotFoundException when submenu is not found', async () => {
       repository.update.mockRejectedValue(new NotFoundException());
 
-      expect(service.update(subMenuId, updateSubMenuDto)).rejects.toThrow(NotFoundException);
-      expect(service.update(subMenuId, updateSubMenuDto)).rejects.toThrow(ErrorMessage.SUB_MENU_NOT_FOUND);
+      expect(service.update(2, subMenuId, updateSubMenuDto)).rejects.toThrow(NotFoundException);
+      expect(service.update(2, subMenuId, updateSubMenuDto)).rejects.toThrow(ErrorMessage.SUB_MENU_NOT_FOUND);
     });
 
     it('should throw BadRequestException when slug is not unique', async () => {
       repository.update.mockRejectedValue(new UniqueConstraintViolationException(new Error('Duplicate slug')));
 
-      expect(service.update(subMenuId, updateSubMenuDto)).rejects.toThrow(BadRequestException);
-      expect(service.update(subMenuId, updateSubMenuDto)).rejects.toThrow(ErrorMessage.INVALID_SUB_MENU_SLUG);
+      expect(service.update(2, subMenuId, updateSubMenuDto)).rejects.toThrow(BadRequestException);
+      expect(service.update(2, subMenuId, updateSubMenuDto)).rejects.toThrow(ErrorMessage.INVALID_SUB_MENU_SLUG);
     });
 
     it('should throw InternalServerErrorException for other errors', async () => {
       repository.update.mockRejectedValue(new Error('Unknown error'));
 
-      expect(service.update(subMenuId, updateSubMenuDto)).rejects.toThrow(InternalServerErrorException);
+      expect(service.update(2, subMenuId, updateSubMenuDto)).rejects.toThrow(InternalServerErrorException);
     });
   });
 
@@ -140,17 +140,17 @@ describe('SubMenuService', () => {
     it('should delete a submenu successfully', async () => {
       repository.delete.mockResolvedValueOnce(true);
 
-      const result = await service.delete(subMenuId);
+      const result = await service.delete(1, subMenuId);
 
-      expect(repository.delete).toHaveBeenCalledWith(subMenuId);
+      expect(repository.delete).toHaveBeenCalledWith(1, subMenuId);
       expect(result).toEqual({ msg: 'subMenu Removed successfully' });
     });
 
     it('should throw NotFoundException when submenu is not found', async () => {
       repository.delete.mockResolvedValue(false);
 
-      expect(service.delete(subMenuId)).rejects.toThrow(NotFoundException);
-      expect(service.delete(subMenuId)).rejects.toThrow(ErrorMessage.SUB_MENU_NOT_FOUND);
+      expect(service.delete(1, subMenuId)).rejects.toThrow(NotFoundException);
+      expect(service.delete(1, subMenuId)).rejects.toThrow(ErrorMessage.SUB_MENU_NOT_FOUND);
     });
   });
 });

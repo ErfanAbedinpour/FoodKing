@@ -13,16 +13,19 @@ import {
   Post,
 } from '@nestjs/common';
 import { IsAuth } from '../common/decorator/auth.decorator';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { GetUser } from '../common/decorator/getUser.decorator';
+import { CreateAddressSwagger, GetAllAddressSwagger, GetOneAddressSwagger, RemoveAddressSwagger, UpdateAddressSwagger } from './address.swagger';
 
 @Controller('addresses')
 @IsAuth()
 @ApiBearerAuth('JWT-AUTH')
+@ApiUnauthorizedResponse({description:"You should login first."})
 export class AddressController {
   constructor(private readonly addressService: AddressService) { }
 
   @Post()
+  @CreateAddressSwagger()
   async createAddress(
     @GetUser("userId") userId: number,
     @Body() createAddressDto: CreateAddressDto
@@ -31,11 +34,13 @@ export class AddressController {
   }
 
   @Get()
+  @GetAllAddressSwagger()
   async addresses(@GetUser("userId") userId: number): Promise<Address[]> {
     return this.addressService.findAll(userId);
   }
 
   @Get(':id')
+  @GetOneAddressSwagger()
   async address(@Param('id', ParseIntPipe) id: number,
     @GetUser("userId") userId: number
   ): Promise<Address> {
@@ -44,6 +49,7 @@ export class AddressController {
   }
 
   @Patch(':id')
+  @UpdateAddressSwagger()
   async updateAddress(
     @GetUser("userId") userId: number,
     @Param('id') id: number,
@@ -53,6 +59,7 @@ export class AddressController {
   }
 
   @Delete(':id')
+  @RemoveAddressSwagger()
   async removeAddress(@Param('id', ParseIntPipe) id: number,
     @GetUser("userId") userId: number
   ): Promise<boolean> {

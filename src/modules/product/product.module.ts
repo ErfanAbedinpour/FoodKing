@@ -21,3 +21,5 @@ import { Directory } from "../storage/enum/directory.enum";
   exports: [ProductService],
 })
 export class ProductModule {}
+
+

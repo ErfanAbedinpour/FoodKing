@@ -30,9 +30,9 @@ export class SubMenuService {
     }
 
 
-    async update(id: number, data: UpdateSubMenuDTO) {
+    async update(menuId: number, id: number, data: UpdateSubMenuDTO) {
         try {
-            const result = await this.subMenuRepository.update(id, data)
+            const result = await this.subMenuRepository.update(menuId, id, data)
             return result
         } catch (err) {
             if (err instanceof HttpException)
@@ -47,8 +47,8 @@ export class SubMenuService {
     }
 
 
-    async delete(id: number) {
-        const result = await this.subMenuRepository.delete(id)
+    async delete(menuId: number, id: number) {
+        const result = await this.subMenuRepository.delete(menuId, id)
 
         if (!result)
             throw new NotFoundException(ErrorMessage.SUB_MENU_NOT_FOUND)
