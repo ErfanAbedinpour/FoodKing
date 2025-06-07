@@ -73,7 +73,7 @@ export class RestaurantService {
     }
   }
 
-  async getRestaurantProduct(restaurantId: number): Promise<Restaurant> {
+  async getRestaurantProducts(restaurantId: number): Promise<Restaurant> {
     try {
       const restaurant = await this.restaurantRepository.getRestaurantProducts(restaurantId);
       return restaurant;
