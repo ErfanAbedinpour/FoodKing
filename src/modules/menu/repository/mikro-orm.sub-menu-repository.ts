@@ -28,8 +28,8 @@ export class MikroSubMenuRepository implements SubMenuRepository {
     }
 
 
-    async delete(id: number): Promise<boolean> {
-        const subMenu = await this.em.findOne(SubMenuModel, id)
+    async delete(menuId: number, id: number): Promise<boolean> {
+        const subMenu = await this.em.findOne(SubMenuModel, { menu: menuId, id });
         if (!subMenu)
             return false
         try {
@@ -42,8 +42,8 @@ export class MikroSubMenuRepository implements SubMenuRepository {
     }
 
 
-    async update(id: number, data: Partial<SubMenuPersis>): Promise<SubMenuModel> {
-        const subMenu = await this.em.findOne(SubMenuModel, id)
+    async update(menuId: number, id: number, data: Partial<SubMenuPersis>): Promise<SubMenuModel> {
+        const subMenu = await this.em.findOne(SubMenuModel, { menu: menuId, id });
         if (!subMenu)
             throw new RepositoryException(ErrorMessage.SUB_MENU_NOT_FOUND)
 

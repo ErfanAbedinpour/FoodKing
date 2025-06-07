@@ -68,18 +68,18 @@ export class S3Storage implements StorageService,OnModuleInit{
 
 
     async upload(file: Buffer, meta:{key:string,mimetype:string}): Promise<string> {
-        const name = this.createKey(meta.key);
+        const key= this.createKey(meta.key);
         try {
             const command = new PutObjectCommand({
                 Bucket: this.bucketName,
-                Key: name,
+                Key: key,
                 Body: file,
                 ContentType: meta.mimetype,
             });
             
             await this.s3Client.send(command);
-            this.logger.log(`Successfully uploaded file with key ${name}`);
-            return name; 
+            this.logger.log(`Successfully uploaded file with key ${key}`);
+            return key; 
         } catch (error) {
             this.logger.error('Failed to upload file', error);
             throw new InternalServerErrorException()

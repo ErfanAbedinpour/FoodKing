@@ -12,9 +12,16 @@ import { RestaurantService } from '../../restaurant/restaurant.service';
 import { Category } from '../../../models';
 import { UpdateCategoryDto } from '../../category/dto/update-category.dto';
 import { UpdateProductDto } from '../dto/update-product.dto';
+import { StorageService } from '../../storage/storage.service';
 
 describe('ProductService', () => {
   let service: ProductService;
+  let mockStorageService:jest.Mocked<StorageService> = {
+    get:jest.fn(),
+    upload:jest.fn(),
+    remove:jest.fn(),
+    signImageUrl:jest.fn()
+  }
 
   const mockRestaurantService = {
     findOne: jest.fn(),
@@ -50,6 +57,10 @@ describe('ProductService', () => {
           provide: RestaurantService,
           useValue: mockRestaurantService,
         },
+        {
+          provide:StorageService,
+          useValue:mockStorageService
+        }
       ],
     }).compile();
 
@@ -85,6 +96,7 @@ describe('ProductService', () => {
 
     it('should create a product successfully', async () => {
       jest.spyOn(Date, 'now').mockReturnValue(1234567890);
+      mockStorageService.signImageUrl.mockReturnValue('test-image-orginal');
       mockProductRepository.create.mockResolvedValue({
         id: 1,
         name: 'Test Product',
@@ -115,7 +127,7 @@ describe('ProductService', () => {
           { id: 1, name: 'Category 1' },
           { id: 2, name: 'Category 2' },
         ],
-        image: '1234567890-test-name',
+        image: 'products/1234567890-test-name',
       });
 
       expect(mockCategoryService.findAllByIds).toHaveBeenCalledWith([1]);
@@ -133,12 +145,15 @@ describe('ProductService', () => {
 
     describe('getProductById', () => {
       it('should return a product when found', async () => {
+        mockStorageService.signImageUrl.mockReturnValue('test-image-orginal');
+
         mockProductRepository.findById.mockResolvedValue(mockProduct);
 
         const result = await service.getProductById(1);
 
-        expect(result).toEqual(mockProduct);
+        expect(result).toEqual({...mockProduct,image:'test-image-orginal'});
         expect(mockProductRepository.findById).toHaveBeenCalledWith(1);
+        expect(mockStorageService.signImageUrl).toHaveBeenCalledWith(mockProduct.image);
       });
 
       it('should throw NotFoundException when product not found', () => {
@@ -147,19 +162,22 @@ describe('ProductService', () => {
         );
 
         expect(service.getProductById(1)).rejects.toThrow('Product not found');
+        expect(mockStorageService.signImageUrl).not.toHaveBeenCalled();
       });
     });
 
     describe('getProductBySlug', () => {
       it('should return a product when found', async () => {
+        mockStorageService.signImageUrl.mockReturnValue('test-image-orginal');
         mockProductRepository.findBySlug.mockResolvedValue(mockProduct);
 
         const result = await service.getProductBySlug('test-product');
 
-        expect(result).toEqual(mockProduct);
+        expect(result).toEqual({...mockProduct,image:'test-image-orginal'});
         expect(mockProductRepository.findBySlug).toHaveBeenCalledWith(
           'test-product',
         );
+        expect(mockStorageService.signImageUrl).toHaveBeenCalledWith(mockProduct.image);
       });
 
       it('should throw NotFoundException when product not found', () => {
@@ -232,12 +250,15 @@ describe('ProductService', () => {
 
     describe('deleteProduct', () => {
       it('should delete The product successfully', async () => {
+        mockStorageService.remove.mockResolvedValue(true);
+
         mockProductRepository.delete.mockResolvedValue(mockProduct);
 
         const result = await service.deleteProduct(1);
 
         expect(result).toEqual(mockProduct);
         expect(mockProductRepository.delete).toHaveBeenCalledWith(1);
+        expect(mockStorageService.remove).toHaveBeenCalledWith(mockProduct.image);
       });
 
       it('should throw NotFoundException when product not found', () => {
