@@ -1,4 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Category } from '../../../models';
+import { CategoryDTO } from '../../category/dto/category.dto';
 
 export class ProductDTO {
   @ApiProperty()
@@ -14,6 +16,9 @@ export class ProductDTO {
   inventory: number;
 
   @ApiProperty()
+  slug:string;
+
+  @ApiProperty()
   price: string;
 
   @ApiProperty()
@@ -23,11 +28,15 @@ export class ProductDTO {
   attributes: object[];
 
   @ApiProperty()
-  restaurant: number;
+  restaurant: number | null;
 
   @ApiProperty()
   is_active: boolean;
 
+  @ApiProperty({required:false})
+  image?: string | null;
+
+
   @ApiProperty()
-  image: string;
+  createdAt:string;
 }
