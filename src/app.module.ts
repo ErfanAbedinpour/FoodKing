@@ -17,6 +17,8 @@ import { CartModule } from './modules/cart/cart.module';
 import { AddressModule } from './modules/address/address.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { OrderModule } from './modules/order/order.module';
+import { StorageModule } from './modules/storage/storage.module';
+import { Directory } from './modules/storage/enum/directory.enum';
 
 @Module({
   imports: [
@@ -37,7 +39,8 @@ import { OrderModule } from './modules/order/order.module';
     CategoryModule,
     CartModule,
     AddressModule,
-    OrderModule
+    OrderModule,
+    StorageModule.register({directory:Directory.Products})
   ],
   controllers: [AppController],
 })

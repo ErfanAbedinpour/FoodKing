@@ -1,4 +1,4 @@
-version: '4.2.0'
+# version: '4.2.0'
 
 services:
   app:
@@ -14,7 +14,6 @@ services:
       - psql
     volumes:
       - .:/app
-      - ./public:/app/public
     networks:
       - app
     command: ['npm', 'run', 'start:dev']

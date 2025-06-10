@@ -14,39 +14,41 @@ import { CategoryService } from '../category/category.service';
 import { RestaurantService } from '../restaurant/restaurant.service';
 import slugify from 'slugify';
 import { UniqueConstraintViolationException } from '@mikro-orm/core';
-import { createWriteStream, existsSync, unlinkSync } from 'node:fs';
+import { StorageService } from '../storage/storage.service';
+import { Directory } from '../storage/enum/directory.enum';
 
 @Injectable()
 export class ProductService {
   private readonly logger = new Logger(ProductService.name);
 
-  private readonly IMAGE_PATH = `${process.cwd()}/public/product-images`;
-
   constructor(
     private readonly productRepository: ProductRepository,
     private readonly categoryService: CategoryService,
     private readonly restaurantService: RestaurantService,
+    private readonly storage:StorageService
   ) {}
 
   private generateFileName(image: Express.Multer.File) {
     return `${Date.now()}-${image.originalname}`;
   }
-  private removeImage(fileName: string) {
-    const path = `${this.IMAGE_PATH}/${fileName}`;
-    if (!existsSync(path)) return;
-    unlinkSync(path);
+  private async removeImage(fileName: string) {
+    if(!fileName)
+      return
+    try{
+      await this.storage.remove(fileName)
+      return 
+    }catch{
+      return
+    }
   }
 
-  private uploadImage(fileName: string, image: Express.Multer.File) {
-    const path = `${this.IMAGE_PATH}/${fileName}`;
-
-    const writeStream = createWriteStream(path);
-
-    writeStream.write(image.buffer);
-
-    writeStream.on('error', (err) => {
-      this.logger.error(err);
-    });
+  private async uploadImage(fileName: string, image: Express.Multer.File) {
+    try{
+      const result = await this.storage.upload(image.buffer,{key:fileName,mimetype:image.mimetype});
+      return result;
+    }catch(err){
+      this.logger.error(`Error During Upload Product Image, ${err}`);
+    }
   }
 
   async createProduct(
@@ -60,7 +62,9 @@ export class ProductService {
     ]);
 
     try {
-      const imagePath = this.generateFileName(image);
+
+      const imageName = this.generateFileName(image);
+      const imagePath= `${Directory.Products}/${imageName}`;
 
       const result = await this.productRepository.create({
         categories,
@@ -69,7 +73,7 @@ export class ProductService {
         name: productData.name,
         price: productData.price,
         restaurant: restaurant,
-        image: imagePath,
+        image:imagePath,
         slug: slugify(productData.slug, {
           lower: true,
           strict: true,
@@ -79,7 +83,7 @@ export class ProductService {
         user_id: userId,
       });
 
-      this.uploadImage(imagePath, image);
+      this.uploadImage(imageName, image);
       return {
         id: result.id,
         categories,
@@ -88,7 +92,7 @@ export class ProductService {
         name: productData.name,
         price: productData.price,
         restaurant: restaurant,
-        image: imagePath,
+        image: this.storage.signImageUrl(imagePath),
       };
     } catch (err) {
       if (err instanceof UniqueConstraintViolationException)
@@ -101,7 +105,12 @@ export class ProductService {
   async getProductById(id: number): Promise<Product> {
     try {
       const product = await this.productRepository.findById(id);
-      return product;
+      
+
+      return {
+        ...product,
+        image:product.image ? this.storage.signImageUrl(product.image):undefined
+      } 
     } catch (err) {
       if (err instanceof RepositoryException)
         throw new NotFoundException(err.message);
@@ -114,7 +123,10 @@ export class ProductService {
   async getProductBySlug(slug: string): Promise<Product> {
     try {
       const product = await this.productRepository.findBySlug(slug);
-      return product;
+      return {
+        ...product,
+        image:product.image ? this.storage.signImageUrl(product.image):undefined
+      };
     } catch (err) {
       if (err instanceof RepositoryException)
         throw new NotFoundException(err.message);
@@ -125,7 +137,11 @@ export class ProductService {
   }
 
   async getAllProduct(): Promise<Product[]> {
-    return this.productRepository.getAll();
+    const reuslt = await this.productRepository.getAll()
+    return reuslt.map(product=>{
+      product.image ? product.image = this.storage.signImageUrl(product.image):null
+      return product;
+    })
   }
 
   async updateProduct(
@@ -143,7 +159,7 @@ export class ProductService {
         updatedPayload['restaurant'] = await this.restaurantService.findOne(
           updateData[key],
         );
-      } else {
+      } else{
         updatedPayload[key] = updateData[key];
       }
     }

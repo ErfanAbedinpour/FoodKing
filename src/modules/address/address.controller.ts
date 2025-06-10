@@ -13,20 +13,19 @@ import {
   Post,
 } from '@nestjs/common';
 import { IsAuth } from '../common/decorator/auth.decorator';
-import { ApiBearerAuth, ApiBody, ApiCreatedResponse, ApiForbiddenResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiProperty, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { GetUser } from '../common/decorator/getUser.decorator';
-import { AddressDto } from './dto/address.dto';
+import { CreateAddressSwagger, GetAllAddressSwagger, GetOneAddressSwagger, RemoveAddressSwagger, UpdateAddressSwagger } from './address.swagger';
 
 @Controller('addresses')
 @IsAuth()
 @ApiBearerAuth('JWT-AUTH')
+@ApiUnauthorizedResponse({description:"You should login first."})
 export class AddressController {
   constructor(private readonly addressService: AddressService) { }
 
   @Post()
-  @ApiBody({ type: CreateAddressDto })
-  @ApiCreatedResponse({ type: AddressDto })
-  @ApiOperation({ summary: "Create new Address" })
+  @CreateAddressSwagger()
   async createAddress(
     @GetUser("userId") userId: number,
     @Body() createAddressDto: CreateAddressDto
@@ -35,17 +34,13 @@ export class AddressController {
   }
 
   @Get()
-  @ApiOkResponse({ type: [AddressDto] })
-  @ApiOperation({ summary: "Get All Addresses" })
+  @GetAllAddressSwagger()
   async addresses(@GetUser("userId") userId: number): Promise<Address[]> {
     return this.addressService.findAll(userId);
   }
 
   @Get(':id')
-  @ApiOkResponse({ type: AddressDto })
-  @ApiParam({ name: "id", description: "AddressId" })
-  @ApiOperation({ summary: "Get Address By Id" })
-  @ApiNotFoundResponse({ description: "Address Not Found" })
+  @GetOneAddressSwagger()
   async address(@Param('id', ParseIntPipe) id: number,
     @GetUser("userId") userId: number
   ): Promise<Address> {
@@ -53,8 +48,7 @@ export class AddressController {
   }
 
   @Patch(':id')
-  @ApiOkResponse({ type: AddressDto })
-  @ApiParam({ name: "id", description: "AddressId" })
+  @UpdateAddressSwagger()
   async updateAddress(
     @GetUser("userId") userId: number,
     @Param('id') id: number,
@@ -64,8 +58,7 @@ export class AddressController {
   }
 
   @Delete(':id')
-  @ApiOkResponse({ schema: { type: 'boolean' } })
-  @ApiParam({ name: "id", description: "AddressId" })
+  @RemoveAddressSwagger()
   async removeAddress(@Param('id', ParseIntPipe) id: number,
     @GetUser("userId") userId: number
   ): Promise<boolean> {

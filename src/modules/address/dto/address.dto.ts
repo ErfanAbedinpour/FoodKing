@@ -1,27 +1,25 @@
-import { ApiOperation, ApiProperty } from "@nestjs/swagger";
+import {  ApiProperty } from "@nestjs/swagger";
 
-export class AddressDto {
-    @ApiProperty()
-    id: number
+export class AddressDto{
 
-    @ApiProperty()
-    zip_code: string
+    @ApiProperty({description:"AddressId",example:1})
+    id:number
 
-    @ApiProperty()
-    street: string
+    @ApiProperty({description:"Address Zip Code",example:"12345"})
+    zip_code:string
 
-    @ApiProperty()
-    city: string
+    @ApiProperty({description:"Address Street",example:"123 Main St"})
+    street:string
 
-    @ApiProperty()
-    state: string
+    @ApiProperty({description:"Address City",example:"New York"})
+    city:string
 
-    @ApiProperty({ required: false })
-    latitude?: number
+    @ApiProperty({description:"Address State",example:"New York"})
+    state:string
 
-    @ApiProperty({ required: false })
-    longitude: number
+    @ApiProperty({description:"Address Latitude",example:40.7128,required:false})
+    latitude?:number
 
-    @ApiProperty()
-    user: number
+    @ApiProperty({description:"Address Longitude",example:-74.0060,required:false})
+    longitude?:number
 }
