@@ -81,7 +81,7 @@ export class MikroOrderRepository implements OrderRepository {
     }
   }
 
-  async getUserOrder(userId: number, orderId: number): Promise<Loaded<Order> | null> {
+  async getUserOrderById(userId: number, orderId: number): Promise<Loaded<Order> | null> {
     const userOrder = await this.em.findOne(Order, { user: userId, id: orderId }, { populate: ['products', 'address'] });
     return userOrder;
   }
