@@ -43,7 +43,7 @@ export class OrderController {
   @Delete(":id")
   async deleteOrder(@GetUser("userId") userId: number, @Param("id", ParseIntPipe) orderId: number) {
 
-    await this.orderService.deleteOrder(userId, orderId);
+    await this.orderService.cancleOrder(userId, orderId);
 
     return {
       msg: "Order Removed successfully"

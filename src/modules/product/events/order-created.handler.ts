@@ -10,7 +10,7 @@ export class OrderCreatedHandler {
   @OnEvent('order.created')
   async handleOrderCreated(event: OrderCreatedEvent) {
     for (const item of event.orderItems) {
-      await this.productService.updateInventory(item.product.id, item.quantity);
+      await this.productService.updateInventory(item.productId, -item.quantity);
     }
   }
 }

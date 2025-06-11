@@ -10,7 +10,6 @@ import {
 import { User } from './user.model';
 import Decimal from 'decimal.js';
 import { BaseModel } from './base.model';
-import { Category } from './category.model';
 import { Cart } from './cart.model';
 import { CartProduct } from './cart-product.model';
 import { Order } from './order.model';

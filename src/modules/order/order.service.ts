@@ -16,22 +16,6 @@ import { OrderStatus } from '../../models/order.model';
 import { ProductService } from '../product/product.service';
 import { OrderProductPersist } from './repository/persist/order.persist';
 
-/**
- *
- * POST /api/v1/order
- * {
- *    paymentMethod = "Catch" | "online"
- *    addressId
- *
- * }
- * if Payment method is Online =>{
- *      1. Create Order  => status=Waiting for payment
- *      2. Create Payment URL
- *      3. After Payment is Complete Product Status should changed to Processing.
- *      4. Emit OrderCreated Event
- * }
- * if Payment method is catch => OrderCreated  and set status to Processing=> Emit Order.created Event For Decrease product quantity
- */
 
 @Injectable()
 export class OrderService {
@@ -47,8 +31,7 @@ export class OrderService {
     userId: number,
     { addressId, paymentMethod, products }: CreateOrderDto,
   ) {
-    const address = await this.addressService.findOne(userId, addressId);
-    console.log('address', address);
+    await this.addressService.findOne(userId, addressId);
 
     const orderProducts: OrderProductPersist[] = [];
 
@@ -62,8 +45,6 @@ export class OrderService {
       orderProducts.push({ product, quantity });
     }
 
-    // console.log('orderProducts ', orderProducts);
-
     try {
       const order = await this.orderRepository.createOrder({
         addressId: addressId,
@@ -72,23 +53,12 @@ export class OrderService {
         userId,
       });
 
-      // TODO: Here should be optimized later.
-      // Emit order created event
-      const orderItems = orderProducts.map(({ product, quantity }) => {
-        const orderItem = new OrderItem();
-        orderItem.product = product;
-        orderItem.order = order;
-        orderItem.quantity = quantity;
-        orderItem.price = product.price;
-        return orderItem;
-      });
-
       this.eventEmitter.emit(
         'order.created',
-        new OrderCreatedEvent(orderItems, userId),
+        new OrderCreatedEvent(orderProducts.map(({ product, quantity }) => ({ productId: product.id, quantity })), userId),
       );
 
-      return order;
+      return { orderId: order.id }
     } catch (err) {
       this.logger.error(err);
       throw new InternalServerErrorException();
@@ -107,7 +77,7 @@ export class OrderService {
     return order;
   }
 
-  async deleteOrder(userId: number, orderId: number) {
+  async cancleOrder(userId: number, orderId: number) {
     const order = await this.getOrderById(userId, orderId);
     if (order.status !== OrderStatus.Processing)
       throw new BadRequestException(ErrorMessage.ORDER_CANNOT_BE_REMOVED);

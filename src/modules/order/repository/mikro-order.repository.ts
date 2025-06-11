@@ -19,6 +19,8 @@ export class MikroOrderRepository implements OrderRepository {
     userId,
   }: OrderPersist): Promise<Loaded<Order>> {
 
+
+    const orderItems: OrderItem[] = []
     const order = this.em.create(
       Order,
       {
@@ -35,20 +37,15 @@ export class MikroOrderRepository implements OrderRepository {
     );
 
     for (const { product, quantity } of products) {
-      console.log("Product is ", product)
-      console.log("quantity is ", quantity)
-      const orderItem = this.em.create(
-        OrderItem,
-        {
-          order,
-          product: product,
-          quantity: quantity,
-          price: product.price,
-        },
-        { persist: true },
-      );
 
-      order.products.add(product);
+      const orderItem = this.em.create(OrderItem, {
+        order: order,
+        product: product.id,
+        quantity: quantity,
+        price: product.price,
+      }, { persist: true })
+
+      orderItems.push(orderItem);
     }
 
     try {
@@ -86,6 +83,21 @@ export class MikroOrderRepository implements OrderRepository {
   async getUserOrder(userId: number, orderId: number): Promise<Loaded<Order> | null> {
     const userOrder = await this.em.findOne(Order, { user: userId, id: orderId }, { populate: ['products', 'address'] });
     return userOrder;
+  }
+
+
+
+  async updateOrderStatus(orderId: number, status: OrderStatus): Promise<Order> {
+    const order = await this.em.findOne(Order, orderId);
+    if (!order) throw new RepositoryException(ErrorMessage.ORDER_NOT_FOUND)
+    order.status = status;
+    try {
+      await this.em.flush();
+      return order as Order;
+
+    } catch (err) {
+      throw err;
+    }
   }
 }
 

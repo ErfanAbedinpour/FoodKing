@@ -37,14 +37,14 @@ import { GetUser } from '../common/decorator/getUser.decorator';
 import { IsAuth } from '../common/decorator/auth.decorator';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { memoryStorage } from 'multer';
-import { 
-  CreateProductSwagger, 
-  GetProductBySlug, 
-  GetAllProductsSwagger, 
-  UpdateProductSwagger, 
-  DeleteProductSwagger, 
-  UpdateInventorySwagger, 
-  ToggleProductStatusSwagger 
+import {
+  CreateProductSwagger,
+  GetProductBySlug,
+  GetAllProductsSwagger,
+  UpdateProductSwagger,
+  DeleteProductSwagger,
+  UpdateInventorySwagger,
+  ToggleProductStatusSwagger
 } from './product.swagger';
 
 @ApiTags('products')
@@ -101,7 +101,7 @@ export class ProductController {
   @Delete(':id')
   @IsAuth()
   @DeleteProductSwagger()
-  async remove(@Param('id', ParseIntPipe) id: number): Promise<ProductDTO> {
+  async remove(@Param('id', ParseIntPipe) id: number) {
     return this.productService.deleteProduct(id);
   }
 
