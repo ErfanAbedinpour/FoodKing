@@ -104,7 +104,17 @@ export function DeleteProductSwagger() {
         ApiResponse({
             status: 200,
             description: 'Product successfully deleted',
-            type: ProductDTO,
+            schema:{
+                type:'object',
+                properties:{
+                    success:{
+                        type:'boolean'
+                    },
+                    deletedId:{
+                        type:'number'
+                    }
+                }
+            } ,
         }),
         ApiNotFoundResponse({ 
             description: 'Product not found' 

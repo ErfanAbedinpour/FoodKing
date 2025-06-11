@@ -44,7 +44,6 @@ export class AddressController {
   async address(@Param('id', ParseIntPipe) id: number,
     @GetUser("userId") userId: number
   ): Promise<Address> {
-
     return this.addressService.findOne(userId, id);
   }
 

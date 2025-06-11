@@ -7,6 +7,7 @@ import { Restaurant } from '@models/restaurant.model';
 import { ProductCategory } from '@models/product-category.model';
 import { RepositoryException } from '../../../exception/repository.exception';
 import { Injectable } from '@nestjs/common';
+import { ProductAttribute } from '../../../models';
 
 @Injectable()
 export class MikroProductRepository implements ProductRepository {
@@ -56,13 +57,16 @@ export class MikroProductRepository implements ProductRepository {
     }
 
     return product;
+
   }
 
-  async findBySlug(slug: string): Promise<Product> {
-    const product = await this.em.findOne(Product, { slug });
+  async findBySlug(slug: string): Promise<Loaded<Product>> {
+    const product = await this.em.findOne(Product, { slug }, { populate: ['category.category', 'attributes', 'restaurant'],exclude:['updatedAt','category:ref','user','carts:ref','orders:ref','comments:ref'] });
+
     if (!product)
       throw new RepositoryException(`Product with slug ${slug} not found`);
-    return product;
+
+    return product as unknown as Loaded<Product>;
   }
 
   async delete(id: number): Promise<Product> {

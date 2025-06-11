@@ -7,6 +7,7 @@ import { CategoryModule } from "../category/category.module";
 import { RestaurantModule } from "../restaurant/restaurant.module";
 import { StorageModule } from "../storage/storage.module";
 import { Directory } from "../storage/enum/directory.enum";
+import { OrderCreatedHandler } from "./events/order-created.handler";
 
 @Module({
   imports:[CategoryModule,RestaurantModule,StorageModule.register({directory:Directory.Products})],
@@ -17,9 +18,8 @@ import { Directory } from "../storage/enum/directory.enum";
       provide: ProductRepository,
       useClass: MikroProductRepository,
     },
+    OrderCreatedHandler,
   ],
   exports: [ProductService],
 })
 export class ProductModule {}
-
-
