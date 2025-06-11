@@ -42,7 +42,7 @@ export class OrderService {
       if (product.inventory < quantity)
         throw new BadRequestException(ErrorMessage.PRODUCT_OUT_OF_STOCK)
 
-      orderProducts.push({ product, quantity });
+      orderProducts.push({ productId: product.id, price: product.price, quantity });
     }
 
     try {
@@ -55,7 +55,7 @@ export class OrderService {
 
       this.eventEmitter.emit(
         'order.created',
-        new OrderCreatedEvent(orderProducts.map(({ product, quantity }) => ({ productId: product.id, quantity })), userId),
+        new OrderCreatedEvent(orderProducts.map(({ productId, quantity }) => ({ productId, quantity })), userId),
       );
 
       return { orderId: order.id }
@@ -83,7 +83,7 @@ export class OrderService {
       throw new BadRequestException(ErrorMessage.ORDER_CANNOT_BE_REMOVED);
 
     try {
-      await this.orderRepository.deleteOrder(orderId);
+      await this.orderRepository.cancleOrder(orderId);
       return;
     } catch (err) {
       this.logger.error(err);

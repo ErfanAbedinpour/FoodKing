@@ -29,20 +29,20 @@ export class MikroOrderRepository implements OrderRepository {
         address: addressId,
         paymentMethod,
         total_price: products.reduce(
-          (acc, { product, quantity }) => acc.plus(Decimal.mul(product.price, quantity)),
+          (acc, { price, quantity }) => acc.plus(Decimal.mul(price, quantity)),
           new Decimal(0),
         ),
       },
       { persist: true },
     );
 
-    for (const { product, quantity } of products) {
+    for (const { productId, quantity, price } of products) {
 
       const orderItem = this.em.create(OrderItem, {
         order: order,
-        product: product.id,
+        product: productId,
         quantity: quantity,
-        price: product.price,
+        price: price,
       }, { persist: true })
 
       orderItems.push(orderItem);

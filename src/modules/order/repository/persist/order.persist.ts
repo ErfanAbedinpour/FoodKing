@@ -1,8 +1,10 @@
+import Decimal from 'decimal.js';
 import { Product } from '../../../../models';
 import { PaymentMethod } from '../../../../models/order.model';
 
 export class OrderProductPersist {
-  product: Product;
+  productId: number;
+  price: Decimal;
   quantity: number;
 }
 
