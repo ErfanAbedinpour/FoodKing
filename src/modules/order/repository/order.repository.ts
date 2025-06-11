@@ -8,6 +8,6 @@ export abstract class OrderRepository {
   abstract getAllUserOrder(userId: number): Promise<Order[]>
   abstract getOrderById(orderId: number): Promise<Loaded<Order> | null>
   abstract getUserOrder(userId: number, orderId: number): Promise<Loaded<Order> | null>
-  abstract deleteOrder(orderId: number): Promise<Order>
+  abstract cancleOrder(orderId: number): Promise<void>
   abstract updateOrderStatus(orderId: number, status: OrderStatus): Promise<Loaded<Order>>
 }

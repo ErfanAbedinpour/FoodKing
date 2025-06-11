@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { OrderRepository } from './order.repository';
-import { EntityManager, Loaded } from '@mikro-orm/postgresql';
-import { CartProduct, Order, OrderItem } from '../../../models';
-import { OrderStatus, PaymentMethod } from '../../../models/order.model';
+import { EntityManager, Loaded, wrap } from '@mikro-orm/postgresql';
+import { Order, OrderItem } from '../../../models';
+import { OrderStatus } from '../../../models/order.model';
 import { OrderPersist } from './persist/order.persist';
 import Decimal from 'decimal.js';
 import { NotFoundError } from 'rxjs';
@@ -68,11 +68,12 @@ export class MikroOrderRepository implements OrderRepository {
   }
 
 
-  async deleteOrder(orderId: number): Promise<Order> {
+  async cancleOrder(orderId: number): Promise<void> {
     try {
-      const order = this.em.getReference(Order, orderId);
-      await this.em.removeAndFlush(order)
-      return order;
+      const order = await this.em.findOneOrFail(Order, orderId);
+      wrap(order).assign({ status: OrderStatus.Cancelled });
+      await this.em.flush();
+      return;
     } catch (err) {
       if (err instanceof NotFoundError)
         throw new RepositoryException(ErrorMessage.ORDER_NOT_FOUND)
