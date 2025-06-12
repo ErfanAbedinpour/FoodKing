@@ -4,7 +4,7 @@ export { Product } from './product.model';
 export { Comment } from './comment.model';
 export { Order } from './order.model';
 export { OrderItem } from './order-item.model';
-export { Payment } from './payment.model';
+export { Transaction, Providers, TransactionStatus, TransactionType } from './transaction.model';
 export { Role } from './role.model';
 export { UserRole } from './role.model';
 export { Category } from './category.model';
@@ -16,4 +16,4 @@ export { CartProduct } from './cart-product.model';
 export { MenuModel } from './menu.model';
 export { SubMenuModel } from './sub-menu.model';
 export { ProductCategory } from './product-category.model';
-export {Restaurant} from './restaurant.model'
+export { Restaurant } from './restaurant.model'
