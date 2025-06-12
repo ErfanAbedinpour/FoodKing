@@ -1404,8 +1404,8 @@
           "nullable": false,
           "mappedType": "bigint"
         },
-        "postal_code": {
-          "name": "postal_code",
+        "zip_code": {
+          "name": "zip_code",
           "type": "varchar(255)",
           "unsigned": false,
           "autoincrement": false,
@@ -1423,15 +1423,23 @@
           "nullable": false,
           "mappedType": "text"
         },
-        "province": {
-          "name": "province",
-          "type": "varchar(255)",
+        "city": {
+          "name": "city",
+          "type": "text",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": 255,
-          "mappedType": "string"
+          "mappedType": "text"
+        },
+        "state": {
+          "name": "state",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
         },
         "latitude": {
           "name": "latitude",
@@ -1439,7 +1447,7 @@
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
-          "nullable": false,
+          "nullable": true,
           "mappedType": "integer"
         },
         "longitude": {
@@ -1448,7 +1456,7 @@
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
-          "nullable": false,
+          "nullable": true,
           "mappedType": "integer"
         },
         "user_id": {

@@ -18,7 +18,8 @@ import { BaseModel } from './base.model';
 export enum OrderStatus {
   Processing = 'processing',
   Shipped = 'Shipped',
-  Delivered = 'Delivered',
+  Cancelled = 'Cancelled',
+  WaitingForPayment = 'WaitingForPayment',
 }
 
 export enum PaymentMethod {

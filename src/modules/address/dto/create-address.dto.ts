@@ -15,6 +15,7 @@ export class CreateAddressDto {
     example: 'New York',
   })
   @IsString()
+  @ApiProperty()
   @IsNotEmpty()
   city!: string;
 
@@ -23,6 +24,7 @@ export class CreateAddressDto {
     example: 'NY',
   })
   @IsString()
+  @ApiProperty()
   @IsNotEmpty()
   state!: string;
 
@@ -31,6 +33,7 @@ export class CreateAddressDto {
     example: 'USA',
   })
   @IsString()
+  @ApiProperty()
   @IsNotEmpty()
   country!: string;
 
@@ -39,6 +42,7 @@ export class CreateAddressDto {
     example: '10001',
   })
   @IsString()
+  @ApiProperty()
   @IsNotEmpty()
   zipCode!: string;
 }

@@ -37,14 +37,14 @@ import { GetUser } from '../common/decorator/getUser.decorator';
 import { IsAuth } from '../common/decorator/auth.decorator';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { memoryStorage } from 'multer';
-import { 
-  CreateProductSwagger, 
-  GetProductBySlug, 
-  GetAllProductsSwagger, 
-  UpdateProductSwagger, 
-  DeleteProductSwagger, 
-  UpdateInventorySwagger, 
-  ToggleProductStatusSwagger 
+import {
+  CreateProductSwagger,
+  GetProductBySlug,
+  GetAllProductsSwagger,
+  UpdateProductSwagger,
+  DeleteProductSwagger,
+  UpdateInventorySwagger,
+  ToggleProductStatusSwagger
 } from './product.swagger';
 
 @ApiTags('products')
@@ -78,7 +78,7 @@ export class ProductController {
 
   @Get(':slug')
   @GetProductBySlug()
-  async findBySlug(@Param('slug') slug: string): Promise<Product> {
+  async findBySlug(@Param('slug') slug: string): Promise<ProductDTO> {
     return this.productService.getProductBySlug(slug);
   }
 
@@ -94,14 +94,14 @@ export class ProductController {
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateProductDto: UpdateProductDto,
-  ): Promise<Product> {
+  ): Promise<ProductDTO> {
     return this.productService.updateProduct(id, updateProductDto);
   }
 
   @Delete(':id')
   @IsAuth()
   @DeleteProductSwagger()
-  async remove(@Param('id', ParseIntPipe) id: number): Promise<Product> {
+  async remove(@Param('id', ParseIntPipe) id: number) {
     return this.productService.deleteProduct(id);
   }
 
@@ -111,14 +111,14 @@ export class ProductController {
   async updateInventory(
     @Param('id', ParseIntPipe) id: number,
     @Body('quantity', ParseIntPipe) quantity: number,
-  ): Promise<Product> {
+  ): Promise<ProductDTO> {
     return this.productService.updateInventory(id, quantity);
   }
 
   @Patch(':id/toggle-status')
   @IsAuth()
   @ToggleProductStatusSwagger()
-  async toggleStatus(@Param('id', ParseIntPipe) id: number): Promise<Product> {
+  async toggleStatus(@Param('id', ParseIntPipe) id: number): Promise<ProductDTO> {
     return this.productService.toggleProductStatus(id);
   }
 }

@@ -15,6 +15,8 @@ import { RestaurantModule } from './modules/restaurant/restaurant.module';
 import { CategoryModule } from './modules/category/category.module';
 import { CartModule } from './modules/cart/cart.module';
 import { AddressModule } from './modules/address/address.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
+import { OrderModule } from './modules/order/order.module';
 import { StorageModule } from './modules/storage/storage.module';
 import { Directory } from './modules/storage/enum/directory.enum';
 
@@ -27,6 +29,7 @@ import { Directory } from './modules/storage/enum/directory.enum';
       isGlobal: true,
     }),
     MikroOrmModule.forRoot(),
+    EventEmitterModule.forRoot(),
     UserModule,
     AuthModule,
     MenuModule,
@@ -36,6 +39,7 @@ import { Directory } from './modules/storage/enum/directory.enum';
     CategoryModule,
     CartModule,
     AddressModule,
+    OrderModule,
     StorageModule.register({directory:Directory.Products})
   ],
   controllers: [AppController],
