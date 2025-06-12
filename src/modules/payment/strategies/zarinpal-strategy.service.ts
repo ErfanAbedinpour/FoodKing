@@ -1,3 +1,4 @@
+import Decimal from "decimal.js";
 import { PaymentStrategies } from "../abstract/payment-strategies";
 import { Authority } from "../types/authority.types";
 import { VerifyPayment } from "../types/verifyPayment";
@@ -5,7 +6,7 @@ import { VerifyPayment } from "../types/verifyPayment";
 
 export class ZarinPalService implements PaymentStrategies {
 
-    async createTransaction(amount: number, orderId: string): Promise<Authority> {
+    async createTransaction(amount: Decimal, orderId: number): Promise<Authority> {
         return "";
     }
 

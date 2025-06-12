@@ -1,3 +1,4 @@
+import Decimal from "decimal.js";
 import { Authority } from "../types/authority.types";
 import { VerifyPayment } from "../types/verifyPayment";
 
@@ -5,7 +6,7 @@ import { VerifyPayment } from "../types/verifyPayment";
 
 export abstract class PaymentStrategies {
 
-    abstract createTransaction(amount: number, orderId: string): Promise<Authority>;
+    abstract createTransaction(amount: Decimal, orderId: number): Promise<Authority>;
 
     abstract getTransactionUrl(authority: Authority): Promise<string>;
 
