@@ -21,4 +21,6 @@ export class ProductPersist {
   is_active?: boolean;
 
   image?: string;
+
+  rating: number
 }

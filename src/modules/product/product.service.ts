@@ -75,6 +75,7 @@ export class ProductService {
         price: productData.price,
         restaurant: restaurant,
         image: imagePath,
+        rating: productData.rating,
         slug: slugify(productData.slug, {
           lower: true,
           strict: true,
@@ -94,6 +95,7 @@ export class ProductService {
         price: productData.price,
         restaurant: restaurant,
         image: this.storage.signImageUrl(imagePath),
+        rating: productData.rating,
       };
     } catch (err) {
       if (err instanceof UniqueConstraintViolationException)
@@ -118,20 +120,21 @@ export class ProductService {
   }
 
 
-  private convertProductToDTO(product:Product):ProductDTO{
+  private convertProductToDTO(product: Product): ProductDTO {
     return {
-      image:product.image ? this.storage.signImageUrl(product.image):null,
-      attributes:product.attributes?.toJSON() || [],
-      category:product.category?.toJSON() || [],
-      restaurant:product.restaurant.id || null,
-      is_active:product.is_active,
-      id:product.id,
-      name:product.name,
-      slug:product.slug,
-      description:product.description,
-      price:product.price.toString(),
-      createdAt:product.createdAt?.toString() || Date.now().toString(),
-      inventory:product.inventory,
+      image: product.image ? this.storage.signImageUrl(product.image) : null,
+      attributes: product.attributes?.toJSON() || [],
+      rating: product.rating || 0,
+      category: product.category?.toJSON() || [],
+      restaurant: product.restaurant.id || null,
+      is_active: product.is_active,
+      id: product.id,
+      name: product.name,
+      slug: product.slug,
+      description: product.description,
+      price: product.price.toString(),
+      createdAt: product.createdAt?.toString() || Date.now().toString(),
+      inventory: product.inventory,
     }
   }
 
@@ -190,8 +193,8 @@ export class ProductService {
       const result = await this.productRepository.delete(id);
       this.removeImage(result.image || '');
       return {
-        success:true,
-        deletedId:result.id
+        success: true,
+        deletedId: result.id
       }
     } catch (err) {
       if (err instanceof RepositoryException)
