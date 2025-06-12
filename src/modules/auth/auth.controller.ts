@@ -6,27 +6,17 @@ import { SendOtpCommand } from './application/command/send-otp.command';
 import { VerifyOtpCommand } from './application/command/verify-otp.command';
 import { SendOtpDTO } from './DTO/send-otp.DTO';
 import { VerifyOtpDTO } from './DTO/verify-otp.DTO';
-import {
-  ApiBadRequestResponse,
-  ApiBody,
-  ApiCreatedResponse,
-  ApiOkResponse,
-  ApiUnauthorizedResponse,
-} from '@nestjs/swagger';
 import { GenerateTokenDTO } from './DTO/generate-token.DTO';
 import { GenerateNewTokensCommand } from './application/command/generate-new-tokens.command';
+import { generateTokenSwagger, signinSwagger, signupSwagger, verifySwagger } from './auth.swagger';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly commandBus: CommandBus) {}
 
   @Post('signup')
-  @ApiCreatedResponse({
-    description: 'user Created successfully',
-    schema: { type: 'object', properties: { msg: { type: 'string' } } },
-  })
-  @ApiBadRequestResponse({ description: 'BadRequest Exception' })
-  async register(@Body() createdUserDto: CreateUserDTO) {
+  @signupSwagger()
+    async register(@Body() createdUserDto: CreateUserDTO) {
     await this.commandBus.execute(
       new CreateUserCommand(
         createdUserDto.name,
@@ -40,11 +30,7 @@ export class AuthController {
 
   @Post('signin')
   @HttpCode(HttpStatus.OK)
-  @ApiOkResponse({
-    description: 'OTP Sended successfully',
-    schema: { type: 'object', properties: { msg: { type: 'string' } } },
-  })
-  @ApiBadRequestResponse({ description: 'BadRequest Exception' })
+  @signinSwagger()
   async sendOTP(@Body() sendOtp: SendOtpDTO) {
     const { code } = await this.commandBus.execute(
       new SendOtpCommand(sendOtp.phone),
@@ -54,18 +40,8 @@ export class AuthController {
 
   @Post('verify')
   @HttpCode(HttpStatus.OK)
-  @ApiOkResponse({
-    description: 'user verified successfully',
-    schema: {
-      type: 'object',
-      properties: {
-        accessToken: { type: 'string' },
-        refreshToken: { type: 'string' },
-      },
-    },
-  })
-  @ApiBadRequestResponse({ description: 'BadRequest Exception' })
-  async verifyOtp(@Body() verifyOtp: VerifyOtpDTO) {
+  @verifySwagger()
+    async verifyOtp(@Body() verifyOtp: VerifyOtpDTO) {
     const res = await this.commandBus.execute(
       new VerifyOtpCommand(verifyOtp.code, verifyOtp.phone),
     );
@@ -73,18 +49,7 @@ export class AuthController {
   }
 
   @Post('/token')
-  @ApiBody({ type: GenerateTokenDTO })
-  @ApiOkResponse({
-    description: 'token generated successfully',
-    schema: {
-      type: 'object',
-      properties: {
-        accessToken: { type: 'string' },
-        refreshToken: { type: 'string' },
-      },
-    },
-  })
-  @ApiUnauthorizedResponse({ description: 'token is invalid' })
+  @generateTokenSwagger()
   @HttpCode(HttpStatus.OK)
   generateToken(@Body() generateTokenDto: GenerateTokenDTO) {
     return this.commandBus.execute(

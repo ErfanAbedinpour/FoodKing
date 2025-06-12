@@ -12,14 +12,9 @@ import { GetUser } from '../common/decorator/getUser.decorator';
 import { AddItemDto } from './dto/add-item.dto';
 import { CartService } from './cart.service';
 import {
-  ApiBadRequestResponse,
   ApiBearerAuth,
-  ApiNotFoundResponse,
-  ApiOkResponse,
-  ApiOperation,
-  getSchemaPath,
 } from '@nestjs/swagger';
-import { CartDTO } from './dto/cart.dto';
+import { AddItemToCartSwagger, ClearCartSwagger, GetUserCartSwagger, RemoveItemFromCartSwagger } from './cart.swagger';
 
 @Controller('cart')
 @IsAuth()
@@ -28,35 +23,13 @@ export class CartController {
   constructor(private readonly cartService: CartService) {}
 
   @Get()
-  @ApiOperation({ summary: 'Get user cart' })
-  @ApiOkResponse({
-    description: 'User cart',
-    schema: {
-      properties: {
-        data: {
-          type: 'array',
-          items: { type: 'object', $ref: getSchemaPath(CartDTO) },
-        },
-        totalPrice: { type: 'number' },
-      },
-    },
-  })
-  @ApiNotFoundResponse({
-    description: 'Cart is empty',
-  })
+  @GetUserCartSwagger()
   async getCart(@GetUser('userId') userId: number) {
     return this.cartService.getCart(userId);
   }
 
   @Post()
-  @ApiOperation({ summary: 'Add item to cart' })
-  @ApiOkResponse({
-    description: 'Item added to cart',
-    type: CartDTO,
-  })
-  @ApiBadRequestResponse({
-    description: 'Product not found',
-  })
+  @AddItemToCartSwagger()
   async addItemToCart(
     @GetUser('userId') userId: number,
     @Body() body: AddItemDto,
@@ -65,27 +38,13 @@ export class CartController {
   }
 
   @Delete('clear')
-  @ApiOperation({ summary: 'Clear cart' })
-  @ApiOkResponse({
-    description: 'Cart cleared',
-    schema: { properties: { msg: { type: 'string' } } },
-  })
-  @ApiNotFoundResponse({
-    description: 'Cart not found',
-  })
+  @ClearCartSwagger()
   async clearCart(@GetUser('userId') userId: number) {
     return this.cartService.clearCart(userId);
   }
 
   @Delete(':productId')
-  @ApiOperation({ summary: 'Remove item from cart' })
-  @ApiOkResponse({
-    description: 'Item removed from cart',
-    schema: { properties: { msg: { type: 'string' } } },
-  })
-  @ApiBadRequestResponse({
-    description: 'Product not found',
-  })
+  @RemoveItemFromCartSwagger() 
   async removeItemFromCart(
     @GetUser('userId') userId: number,
     @Param('productId', ParseIntPipe) productId: number,

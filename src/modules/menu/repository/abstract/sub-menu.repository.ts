@@ -6,10 +6,11 @@ export abstract class SubMenuRepository {
     abstract create(menuId: number, subMenu: SubMenuPersis): Promise<SubMenuModel>;
 
     abstract update(
+        menuId: number,
         id: number,
         data: Partial<SubMenuPersis>,
     ): Promise<SubMenuModel>;
 
-    abstract delete(id: number): Promise<boolean>;
+    abstract delete(menuId: number, id: number): Promise<boolean>;
 }
 

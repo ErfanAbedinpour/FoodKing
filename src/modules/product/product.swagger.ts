@@ -78,7 +78,7 @@ export function UpdateProductSwagger() {
         ApiResponse({
             status: 200,
             description: 'Product successfully updated',
-            type: Product,
+            type: ProductDTO,
         }),
         ApiNotFoundResponse({ 
             description: 'Product not found' 
@@ -104,7 +104,7 @@ export function DeleteProductSwagger() {
         ApiResponse({
             status: 200,
             description: 'Product successfully deleted',
-            type: Product,
+            type: ProductDTO,
         }),
         ApiNotFoundResponse({ 
             description: 'Product not found' 

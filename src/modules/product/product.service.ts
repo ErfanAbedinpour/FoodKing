@@ -62,9 +62,10 @@ export class ProductService {
     ]);
 
     try {
-      console.log("resauraunt is ", restaurant)
-      const imagePath = this.generateFileName(image);
-      const fullPath = `${Directory.Products}/${imagePath}`;
+
+      const imageName = this.generateFileName(image);
+      const imagePath= `${Directory.Products}/${imageName}`;
+
       const result = await this.productRepository.create({
         categories,
         description: productData.description,
@@ -72,7 +73,7 @@ export class ProductService {
         name: productData.name,
         price: productData.price,
         restaurant: restaurant,
-        image:fullPath ,
+        image:imagePath,
         slug: slugify(productData.slug, {
           lower: true,
           strict: true,
@@ -82,7 +83,7 @@ export class ProductService {
         user_id: userId,
       });
 
-      this.uploadImage(imagePath, image);
+      this.uploadImage(imageName, image);
       return {
         id: result.id,
         categories,
@@ -91,7 +92,7 @@ export class ProductService {
         name: productData.name,
         price: productData.price,
         restaurant: restaurant,
-        image: this.storage.signImageUrl(fullPath),
+        image: this.storage.signImageUrl(imagePath),
       };
     } catch (err) {
       if (err instanceof UniqueConstraintViolationException)
@@ -104,8 +105,12 @@ export class ProductService {
   async getProductById(id: number): Promise<Product> {
     try {
       const product = await this.productRepository.findById(id);
-      product.image ? product.image = this.storage.signImageUrl(product.image):null
-      return product;
+      
+
+      return {
+        ...product,
+        image:product.image ? this.storage.signImageUrl(product.image):undefined
+      } 
     } catch (err) {
       if (err instanceof RepositoryException)
         throw new NotFoundException(err.message);
@@ -118,8 +123,10 @@ export class ProductService {
   async getProductBySlug(slug: string): Promise<Product> {
     try {
       const product = await this.productRepository.findBySlug(slug);
-      product.image ? product.image = this.storage.signImageUrl(product.image):null
-      return product;
+      return {
+        ...product,
+        image:product.image ? this.storage.signImageUrl(product.image):undefined
+      };
     } catch (err) {
       if (err instanceof RepositoryException)
         throw new NotFoundException(err.message);
