@@ -165,7 +165,7 @@ describe("OrderService", () => {
                 products: [{ productId: 1, quantity: 1 }],
             });
 
-            const order = await service.getOrderById(1, 1);
+            const order = await service.getUserOrderById(1, 1);
 
             expect(order).toEqual({
                 id: 1,
@@ -179,7 +179,7 @@ describe("OrderService", () => {
 
         it("should throw an error if the order is not found", async () => {
             mockOrderRepository.getUserOrderById.mockResolvedValueOnce(null);
-            expect(service.getOrderById(1, 1)).rejects.toThrow(NotFoundException);
+            expect(service.getUserOrderById(1, 1)).rejects.toThrow(NotFoundException);
         })
     })
 

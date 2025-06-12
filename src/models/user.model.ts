@@ -21,8 +21,9 @@ import { Hashing } from '../modules/auth/hashing/hash';
 
 @Entity({ tableName: 'User' })
 export class User extends BaseModel {
-  private hashService:Hashing 
-  constructor(){
+  private hashService: Hashing
+
+  constructor() {
     super()
     this.hashService = new ArgonHash();
   }
@@ -72,9 +73,8 @@ export class User extends BaseModel {
 
   @BeforeCreate()
   async beforeCreate(args: EventArgs<this>) {
-    // console.l
-    // args.entity.password = await this.hashService.hash(args.entity.password);
-    // args.entity.email = args.entity.email.toLowerCase();
-    // return args;
+    args.entity.password = await this.hashService.hash(args.entity.password);
+    args.entity.email = args.entity.email.toLowerCase();
+    return args;
   }
 }

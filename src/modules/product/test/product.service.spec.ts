@@ -93,6 +93,7 @@ describe('ProductService', () => {
       price: new Decimal('99.99'),
       categories: [1],
       restaurant_id: 1,
+      rating: 2,
     });
 
     it('should create a product successfully', async () => {
@@ -117,6 +118,7 @@ describe('ProductService', () => {
 
       expect(result.id).toEqual(1);
       expect(result.name).toEqual('Test Product');
+      expect(result.rating).toEqual(2);
 
       const copyDto = { ...createProductDto, user_id: 1 };
       Reflect.deleteProperty(copyDto, 'restaurant_id');
