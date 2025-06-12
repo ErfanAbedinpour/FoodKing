@@ -78,6 +78,7 @@ describe('MikroProductRepository Behavior Tests', () => {
       slug: 'test-product',
       inventory: 10,
       user_id: 1,
+      rating: 2,
       price: new Decimal('99.99'),
       categories: [mockCategory],
       restaurant: mockRestaurant,

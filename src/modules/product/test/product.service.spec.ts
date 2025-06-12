@@ -176,7 +176,7 @@ describe('ProductService', () => {
 
       const result = await service.getProductBySlug('test-product');
 
-      expect(result).toEqual({ ...mockProduct, image: 'test-image-orginal', restaurant: 2, attributes: [], category: [], createdAt: mockProduct.createdAt.toString(), price: mockProduct.price.toString() });
+      expect(result).toEqual({ ...mockProduct, image: 'test-image-orginal', restaurant: 2, attributes: [], category: [], createdAt: mockProduct.createdAt.toString(), price: mockProduct.price.toString(), rating: 0 });
       expect(mockProductRepository.findBySlug).toHaveBeenCalledWith(
         'test-product',
       );
