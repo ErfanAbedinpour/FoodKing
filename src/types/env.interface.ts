@@ -7,14 +7,16 @@ export interface IEnv {
   PG_DBNAME: string;
   PG_HOST: string;
   PG_PASSWORD: string;
-  S3_ACCESS_KEY:string
-  S3_SECRET_KEY:string
-  S3_BUCKET:string
-  S3_END_POINT:string
+  S3_ACCESS_KEY: string
+  S3_SECRET_KEY: string
+  S3_BUCKET: string
+  S3_END_POINT: string
+  ZARINPAL_MERCHANT_ID: string
+  ZARINPAL_CALLBACK_URL: string
 }
 
 declare global {
   namespace NodeJS {
-    interface ProcessEnv extends IEnv {}
+    interface ProcessEnv extends IEnv { }
   }
 }

@@ -6,7 +6,22 @@ import { VerifyPayment } from "../types/verifyPayment";
 
 export class ZarinPalService implements PaymentStrategies {
 
+    private readonly zarinpal_config = {
+        merchant_id: process.env.ZARINPAL_MERCHANT_ID,
+        callback_url: process.env.ZARINPAL_CALLBACK_URL,
+    }
+    constructor() {
+
+    }
+
     async createTransaction(amount: Decimal, orderId: number): Promise<Authority> {
+        const body = {}
+
+        const resp = await fetch("https://payment.zarinpal.com/pg/v4/payment/request.json", {
+            method: "POST",
+            body: JSON.stringify(body)
+        })
+
         return "";
     }
 
