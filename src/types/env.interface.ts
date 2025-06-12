@@ -13,6 +13,7 @@ export interface IEnv {
   S3_END_POINT: string
   ZARINPAL_MERCHANT_ID: string
   ZARINPAL_CALLBACK_URL: string
+  IS_SANDBOX: true
 }
 
 declare global {
