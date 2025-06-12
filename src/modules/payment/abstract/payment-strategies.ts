@@ -10,7 +10,7 @@ export abstract class PaymentStrategies {
 
     abstract getTransactionUrl(authority: Authority): Promise<string>;
 
-    abstract verifyTransaction(transaction_id: string): Promise<VerifyPayment>;
+    abstract verifyTransaction(amount: Decimal, authority: string): Promise<VerifyPayment>;
 
     abstract refundTransaction(transactionId: string): Promise<void>;
 }
