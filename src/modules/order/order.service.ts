@@ -70,6 +70,13 @@ export class OrderService {
     return orders;
   }
 
+  async getUserOrderById(userId: number, orderId: number) {
+    const order = await this.orderRepository.getUserOrderById(userId, orderId);
+    if (!order) throw new NotFoundException(ErrorMessage.ORDER_NOT_FOUND);
+
+    return order;
+  }
+
   async getOrderById(orderId: number) {
     const order = await this.orderRepository.getOrderById(orderId);
     if (!order) throw new NotFoundException(ErrorMessage.ORDER_NOT_FOUND);
