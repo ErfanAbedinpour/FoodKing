@@ -11,7 +11,7 @@ import { ProductAttribute } from '../../../models';
 
 @Injectable()
 export class MikroProductRepository implements ProductRepository {
-  constructor(private readonly em: EntityManager) {}
+  constructor(private readonly em: EntityManager) { }
 
   async create(product: ProductPersist): Promise<Product> {
     const user = this.em.getReference(User, product.user_id);
@@ -24,6 +24,7 @@ export class MikroProductRepository implements ProductRepository {
         slug: product.slug,
         inventory: product.inventory,
         price: product.price,
+        rating: product.rating,
         user,
         restaurant: product.restaurant,
         is_active: true,
@@ -61,7 +62,7 @@ export class MikroProductRepository implements ProductRepository {
   }
 
   async findBySlug(slug: string): Promise<Loaded<Product>> {
-    const product = await this.em.findOne(Product, { slug }, { populate: ['category.category', 'attributes', 'restaurant'],exclude:['updatedAt','category:ref','user','carts:ref','orders:ref','comments:ref'] });
+    const product = await this.em.findOne(Product, { slug }, { populate: ['category.category', 'attributes', 'restaurant'], exclude: ['updatedAt', 'category:ref', 'user', 'carts:ref', 'orders:ref', 'comments:ref'] });
 
     if (!product)
       throw new RepositoryException(`Product with slug ${slug} not found`);

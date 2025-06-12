@@ -81,5 +81,5 @@ export class Product extends BaseModel {
   image?: string;
 
   @Property({ default: 0, nullable: false })
-  rating: number
+  rating?: number
 }
