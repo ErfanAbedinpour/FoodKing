@@ -7,7 +7,7 @@ export abstract class ProductRepository {
 
   abstract findById(id: number): Promise<Product>;
 
-  abstract findBySlug(slug: string): Promise<Product>;
+  abstract findBySlug(slug: string): Promise<Loaded<Product>>;
 
   abstract getAll(): Promise<Product[]>;
 

@@ -16,6 +16,7 @@ import slugify from 'slugify';
 import { UniqueConstraintViolationException } from '@mikro-orm/core';
 import { StorageService } from '../storage/storage.service';
 import { Directory } from '../storage/enum/directory.enum';
+import { ProductDTO } from './dto/product.dto';
 
 @Injectable()
 export class ProductService {
@@ -25,28 +26,28 @@ export class ProductService {
     private readonly productRepository: ProductRepository,
     private readonly categoryService: CategoryService,
     private readonly restaurantService: RestaurantService,
-    private readonly storage:StorageService
-  ) {}
+    private readonly storage: StorageService
+  ) { }
 
   private generateFileName(image: Express.Multer.File) {
     return `${Date.now()}-${image.originalname}`;
   }
   private async removeImage(fileName: string) {
-    if(!fileName)
+    if (!fileName)
       return
-    try{
+    try {
       await this.storage.remove(fileName)
-      return 
-    }catch{
+      return
+    } catch {
       return
     }
   }
 
   private async uploadImage(fileName: string, image: Express.Multer.File) {
-    try{
-      const result = await this.storage.upload(image.buffer,{key:fileName,mimetype:image.mimetype});
+    try {
+      const result = await this.storage.upload(image.buffer, { key: fileName, mimetype: image.mimetype });
       return result;
-    }catch(err){
+    } catch (err) {
       this.logger.error(`Error During Upload Product Image, ${err}`);
     }
   }
@@ -64,7 +65,7 @@ export class ProductService {
     try {
 
       const imageName = this.generateFileName(image);
-      const imagePath= `${Directory.Products}/${imageName}`;
+      const imagePath = `${Directory.Products}/${imageName}`;
 
       const result = await this.productRepository.create({
         categories,
@@ -73,7 +74,7 @@ export class ProductService {
         name: productData.name,
         price: productData.price,
         restaurant: restaurant,
-        image:imagePath,
+        image: imagePath,
         slug: slugify(productData.slug, {
           lower: true,
           strict: true,
@@ -105,12 +106,8 @@ export class ProductService {
   async getProductById(id: number): Promise<Product> {
     try {
       const product = await this.productRepository.findById(id);
-      
 
-      return {
-        ...product,
-        image:product.image ? this.storage.signImageUrl(product.image):undefined
-      } 
+      return product;
     } catch (err) {
       if (err instanceof RepositoryException)
         throw new NotFoundException(err.message);
@@ -120,13 +117,30 @@ export class ProductService {
     }
   }
 
-  async getProductBySlug(slug: string): Promise<Product> {
+
+  private convertProductToDTO(product:Product):ProductDTO{
+    return {
+      image:product.image ? this.storage.signImageUrl(product.image):null,
+      attributes:product.attributes?.toJSON() || [],
+      category:product.category?.toJSON() || [],
+      restaurant:product.restaurant.id || null,
+      is_active:product.is_active,
+      id:product.id,
+      name:product.name,
+      slug:product.slug,
+      description:product.description,
+      price:product.price.toString(),
+      createdAt:product.createdAt?.toString() || Date.now().toString(),
+      inventory:product.inventory,
+    }
+  }
+
+  async getProductBySlug(slug: string): Promise<ProductDTO> {
     try {
       const product = await this.productRepository.findBySlug(slug);
-      return {
-        ...product,
-        image:product.image ? this.storage.signImageUrl(product.image):undefined
-      };
+
+      return this.convertProductToDTO(product);
+      // return product
     } catch (err) {
       if (err instanceof RepositoryException)
         throw new NotFoundException(err.message);
@@ -136,18 +150,15 @@ export class ProductService {
     }
   }
 
-  async getAllProduct(): Promise<Product[]> {
+  async getAllProduct(): Promise<ProductDTO[]> {
     const reuslt = await this.productRepository.getAll()
-    return reuslt.map(product=>{
-      product.image ? product.image = this.storage.signImageUrl(product.image):null
-      return product;
-    })
+    return reuslt.map(product => this.convertProductToDTO(product));
   }
 
   async updateProduct(
     id: number,
     updateData: UpdateProductDto,
-  ): Promise<Product> {
+  ): Promise<ProductDTO> {
     const updatedPayload = {};
 
     for (const key in updateData) {
@@ -159,13 +170,13 @@ export class ProductService {
         updatedPayload['restaurant'] = await this.restaurantService.findOne(
           updateData[key],
         );
-      } else{
+      } else {
         updatedPayload[key] = updateData[key];
       }
     }
     try {
       const result = await this.productRepository.update(id, updatedPayload);
-      return result;
+      return this.convertProductToDTO(result);
     } catch (err) {
       if (err instanceof RepositoryException)
         throw new NotFoundException(err.message);
@@ -174,11 +185,14 @@ export class ProductService {
     }
   }
 
-  async deleteProduct(id: number): Promise<Product> {
+  async deleteProduct(id: number) {
     try {
       const result = await this.productRepository.delete(id);
       this.removeImage(result.image || '');
-      return result;
+      return {
+        success:true,
+        deletedId:result.id
+      }
     } catch (err) {
       if (err instanceof RepositoryException)
         throw new NotFoundException(err.message);
@@ -187,26 +201,23 @@ export class ProductService {
     }
   }
 
-  async updateInventory(id: number, quantity: number): Promise<Product> {
+  async updateInventory(id: number, quantity: number): Promise<ProductDTO> {
     const product = await this.getProductById(id);
 
-    if (product.inventory < quantity) {
-      throw new BadRequestException('Insufficient inventory');
-    }
 
     try {
       const result = await this.productRepository.update(id, {
-        inventory: product.inventory - quantity,
+        inventory: product.inventory + quantity,
       });
 
-      return result;
+      return this.convertProductToDTO(result);
     } catch (err) {
       this.logger.error(err);
       throw new InternalServerErrorException();
     }
   }
 
-  async toggleProductStatus(id: number): Promise<Product> {
+  async toggleProductStatus(id: number): Promise<ProductDTO> {
     const product = await this.getProductById(id);
 
     try {
@@ -214,7 +225,7 @@ export class ProductService {
         is_active: !product.is_active,
       });
 
-      return result;
+      return this.convertProductToDTO(result);
     } catch (err) {
       if (err instanceof RepositoryException)
         throw new NotFoundException(err.message);

@@ -21,7 +21,7 @@ export class CartService {
   constructor(
     private readonly cartRepository: CartRepository,
     private readonly productService: ProductService,
-  ) {}
+  ) { }
 
   async getCart(userId: number) {
     try {
@@ -129,10 +129,10 @@ export class CartService {
 
       userCartItem.count > 1
         ? await this.updateCartItemCount(
-            userCart!.id,
-            product.id,
-            userCartItem.count - 1,
-          )
+          userCart!.id,
+          product.id,
+          userCartItem.count - 1,
+        )
         : await this.cartRepository.removeItemFromCart(userCart!.id, productId);
 
       return {

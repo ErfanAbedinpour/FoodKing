@@ -11,9 +11,9 @@ export class OrderItem {
   @ManyToOne(() => Order, { primary: true, fieldName: 'order_id' })
   order: Rel<Order>;
 
-  @Property()
+  @Property({ nullable: false })
   quantity: number;
 
-  @Property({ type: 'decimal', columnType: 'numeric(10,2)' })
+  @Property({ type: 'decimal', columnType: 'numeric(10,2)', nullable: false })
   price: Decimal;
 }
