@@ -19,6 +19,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
 import { OrderModule } from './modules/order/order.module';
 import { StorageModule } from './modules/storage/storage.module';
 import { Directory } from './modules/storage/enum/directory.enum';
+import { PaymentModule } from './modules/payment/payment.module';
 
 @Module({
   imports: [
@@ -40,7 +41,8 @@ import { Directory } from './modules/storage/enum/directory.enum';
     CartModule,
     AddressModule,
     OrderModule,
-    StorageModule.register({directory:Directory.Products})
+    StorageModule.register({ directory: Directory.Products }),
+    PaymentModule
   ],
   controllers: [AppController],
 })

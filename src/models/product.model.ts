@@ -79,4 +79,7 @@ export class Product extends BaseModel {
 
   @Property({ nullable: true, unique: true })
   image?: string;
+
+  @Property({ default: 0, nullable: false })
+  rating?: number
 }

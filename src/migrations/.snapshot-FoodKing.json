@@ -779,6 +779,16 @@
           "nullable": true,
           "length": 255,
           "mappedType": "string"
+        },
+        "rating": {
+          "name": "rating",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "default": "0",
+          "mappedType": "integer"
         }
       },
       "name": "products",
@@ -1540,7 +1550,8 @@
           "enumItems": [
             "processing",
             "Shipped",
-            "Delivered"
+            "Cancelled",
+            "WaitingForPayment"
           ],
           "mappedType": "enum"
         },
@@ -1697,7 +1708,7 @@
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
-          "nullable": false,
+          "nullable": true,
           "default": "'Pending'",
           "enumItems": [
             "Pending",
@@ -1716,14 +1727,16 @@
           "length": 255,
           "mappedType": "string"
         },
-        "user_id": {
-          "name": "user_id",
-          "type": "int",
+        "transaction_type": {
+          "name": "transaction_type",
+          "type": "varchar(255)",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "mappedType": "integer"
+          "length": 255,
+          "default": "'payment'",
+          "mappedType": "string"
         },
         "order_id": {
           "name": "order_id",
@@ -1735,21 +1748,11 @@
           "mappedType": "integer"
         }
       },
-      "name": "payments",
+      "name": "transactions",
       "schema": "public",
       "indexes": [
         {
-          "columnNames": [
-            "order_id"
-          ],
-          "composite": false,
-          "keyName": "payments_order_id_unique",
-          "constraint": true,
-          "primary": false,
-          "unique": true
-        },
-        {
-          "keyName": "payments_pkey",
+          "keyName": "transactions_pkey",
           "columnNames": [
             "id"
           ],
@@ -1761,29 +1764,17 @@
       ],
       "checks": [],
       "foreignKeys": {
-        "payments_user_id_foreign": {
-          "constraintName": "payments_user_id_foreign",
-          "columnNames": [
-            "user_id"
-          ],
-          "localTableName": "public.payments",
-          "referencedColumnNames": [
-            "id"
-          ],
-          "referencedTableName": "public.User",
-          "deleteRule": "set null",
-          "updateRule": "cascade"
-        },
-        "payments_order_id_foreign": {
-          "constraintName": "payments_order_id_foreign",
+        "transactions_order_id_foreign": {
+          "constraintName": "transactions_order_id_foreign",
           "columnNames": [
             "order_id"
           ],
-          "localTableName": "public.payments",
+          "localTableName": "public.transactions",
           "referencedColumnNames": [
             "id"
           ],
           "referencedTableName": "public.orders",
+          "deleteRule": "set null",
           "updateRule": "cascade"
         }
       },

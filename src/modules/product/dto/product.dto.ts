@@ -16,7 +16,7 @@ export class ProductDTO {
   inventory: number;
 
   @ApiProperty()
-  slug:string;
+  slug: string;
 
   @ApiProperty()
   price: string;
@@ -33,10 +33,12 @@ export class ProductDTO {
   @ApiProperty()
   is_active: boolean;
 
-  @ApiProperty({required:false})
+  @ApiProperty({ required: false })
   image?: string | null;
 
+  @ApiProperty({ example: 2 })
+  rating: number
 
   @ApiProperty()
-  createdAt:string;
+  createdAt: string;
 }

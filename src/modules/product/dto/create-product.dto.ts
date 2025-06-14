@@ -4,7 +4,8 @@ import {
   IsNumber,
   IsNumberString,
   IsString,
-  IsArray,
+  Min,
+  Max,
 } from 'class-validator';
 import Decimal from 'decimal.js';
 import { ApiProperty } from '@nestjs/swagger';
@@ -58,4 +59,13 @@ export class CreateProductDTO {
   @IsNotEmpty()
   @Type(() => Number)
   restaurant_id: number;
+
+
+  @ApiProperty({ example: 2 })
+  @IsNotEmpty()
+  @IsNumber()
+  @Type(() => Number)
+  @Min(0)
+  @Max(5)
+  rating: number
 }

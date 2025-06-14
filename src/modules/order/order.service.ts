@@ -70,15 +70,25 @@ export class OrderService {
     return orders;
   }
 
-  async getOrderById(userId: number, orderId: number) {
+  async getUserOrderById(userId: number, orderId: number) {
     const order = await this.orderRepository.getUserOrderById(userId, orderId);
     if (!order) throw new NotFoundException(ErrorMessage.ORDER_NOT_FOUND);
 
     return order;
   }
 
+  async getOrderById(orderId: number) {
+    const order = await this.orderRepository.getOrderById(orderId);
+    if (!order) throw new NotFoundException(ErrorMessage.ORDER_NOT_FOUND);
+
+    return order;
+  }
+
   async cancleOrder(userId: number, orderId: number) {
-    const order = await this.getOrderById(userId, orderId);
+    const order = await this.orderRepository.getUserOrderById(userId, orderId);
+    if (!order)
+      throw new NotFoundException(ErrorMessage.ORDER_NOT_FOUND);
+
     if (order.status !== OrderStatus.Processing)
       throw new BadRequestException(ErrorMessage.ORDER_CANNOT_BE_REMOVED);
 
