@@ -1,5 +1,5 @@
 import {applyDecorators} from '@nestjs/common'
-import {ApiBody,ApiCreatedResponse, ApiOkResponse, ApiOperation} from '@nestjs/swagger'
+import {ApiBearerAuth, ApiBody,ApiCreatedResponse, ApiOkResponse, ApiOperation} from '@nestjs/swagger'
 import {CreateCommentDto} from './dtos/create-comment.dto'
 import { CommentDto } from './dtos/comment.dto'
 
@@ -7,6 +7,7 @@ export function CreateCommentSwaggerConfiguration(){
 	return applyDecorators(
 		ApiBody({type:CreateCommentDto}),
 		ApiOkResponse({description:"Comment Created",type:CommentDto}),
+		ApiBearerAuth("JWT-AUTH"),
 		ApiOperation({summary:"Create Comment"})
 	)
 }

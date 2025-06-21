@@ -1,9 +1,12 @@
-import {Injectable, InternalServerErrorException, Logger} from '@nestjs/common'
-import {EntityManager} from '@mikro-orm/core'
+import { BadRequestException, HttpException, Injectable, InternalServerErrorException, Logger, NotFoundException} from '@nestjs/common'
+import {EntityManager, NotFoundError, wrap} from '@mikro-orm/core'
 import { CreateCommentDto } from './dtos/create-comment.dto'
 import { ProductService } from '../product/product.service'
 import { Comment } from '@models/comment.model';
 import { CommentDto } from './dtos/comment.dto';
+import { UpdateCommentDto } from './dtos/update-comment.dto';
+import { ErrorMessage } from '../../ErrorMessages/Error.enum';
+import { UserRole } from '@models/role.model';
 
 
 @Injectable()
@@ -37,12 +40,57 @@ export class CommentService{
 		}
 	}
 
-	updateComment(id:number){}
+	async updateComment(id:number,{rate,body}:UpdateCommentDto,userId:number){
+		try{
+			const targetComment = await this.em.findOneOrFail(Comment,{$and:[{id},{user:userId}]});
+			const commnet = wrap(targetComment).assign({rating:rate,body})
+			return commnet;
+		}catch(err){
+			if(err instanceof NotFoundError){
+				throw new NotFoundException(ErrorMessage.COMMENT_NOT_FOUND)
+			}
+			this.logger.error(err)
+			throw new InternalServerErrorException()
+		}
+
+	}
 
 
-	deleteComment(id:number){}
+	async deleteComment(id:number,userId:number,userRole:UserRole){
+		try{
+			const targetComment = await this.em.findOneOrFail(Comment,id);
+			
+			 if(targetComment.user.id!==userId || userRole!==UserRole.Owner)
+				throw new NotFoundException(ErrorMessage.COMMENT_NOT_FOUND)
+			
+			 await this.em.removeAndFlush(targetComment)
+			return true;
+		}catch(err){
+			if(err instanceof HttpException)
+				throw err
+			else if(err instanceof NotFoundError)
+				throw new NotFoundException(ErrorMessage.COMMENT_NOT_FOUND)
+			
+			this.logger.error(err)
+			throw new InternalServerErrorException()
+		}
 
 
-	getCommentById(id:number){}
+	}
+
+
+	async getCommentById(id:number){
+		try{
+			const targetComment = await this.em.findOneOrFail(Comment,id,{populate:['user']});
+
+			return targetComment
+		}catch(err){
+			if(err instanceof NotFoundError){
+				throw new NotFoundException(ErrorMessage.COMMENT_NOT_FOUND)
+			}
+			this.logger.error(err)
+			throw new InternalServerErrorException()
+		}
+	}
 
 }
