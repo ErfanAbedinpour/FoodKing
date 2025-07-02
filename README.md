@@ -202,3 +202,15 @@ npm run test:e2e
 - [x] Storage Cloud Configuration
 - [x] Upload Product image to Cloud storage with s3 protocol
 - [x] Remove Product Image when product deleted from cloud storage 
+- [x] Remove Comment
+- [x] Add Comment
+- [x] GET Comment
+- [x] Update Comment
+- [x] Commnet Test Suits
+- [x] Payment
+- [ ] Users CRUD For Admin Dashboard
+- [ ] Search
+- [ ] Blog
+- [ ] Orders Reports
+- [ ] Grafana For Monitoring
+- [ ] Refacor Codes Structure
