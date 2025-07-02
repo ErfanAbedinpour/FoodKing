@@ -14,7 +14,7 @@ export class CommentDto{
 	@ApiProperty()
 	updatedAt:string
 	@ApiProperty()
-	user:number
+	userId:number
 	@ApiProperty()
 	productId:number
 }
