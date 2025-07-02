@@ -31,4 +31,5 @@ export enum ErrorMessage {
   ORDER_NOT_FOUND = 'Order Not Found',
   ORDER_CANNOT_BE_REMOVED = "The Order on this situation cannot be removed",
   FILE_NOT_FOUND= "File Not Found",
+  COMMENT_NOT_FOUND= "Comment Not Found",
 }

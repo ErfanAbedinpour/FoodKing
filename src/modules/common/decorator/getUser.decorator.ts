@@ -7,8 +7,6 @@ export const GetUser = createParamDecorator(
   (data: keyof RequestUser, ctx: ExecutionContext) => {
     const request = ctx.switchToHttp().getRequest();
     try{
-
-      console.log("request user is ", request.user);
     return data? request.user[data]: request.user;
     }catch(err){
       throw new UnauthorizedException("Please log in First.")
