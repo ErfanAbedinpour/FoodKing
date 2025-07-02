@@ -20,6 +20,7 @@ import { OrderModule } from './modules/order/order.module';
 import { StorageModule } from './modules/storage/storage.module';
 import { Directory } from './modules/storage/enum/directory.enum';
 import { PaymentModule } from './modules/payment/payment.module';
+import {CommentModule} from './modules/comment/comment.module'
 
 @Module({
   imports: [
@@ -42,7 +43,8 @@ import { PaymentModule } from './modules/payment/payment.module';
     AddressModule,
     OrderModule,
     StorageModule.register({ directory: Directory.Products }),
-    PaymentModule
+    PaymentModule,
+    CommentModule
   ],
   controllers: [AppController],
 })
