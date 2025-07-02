@@ -6,7 +6,7 @@ import { OrderStatus } from '../../../models/order.model';
 import { OrderPersist } from './persist/order.persist';
 import Decimal from 'decimal.js';
 import { NotFoundError } from 'rxjs';
-import { RepositoryException } from '../../../exception/repository.exception';
+import { RepositoryException } from '../../common/exception/repository.exception';
 import { ErrorMessage } from '../../../ErrorMessages/Error.enum';
 
 @Injectable()

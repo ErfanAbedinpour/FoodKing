@@ -2,7 +2,7 @@ import { BadRequestException, HttpException, Injectable, InternalServerErrorExce
 import { SubMenuRepository } from "../repository/abstract/sub-menu.repository";
 import { CreateSubMenuDTO } from "../DTO/create-sub-menu.dto";
 import slugify from "slugify";
-import { RepositoryException } from "../../../exception/repository.exception";
+import { RepositoryException } from "../../common/exception/repository.exception";
 import { UpdateSubMenuDTO } from "../DTO/update-sub-menu.dto";
 import { ErrorMessage } from "../../../ErrorMessages/Error.enum";
 import { UniqueConstraintViolationException } from "@mikro-orm/core";

@@ -2,61 +2,62 @@ import { Test } from "@nestjs/testing"
 import { RestaurantRepository } from "../respository/abstract/restaurant.repository"
 import { RestaurantService } from "../restaurant.service"
 import { Restaurant } from "../../../models"
-import { RepositoryException } from "../../../exception/repository.exception"
+import { RepositoryException } from "../../common/exception/repository.exception"
 import { InternalServerErrorException, NotFoundException } from "@nestjs/common"
 
-describe("RestaurantService",()=>{
-    let service:RestaurantService
+describe("RestaurantService", () => {
+    let service: RestaurantService
 
     let repository = {
-        create:jest.fn(),
-        delete:jest.fn(),
-        findAll:jest.fn(),
-        findOne:jest.fn(),
-        getAllRestaurantProducts:jest.fn(),
-        getRestaurantProducts:jest.fn(),
-        update:jest.fn()
-    } as jest.Mocked<RestaurantRepository> 
+        create: jest.fn(),
+        delete: jest.fn(),
+        findAll: jest.fn(),
+        findOne: jest.fn(),
+        getAllRestaurantProducts: jest.fn(),
+        getRestaurantProducts: jest.fn(),
+        update: jest.fn()
+    } as jest.Mocked<RestaurantRepository>
 
-    beforeEach(async ()=>{
+    beforeEach(async () => {
 
         const moduleRef = await Test.createTestingModule({
 
-            providers:[
+            providers: [
                 RestaurantService,
-               {
-                provide:RestaurantRepository,
-                useValue:repository
-               } 
-            ],}).compile()
+                {
+                    provide: RestaurantRepository,
+                    useValue: repository
+                }
+            ],
+        }).compile()
 
 
 
-            service = moduleRef.get(RestaurantService);
-            repository= moduleRef.get(RestaurantRepository);
+        service = moduleRef.get(RestaurantService);
+        repository = moduleRef.get(RestaurantRepository);
     })
 
 
-    it("Should be Defined",()=>{
+    it("Should be Defined", () => {
         expect(service).toBeDefined()
         expect(repository).toBeDefined()
     })
 
-    describe("Create Restaurant",()=>{
+    describe("Create Restaurant", () => {
         const mockRestaurantData = {
-            en_name:"test-restaurant",
-            name:"test",
-            id:1,
+            en_name: "test-restaurant",
+            name: "test",
+            id: 1,
         } as Restaurant
 
 
-        it("Should Created Restaurant",async ()=>{
+        it("Should Created Restaurant", async () => {
             repository.create.mockResolvedValue(mockRestaurantData);
 
-            const result = await service.create({en_name:mockRestaurantData.en_name,name:mockRestaurantData.name},1);
+            const result = await service.create({ en_name: mockRestaurantData.en_name, name: mockRestaurantData.name }, 1);
             expect(result.name).toEqual(mockRestaurantData.name)
             expect(result.id).toEqual(1)
-            expect(repository.create).toHaveBeenCalledWith({name:mockRestaurantData.name,en_name:mockRestaurantData.en_name,owner_id:1});
+            expect(repository.create).toHaveBeenCalledWith({ name: mockRestaurantData.name, en_name: mockRestaurantData.en_name, owner_id: 1 });
         })
     })
 
@@ -68,7 +69,7 @@ describe("RestaurantService",()=>{
                 en_name: "test-restaurant-1"
             },
             {
-                id: 2, 
+                id: 2,
                 name: "Test Restaurant 2",
                 en_name: "test-restaurant-2"
             }

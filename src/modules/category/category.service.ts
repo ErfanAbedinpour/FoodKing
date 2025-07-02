@@ -9,7 +9,7 @@ import { CategoryRepository } from './repository/category.repository';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import slugify from 'slugify';
 import { Category } from '../../models';
-import { RepositoryException } from '../../exception/repository.exception';
+import { RepositoryException } from '../common/exception/repository.exception';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { UniqueConstraintViolationException } from '@mikro-orm/core';
 import { ErrorMessage } from '../../ErrorMessages/Error.enum';
@@ -17,7 +17,7 @@ import { ErrorMessage } from '../../ErrorMessages/Error.enum';
 @Injectable()
 export class CategoryService {
   private readonly logger = new Logger(CategoryService.name);
-  constructor(private readonly categoryRepository: CategoryRepository) {}
+  constructor(private readonly categoryRepository: CategoryRepository) { }
 
   async create(
     createCategoryDto: CreateCategoryDto,

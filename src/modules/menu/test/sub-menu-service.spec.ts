@@ -6,7 +6,7 @@ import { CreateSubMenuDTO } from '../DTO/create-sub-menu.dto';
 import { UpdateSubMenuDTO } from '../DTO/update-sub-menu.dto';
 import { ErrorMessage } from '../../../ErrorMessages/Error.enum';
 import { UniqueConstraintViolationException } from '@mikro-orm/core';
-import { RepositoryException } from '../../../exception/repository.exception';
+import { RepositoryException } from '../../common/exception/repository.exception';
 import { SubMenuModel } from '@models/sub-menu.model';
 
 describe('SubMenuService', () => {

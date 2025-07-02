@@ -3,11 +3,11 @@ import { Injectable } from '@nestjs/common';
 import { Category } from '../../../models';
 import { CategoryRepository } from './category.repository';
 import { CategoryPersist } from './persistance/category.persist';
-import { RepositoryException } from '../../../exception/repository.exception';
+import { RepositoryException } from '../../common/exception/repository.exception';
 
 @Injectable()
 export class MikroCategoryRepository implements CategoryRepository {
-  constructor(private readonly em: EntityManager) {}
+  constructor(private readonly em: EntityManager) { }
 
   async create(data: CategoryPersist): Promise<Category> {
     try {

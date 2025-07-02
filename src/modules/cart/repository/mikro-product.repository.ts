@@ -2,12 +2,12 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { CartRepository } from './cart.repository';
 import { EntityManager, Loaded, NotFoundError } from '@mikro-orm/postgresql';
 import { Cart, CartProduct, Product } from '../../../models';
-import { RepositoryException } from '../../../exception/repository.exception';
+import { RepositoryException } from '../../common/exception/repository.exception';
 import { ErrorMessage } from '../../../ErrorMessages/Error.enum';
 
 @Injectable()
 export class MikroCartRepository implements CartRepository {
-  constructor(private readonly em: EntityManager) {}
+  constructor(private readonly em: EntityManager) { }
 
   async addItemToCart(cartId: number, product: Product): Promise<CartProduct> {
     try {

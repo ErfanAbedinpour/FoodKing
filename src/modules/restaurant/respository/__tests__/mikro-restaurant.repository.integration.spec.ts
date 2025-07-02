@@ -4,7 +4,7 @@ import { MikroRestaurantRepository } from '../mikro-restaurant.repository';
 import { Restaurant } from '@models/restaurant.model';
 import { User } from '@models/user.model';
 import { RestaurantPersist } from '../persistance/restaurant-persist';
-import { RepositoryException } from '../../../../exception/repository.exception';
+import { RepositoryException } from '../../../common/exception/repository.exception';
 import { Role } from '@models/role.model';
 import { UserRole } from '@models/role.model';
 import { Cart } from '@models/cart.model';
@@ -20,21 +20,21 @@ describe('MikroRestaurantRepository Integration Tests', () => {
     let testCart: Cart;
 
     beforeEach(async () => {
-        
+
         const moduleRef = await Test.createTestingModule({
 
-            imports:[MikroOrmModule.forRoot({
-            driver: SqliteDriver,
-            dbName: ':memory:',
-            entities: [Restaurant, User, Role, Cart],
-            debug: false,
-            ensureDatabase:{create:true},
-            allowGlobalContext:true
+            imports: [MikroOrmModule.forRoot({
+                driver: SqliteDriver,
+                dbName: ':memory:',
+                entities: [Restaurant, User, Role, Cart],
+                debug: false,
+                ensureDatabase: { create: true },
+                allowGlobalContext: true
             })],
-            providers:[MikroRestaurantRepository]
+            providers: [MikroRestaurantRepository]
 
         }).compile()
-        
+
         em = moduleRef.get(EntityManager);
         orm = moduleRef.get(MikroORM)
         repository = moduleRef.get(MikroRestaurantRepository)
@@ -42,7 +42,7 @@ describe('MikroRestaurantRepository Integration Tests', () => {
 
         testRole = em.create(Role, {
             name: UserRole.Owner
-        },{persist:true});
+        }, { persist: true });
 
         testUser = em.create(User, {
             name: 'Test User',
@@ -52,12 +52,12 @@ describe('MikroRestaurantRepository Integration Tests', () => {
             role: testRole,
             is_active: true,
             createdAt: Date.now(),
-            cart:{},
-        },{persist:true});
+            cart: {},
+        }, { persist: true });
 
         testCart = em.create(Cart, {
-            user:testUser,
-        },{persist:true});
+            user: testUser,
+        }, { persist: true });
 
         testUser.cart = testCart;
 
@@ -67,7 +67,7 @@ describe('MikroRestaurantRepository Integration Tests', () => {
     afterAll(async () => {
         await orm.close();
     });
-    
+
     describe('create', () => {
         it('should create a new restaurant', async () => {
             const restaurantData: RestaurantPersist = {
@@ -88,7 +88,7 @@ describe('MikroRestaurantRepository Integration Tests', () => {
             const invalidData: RestaurantPersist = {
                 name: 'Test Restaurant',
                 en_name: 'Test Restaurant EN',
-                owner_id: 999999 
+                owner_id: 999999
             };
 
             await expect(repository.create(invalidData)).rejects.toThrow(RepositoryException);

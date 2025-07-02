@@ -3,7 +3,7 @@ import { SubMenuRepository } from "./abstract/sub-menu.repository";
 import { Injectable } from "@nestjs/common";
 import { MenuModel, SubMenuModel } from "../../../models";
 import { SubMenuPersis } from "./abstract/persist/sub-menu.persist";
-import { RepositoryException } from "../../../exception/repository.exception";
+import { RepositoryException } from "../../common/exception/repository.exception";
 import { ErrorMessage } from "../../../ErrorMessages/Error.enum";
 
 @Injectable()

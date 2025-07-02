@@ -9,7 +9,7 @@ import {
 import { AddItemDto } from './dto/add-item.dto';
 import { RemoveItemDto } from './dto/remove-item.dto';
 import { CartRepository } from './repository/cart.repository';
-import { RepositoryException } from '../../exception/repository.exception';
+import { RepositoryException } from '../common/exception/repository.exception';
 import { ProductService } from '../product/product.service';
 import { ErrorMessage } from '../../ErrorMessages/Error.enum';
 import Decimal from 'decimal.js';

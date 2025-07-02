@@ -3,7 +3,7 @@ import { Restaurant } from '@models/restaurant.model';
 import { RestaurantPersist } from './persistance/restaurant-persist';
 import { RestaurantRepository } from './abstract/restaurant.repository';
 import { User } from '@models/user.model';
-import { RepositoryException } from '../../../exception/repository.exception';
+import { RepositoryException } from '../../common/exception/repository.exception';
 import { Injectable } from '@nestjs/common';
 import { ErrorMessage } from '../../../ErrorMessages/Error.enum';
 
@@ -40,9 +40,9 @@ export class MikroRestaurantRepository implements RestaurantRepository {
 
     async findAll(): Promise<Restaurant[]> {
         try {
-            const restaurants = await this.em.findAll(Restaurant,{});
+            const restaurants = await this.em.findAll(Restaurant, {});
 
-            return restaurants; 
+            return restaurants;
         } catch (err) {
             throw new RepositoryException(ErrorMessage.RESTAURANT_FETCH_FAILED);
         }
@@ -50,7 +50,7 @@ export class MikroRestaurantRepository implements RestaurantRepository {
 
     async getRestaurantProducts(id: number): Promise<Loaded<Restaurant, 'products', '*', never>> {
         try {
-            const restaurant = await this.em.findOneOrFail(Restaurant,{id},{populate:['products']});
+            const restaurant = await this.em.findOneOrFail(Restaurant, { id }, { populate: ['products'] });
             return restaurant
         } catch (err) {
             throw new RepositoryException(ErrorMessage.RESTAURANT_PRODUCTS_FETCH_FAILED);

@@ -8,7 +8,7 @@ import Decimal from 'decimal.js';
 import { ProductCategory } from '@models/product-category.model';
 import { Category } from '@models/category.model';
 import { SqliteDriver } from '@mikro-orm/sqlite';
-import { RepositoryException } from '../../../../exception/repository.exception';
+import { RepositoryException } from '../../../common/exception/repository.exception';
 import { Test } from '@nestjs/testing';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { Role, UserRole } from '../../../../models';

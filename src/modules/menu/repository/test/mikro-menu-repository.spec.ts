@@ -5,7 +5,7 @@ import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { MenuModel, SubMenuModel } from '../../../../models';
 import { BetterSqliteDriver, EntityManager } from '@mikro-orm/better-sqlite';
 import { MenuPersist } from '../abstract/persist/menu.persist';
-import { RepositoryException } from '../../../../exception/repository.exception';
+import { RepositoryException } from '../../../common/exception/repository.exception';
 import { ErrorMessage } from '../../../../ErrorMessages/Error.enum';
 
 describe('MikroMenuRepository', () => {

@@ -4,7 +4,7 @@ import { ProductRepository } from '../repository/product.repository';
 import { Product } from '@models/product.model';
 import { CreateProductDTO } from '../dto/create-product.dto';
 import { NotFoundException } from '@nestjs/common';
-import { RepositoryException } from '../../../exception/repository.exception';
+import { RepositoryException } from '../../common/exception/repository.exception';
 import Decimal from 'decimal.js';
 import { Restaurant } from '@models/restaurant.model';
 import { CategoryService } from '../../category/category.service';

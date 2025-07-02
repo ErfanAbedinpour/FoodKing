@@ -11,7 +11,7 @@ import { OrderCreatedEvent } from '../events/order-created.event';
 import Decimal from 'decimal.js';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { ErrorMessage } from '../../../ErrorMessages/Error.enum';
-import { RepositoryException } from '../../../exception/repository.exception';
+import { RepositoryException } from '../../common/exception/repository.exception';
 
 describe("OrderService", () => {
     let service: OrderService;

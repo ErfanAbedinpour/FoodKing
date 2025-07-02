@@ -5,7 +5,7 @@ import { ProductRepository } from './product.repository';
 import { User } from '@models/user.model';
 import { Restaurant } from '@models/restaurant.model';
 import { ProductCategory } from '@models/product-category.model';
-import { RepositoryException } from '../../../exception/repository.exception';
+import { RepositoryException } from '../../common/exception/repository.exception';
 import { Injectable } from '@nestjs/common';
 import { ProductAttribute } from '../../../models';
 
